@@ -63,7 +63,3 @@ npm run preview    # 预览生产构建
 目前使用 DuckDuckGo favicon API 自动获取链接图标（`icons.duckduckgo.com/ip3/{domain}.ico`），图标加载失败时显示站点名首字作为 fallback。
 
 计划迁移为自维护 WebP 图片（`public/icons/`），提升国内加载速度和稳定性。
-
-## License
-
-GPL v3
