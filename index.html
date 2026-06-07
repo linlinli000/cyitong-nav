@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>成医通 - 成都医学院导航</title>
+    <meta name="description" content="成都医学院学生专属导航页，汇集教务系统、图书馆、一卡通、就业信息等常用校内链接与服务" />
+    <meta name="keywords" content="成都医学院,成医,导航,教务系统,图书馆,一卡通,校园邮箱,CMC导航" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="成医通 - 成都医学院导航" />
+    <meta property="og:description" content="成都医学院学生专属导航页，汇集常用校内链接与服务" />
+    <meta property="og:image" content="/favicon.svg" />
+    <meta property="og:site_name" content="成医通" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="成医通 - 成都医学院导航" />
+    <meta name="twitter:description" content="成都医学院学生专属导航页" />
+
+    <!-- 暗色模式检测（优先读取用户手动选择） -->
+    <script>
+      (function() {
+        var saved = null;
+        try { saved = localStorage.getItem('theme'); } catch(e) {}
+        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+        // 仅在用户未手动选择时跟随系统变化
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+          try {
+            if (!localStorage.getItem('theme')) {
+              document.documentElement.classList.toggle('dark', e.matches);
+            }
+          } catch(ex) {}
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
