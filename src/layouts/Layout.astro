@@ -1,5 +1,10 @@
 ---
 import '../styles/global.css';
+import { RUNTIME_ICON_NAMES } from '../components/web/icons';
+import { buildIconSprite } from '../lib/icon-sprite';
+
+/** 运行期图标 symbol sprite（web 组件 `<use href>` 引用，字形与 astro-icon 同源） */
+const iconSymbols = buildIconSprite(RUNTIME_ICON_NAMES);
 
 interface Props {
   title?: string;
@@ -58,6 +63,12 @@ const {
     </script>
   </head>
   <body>
+    <!-- 运行期图标 sprite：lucide 符号单一来源（构建期生成），供 web 组件 <use href> 引用 -->
+    <svg
+      aria-hidden="true"
+      style="position:absolute;width:0;height:0;overflow:hidden"
+      set:html={iconSymbols}
+    ></svg>
     <nav-dialog />
     <slot />
 

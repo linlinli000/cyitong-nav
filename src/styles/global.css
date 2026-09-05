@@ -125,11 +125,8 @@ nav-cat-tabs {
   background: color-mix(in srgb, var(--color-brand) 10%, transparent);
 }
 
-/* ── 折叠几何：图标固定在恒定列位，收起/展开时图标不动 ──────────────────
-   所有内边距在展开与折叠态保持一致（内容起点恒为折叠图标条的中轴 x=32px：
-   nav px-2=8 + 行 pl=14 = 图标左缘 22 → 20px 图标中心 32；header pl=14 →
-   36px logo 中心同样 32）。折叠图标条 4rem=64px（2×32）让图标恰好居中。
-   不再靠切换 justify-content 做"居中"，所以文字被裁切/淡出时图标不会被条宽拖走。 */
+/* 折叠几何：文字淡出时图标位置恒定。内容起点 = 折叠条中轴 x=32px（行 pl14 + 20px 图标中心；
+   header pl14 + 36px logo 中心，二者同为 32）。条宽 4rem=64 = 2×32 恰居中。 */
 #sidebar .sidebar-header {
   padding-left: 14px;
   padding-right: 14px; /* 收起时 logo(36px) 恰好容纳，避免被 .sidebar-brand 裁切 */
@@ -163,26 +160,23 @@ nav-cat-tabs {
   transition: opacity 0.15s ease;
 }
 #sidebar .sidebar-cat-name {
-  /* 名字按内容宽排完即止（不撑满）；数字+箭头簇靠 .count 的 margin-left:auto 钉到行右侧。
-     字到簇的间距由行剩余宽决定 → 由桌面展开宽度控制（见下方 12rem）。min-width:0 保留窄宽截断。 */
+  /* 名字按内容宽排完即止；min-width:0 保留窄宽截断 */
   flex: 0 1 auto;
   min-width: 0;
 }
 #sidebar .sidebar-cat-count {
-  /* 吃掉名字右侧的剩余空间，把「计数+箭头」整簇推到行的最右，两者仍由 meta 的 gap 保持相邻 */
+  /* 占满名字右侧剩余空间，把「计数+箭头」整簇推到行最右 */
   margin-left: auto;
 }
 #sidebar .sidebar-group .sub-link {
   padding-left: 14px; /* 与父级图标左缘（22px）对齐 */
 }
 
-/* ── 桌面端「折叠成图标条」（≥lg 生效，移动端抽屉始终全宽） ─────────────
-   状态载体是 <aside#sidebar> 的 .is-collapsed（默认展开：SSR 不带该类；
-   若 localStorage[nav:rail]==collapsed，Sidebar 开头的 inline bootstrap 会在
-   内容区解析前加回该类 → 无 FOUC）。状态经 nav-sidebar toggle 持久化到 nav:rail。
-   内容区留白经 nav-sidebar:has(...) + .site-content 推导，两侧永不失同步。 */
+/* 桌面「折叠成图标条」（≥lg；移动端抽屉始终全宽）。状态 = aside#sidebar 的 .is-collapsed，
+   默认展开（SSR 不带）；localStorage[nav:rail]==collapsed 时 Sidebar inline bootstrap 首帧前加回（无 FOUC）。
+   内容留白由 nav-sidebar:has(...) + .site-content 同源推导，两侧不失同步。 */
 @media (min-width: 1024px) {
-  /* 宽度/留白过渡挂在无条件选择器上，收/展两个方向都会动 */
+  /* 过渡挂无条件选择器：收/展双向都动 */
   #sidebar {
     transition: width 0.2s ease;
   }
@@ -190,13 +184,11 @@ nav-cat-tabs {
     transition: padding-left 0.2s ease;
   }
 
-  /* 展开宽基础用 .w-56 = 14rem（224px，Sidebar.astro / index.astro lg:pl-56）：
-     7 个一级分类名都 ~4 字，簇钉最右时字↔簇距离由展开宽决定 → 收窄即让两者更近。
-     移动抽屉与桌面共用同一 .w-56。折叠态（图标条）仍单独 4rem。 */
+  /* 展开宽 .w-56 = 14rem：字↔簇距离由展开宽决定（簇钉最右），移动抽屉与桌面共用。
+     折叠（图标条）单独 4rem。 */
   nav-sidebar:has(#sidebar:not(.is-collapsed)) + .site-content {
     padding-left: 14rem;
   }
-  /* 折叠：内容让位到图标条宽 */
   nav-sidebar:has(#sidebar.is-collapsed) + .site-content {
     padding-left: 4rem;
   }
@@ -213,8 +205,7 @@ nav-cat-tabs {
     opacity: 0;
     pointer-events: none;
   }
-  /* 分类手风琴与页脚整体隐藏（它们不在折叠条内）；不用 display:none 处理文字区，
-     否则会跳过上面的淡出过渡 */
+  /* 手风琴/页脚不在折叠条内，整体隐藏（文字区走上面 opacity 淡出，不用 display:none） */
   #sidebar.is-collapsed .sidebar-sub,
   #sidebar.is-collapsed .sidebar-footer {
     display: none;

@@ -1,8 +1,6 @@
-/**
- * 站内搜索匹配器
- *
- * 全新实现：多分隔符分词 + 多字段加权（含前缀档位）+ bigram-Dice 模糊容错 + 稳定平局排序。
- */
+/** 站内搜索：多分隔符分词 + 多字段加权 + bigram-Dice 模糊回退 + 稳定排序 */
+
+import type { Mirror } from '../../content.config';
 
 export interface SiteRecord {
   id: string;
@@ -15,7 +13,7 @@ export interface SiteRecord {
   subName: string;
   qr?: boolean;
   qrNote?: string;
-  mirrors?: { label: string; url: string }[];
+  mirrors?: Mirror[];
   icon: string;
 }
 

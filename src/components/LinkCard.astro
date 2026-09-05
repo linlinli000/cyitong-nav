@@ -1,4 +1,6 @@
 ---
+import type { Mirror } from '../content.config';
+
 interface Props {
   categoryId: string;
   /** 所属二级分类 id：供 <nav-cat-tabs> 按 tab 过滤显隐 */
@@ -9,7 +11,7 @@ interface Props {
     url: string;
     qr?: boolean;
     qrNote?: string;
-    mirrors?: { label: string; url: string }[];
+    mirrors?: Mirror[];
   };
 }
 

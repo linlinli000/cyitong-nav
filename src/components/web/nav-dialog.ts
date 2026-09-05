@@ -1,15 +1,8 @@
-/**
- * <nav-dialog> 弹窗：二维码（qrcode 包生成）+ 镜像站列表
- * 通过文档级事件委托拦截所有 a[data-mirrors] / a[data-qr] 点击（含搜索结果与网格卡片）。
- */
+/** <nav-dialog>：文档级拦截 a[data-mirrors]/a[data-qr] 点击 → 二维码/镜像弹窗（覆盖搜索与网格卡片） */
 import QRCode from 'qrcode';
-
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]!);
-}
-
-const CLOSE_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>';
+import { escapeHtml } from './html-escape';
+import type { Mirror } from '../../content.config';
+import { iconEl } from './icons';
 
 class NavDialog extends HTMLElement {
   private dlg: HTMLDialogElement | null = null;
@@ -22,13 +15,13 @@ class NavDialog extends HTMLElement {
 
     if (a.dataset.mirrors) {
       try {
-        const mirrors = JSON.parse(a.dataset.mirrors) as { label: string; url: string }[];
+        const mirrors = JSON.parse(a.dataset.mirrors) as Mirror[];
         if (mirrors.length) {
           this.openMirrors(title, mirrors);
           return;
         }
       } catch {
-        /* 非法 JSON：回退到二维码或默认跳转 */
+        /* 非法 JSON：忽略镜像，继续走二维码 */
       }
     }
     if (a.dataset.qr) {
@@ -42,7 +35,7 @@ class NavDialog extends HTMLElement {
         <div class="flex items-center justify-between gap-4">
           <h3 data-role="title" class="truncate text-base font-semibold"></h3>
           <button type="button" data-role="close" class="shrink-0 text-muted transition-colors hover:text-ink" aria-label="关闭">
-            ${CLOSE_SVG}
+            ${iconEl('x', 'h-5 w-5')}
           </button>
         </div>
         <div data-role="body" class="mt-4"></div>
@@ -89,7 +82,7 @@ class NavDialog extends HTMLElement {
     if (!this.dlg!.open) this.dlg!.showModal();
   }
 
-  private openMirrors(title: string, mirrors: { label: string; url: string }[]): void {
+  private openMirrors(title: string, mirrors: Mirror[]): void {
     this.dlg!.querySelector('[data-role="title"]')!.textContent = title;
     this.dlg!.querySelector('[data-role="body"]')!.innerHTML = `
       <ul class="space-y-2">

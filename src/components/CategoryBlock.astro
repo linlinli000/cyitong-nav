@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { categoryIconSvg } from '../data/category-icons';
+import { Icon } from 'astro-icon/components';
+import { categoryIcon } from '../data/category-icons';
 import LinkCard from './LinkCard.astro';
 
 interface Props {
@@ -20,7 +21,9 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
   <!-- 标题 + tab 同行：桌面端同一排，移动端两排（tab 在下） -->
   <div class="mb-4 flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
     <div class="flex shrink-0 items-center gap-2.5">
-      <span class="text-brand" set:html={categoryIconSvg(category.data.icon, 'h-5 w-5')}></span>
+      <span class="text-brand">
+        <Icon name={categoryIcon(category.data.icon)} class="h-5 w-5" />
+      </span>
       <h2 class="text-lg font-bold text-ink">{category.data.name}</h2>
       <span class="rounded-full bg-surface px-2 py-0.5 text-xs text-muted">{total} 个链接</span>
     </div>
@@ -58,21 +61,11 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
   <!-- 卡片折叠：超出 3 排（桌面）/ 5 排（移动）时显示查看更多，点击展开/收起 -->
   <button type="button" class="cat-more" hidden>
     <span class="cat-more-label">查看更多</span>
-    <svg
-      class="cat-more-chevron h-3.5 w-3.5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path d="m6 9 6 6 6-6"></path>
-    </svg>
+    <Icon name="lucide:chevron-down" class="cat-more-chevron h-3.5 w-3.5" />
   </button>
 </section>
 
 <!-- 自注册自定义元素：升级 <nav-cat-tabs> 宿主 -->
 <script>
-  import '../components/web/nav-cat-tabs';
+  import './web/nav-cat-tabs';
 </script>

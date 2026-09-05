@@ -1,19 +1,16 @@
 ---
-/** 汉堡图标（三横线），移动端菜单与桌面端折叠共用 */
-const MENU_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>';
+import { Icon } from 'astro-icon/components';
 
-/** 下拉小箭头 */
-const CARET_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 shrink-0 opacity-70"><path d="m6 9 6 6 6-6"></path></svg>';
+/** 顶部栏图标统一 lucide（astro-icon 构建期内联，勿手抄 path；换图改 iconify 名即可） */
+const MENU_ICON = 'lucide:menu';
+const CARET_ICON = 'lucide:chevron-down';
 
 /* 三个快速工具下拉（右侧，月亮按钮左侧）。服务项图标用首字色块占位，后续可换品牌 logo。 */
 const TOOLS = [
   {
     id: 'translate',
     label: '翻译',
-    icon:
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>',
+    icon: 'lucide:globe',
     items: [
       { name: '百度翻译', url: 'https://fanyi.baidu.com/' },
       { name: '有道翻译', url: 'https://fanyi.youdao.com/indexLLM.html#/' },
@@ -25,8 +22,7 @@ const TOOLS = [
   {
     id: 'drive',
     label: '网盘',
-    icon:
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><path d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"></path></svg>',
+    icon: 'lucide:cloud-download',
     items: [
       { name: '百度网盘', url: 'https://pan.baidu.com' },
       { name: '阿里云盘', url: 'https://www.alipan.com' },
@@ -38,8 +34,7 @@ const TOOLS = [
   {
     id: 'mail',
     label: '邮箱',
-    icon:
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"></path></svg>',
+    icon: 'lucide:mail',
     items: [
       { name: 'QQ邮箱', url: 'https://mail.qq.com' },
       { name: '163邮箱', url: 'https://mail.163.com' },
@@ -54,10 +49,8 @@ const initial = (name: string): string => name.trim().charAt(0).toUpperCase() ||
 ---
 
 <header class="sticky top-0 z-20 border-b border-line bg-card/80 backdrop-blur">
-  <!-- 左侧（菜单/折叠汉堡）与右侧（主题）各靠一端：不居中，铺满内容区；桌面水平内距收窄让图标贴近两端 -->
   <div class="relative flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5 lg:px-4">
-    <!-- 移动端 header 居中品牌：桌面展开侧栏同款 logo + 文字，lg 下隐藏（侧栏已有）。
-         左右按钮组宽不对称，故绝对居中而非三列 flex -->
+    <!-- 移动居中品牌（lg 隐藏，桌面侧栏已有）：左右按钮宽不对称 → 绝对居中而非三列 flex -->
     <a
       href="#top"
       aria-label="成医通"
@@ -66,7 +59,8 @@ const initial = (name: string): string => name.trim().charAt(0).toUpperCase() ||
       <img src="/logo.svg" alt="" width="32" height="32" class="h-8 w-8 shrink-0" />
       <span class="leading-none">
         <span class="block text-[16px] font-bold text-ink">成医通</span>
-        <span class="mt-1 hidden text-[10px] text-muted min-[400px]:block">nav.cyitong.top</span>
+        <!-- ≥360px 才显示：logo 在窄屏将副标题与左侧 wiki 隔开不重叠 -->
+        <span class="mt-1 hidden text-[10px] text-muted min-[360px]:block">nav.cyitong.top</span>
       </span>
     </a>
 
@@ -77,41 +71,29 @@ const initial = (name: string): string => name.trim().charAt(0).toUpperCase() ||
         aria-label="打开菜单"
         aria-expanded="false"
         class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink lg:hidden"
-        set:html={MENU_SVG}
-      ></button>
+      >
+        <Icon name={MENU_ICON} class="h-6 w-6" aria-hidden="true" />
+      </button>
 
-      <!-- 桌面端：折叠/展开侧边栏图标条（默认展开，aria 由 nav-sidebar 同步） -->
+      <!-- 桌面端折叠侧栏（aria 由 nav-sidebar 同步） -->
       <button
         type="button"
         data-sidebar-toggle
         aria-label="收起侧边栏"
         aria-expanded="true"
         class="hidden h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink lg:grid"
-        set:html={MENU_SVG}
-      ></button>
+      >
+        <Icon name={MENU_ICON} class="h-6 w-6" aria-hidden="true" />
+      </button>
 
-      <!-- wiki：汉堡按钮右侧，跳转 wiki.cyitong.top -->
+      <!-- wiki 入口 -->
       <a
         href="https://wiki.cyitong.top"
         aria-label="wiki"
         title="wiki"
         class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="h-5 w-5 shrink-0"
-          aria-hidden="true"
-        >
-          <path
-            d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"
-          />
-        </svg>
+        <Icon name="lucide:book-open" class="h-5 w-5 shrink-0" aria-hidden="true" />
         wiki
       </a>
     </div>
@@ -128,9 +110,9 @@ const initial = (name: string): string => name.trim().charAt(0).toUpperCase() ||
             title={tool.label}
             class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
           >
-            <span class="inline-flex shrink-0" aria-hidden="true" set:html={tool.icon}></span>
+            <Icon name={tool.icon} class="h-5 w-5 shrink-0" aria-hidden="true" />
             {tool.label}
-            <span class="inline-flex shrink-0" aria-hidden="true" set:html={CARET_SVG}></span>
+            <Icon name={CARET_ICON} class="h-3 w-3 shrink-0 opacity-70" aria-hidden="true" />
           </button>
           <div
             data-menu-panel
@@ -159,26 +141,16 @@ const initial = (name: string): string => name.trim().charAt(0).toUpperCase() ||
       ))}
 
       <nav-theme-toggle />
-      <!-- GitHub 源码：跳转 cyitong-nav 仓库（放最右） -->
+      <!-- GitHub 源码（最右） -->
       <a
         href="https://github.com/linlinli000/cyitong-nav"
         target="_blank"
-        rel="noopener"
+        rel="noopener noreferrer"
         aria-label="GitHub 源码"
         title="GitHub 源码"
         class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="h-6 w-6"
-          aria-hidden="true"
-        >
-          <path
-            d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-          />
-        </svg>
+        <Icon name="lucide:github" class="h-6 w-6" aria-hidden="true" />
       </a>
     </div>
   </div>

@@ -2,8 +2,6 @@
 
 成都医学院师生专属导航页，WebStack 侧边栏风格。汇集校内系统、医学文献、AI 工具与常用在线工具的快捷入口，另有搜索、二维码/镜像弹窗、顶部快捷下拉等增强。
 
-> 本项目是旧 [成医通](https://github.com/linlinli000/cyitong-nav)（Vue + Vite）的**完全重构**，全部代码重新编写，仅沿用其分类标准、链接数据与静态图标资源。
-
 ## 技术栈
 
 | 层面 | 方案 |
@@ -11,6 +9,7 @@
 | 框架 | **Astro 7**（纯静态输出，Content Layer API） |
 | 数据层 | Content Layer + **glob() loader** + **Zod v4** 校验（YAML） |
 | 样式 | **Tailwind CSS v4**（`@tailwindcss/vite`，`@theme` 语义令牌，类名暗色） |
+| 图标 | `astro-icon` 构建期内联（heroicons v2 / lucide，模板内）；运行期走 lucide symbol sprite（Web 组件 `<use>`） |
 | 交互 | 原生 **TypeScript Web Components** + 普通增强模块（自注册/副作用导入，无框架） |
 | 二维码 | `qrcode` npm 包（浏览器端生成） |
 
@@ -39,14 +38,16 @@ cyitong-nav/
 │       ├── study/  webtools/
 │       └── （共 96 个 .webp，与 YAML 里的链接 id 一一对应）
 └── src/
-    ├── content.config.ts    # ★ Content Layer 定义：glob 加载 + Zod 两级模型校验
+    ├── content.config.ts    # ★ Content Layer 定义：glob 加载 + Zod 两级模型校验 + 导出 Mirror 类型
     ├── data/
     │   ├── sites/           # ★ 7 个一级分类，每个分类一个 YAML 文件（唯一数据源）
-    │   ├── category-icons.ts # 7 个分类图标 → heroicons SVG 路径（categoryIconSvg()）
-    │   └── search-engines.ts # 搜索范围 tab（站内/搜索/社区/文献检索）+ 13 个外部引擎（{q} 模板）
-    ├── styles/global.css    # Tailwind v4 + @theme 令牌 + .dark 覆盖 + 宿主/分段控件等样式
+    │   ├── category-icons.ts # yaml 分类 icon 语义键 → heroicons v2 solid 图标名（categoryIcon()）
+    │   └── search-engines.ts # 搜索范围 tab（站内/搜索/社区/文献检索）+ 各 scope 外部引擎（{q} 模板）
+    ├── lib/
+    │   └── icon-sprite.ts   # ★ 运行期图标 symbol sprite（服务端专用，勿被客户端导入）
+    ├── styles/global.css    # Tailwind v4 + @theme 令牌 + .dark 覆盖 + 折叠/分段控件等样式
     ├── layouts/
-    │   └── Layout.astro     # html 壳：SEO/OG、防闪烁主题、<nav-dialog>、#site-index
+    │   └── Layout.astro     # html 壳：SEO/OG、防闪烁主题、注入 icon sprite + #site-index
     ├── pages/
     │   ├── index.astro      # 唯一首页：getCollection → 组装页面 + 序列化搜索索引
     │   └── 404.astro
@@ -67,9 +68,12 @@ cyitong-nav/
             ├── nav-sidebar.ts      # 折叠持久化 + 滚动高亮 + 移动端抽屉
             ├── nav-theme-toggle.ts # 暗色切换（localStorage 持久化）
             ├── nav-backtotop.ts    # 回到顶部
+            ├── icons.ts            # 运行期图标：RUNTIME_ICON_NAMES + iconEl()（<use href> 引用 sprite）
+            ├── html-escape.ts      # HTML 文本/属性转义（客户端模板拼串用）
             └── header-dropdown.ts  # 顶部栏快速下拉（hover 展开；普通模块，非自定义元素）
-    └── dist/                # build 产物（构建时生成，不入库）
 ```
+
+`dist/`（构建产物，不入库）在仓库根目录，非 src 内。
 
 ## 数据模型（二级分类）
 
@@ -80,7 +84,7 @@ cyitong-nav/
 order: 1              # 一级分类排序（glob 不保证顺序，必须显式给出）
 id: campus            # 分类 id，需与文件名一致
 name: 成医生活
-icon: building        # 对应 category-icons.ts 里的 SVG 路径 key
+icon: building        # 语义键 → category-icons.ts → heroicons v2 solid 图标
 subs:
   - id: finance       # 二级分类 id
     name: 财务
@@ -126,6 +130,13 @@ subs:
 ```
 
 **`web/` 下也有非自定义元素的普通增强模块**（如 `header-dropdown.ts`），它不定义元素、只挂事件监听，同样是「副作用导入 + 在使用处 `<script>` 引入」，同样不能省略或挂 `client:*`。
+
+### 两套图标系统（勿混淆）
+
+- **SSR 模板图标**（`.astro` 里静态标记，顶栏/分类/箭头等）：`astro-icon` `<Icon name="heroicons:…|lucide:…">`，构建期内联成 sprite，零运行时 JS。来源本地 `@iconify-json/heroicons|lucide`，换图直接用 iconify 集内名字，勿手抄 path。
+- **运行期图标**（自定义元素 `innerHTML` 里动态拼的，如搜索/历史/明暗/关闭/回顶）：用**单一 lucide symbol sprite**——`src/lib/icon-sprite.ts` 构建期从 `@iconify-json/lucide/icons.json` 生成 `<symbol>` 注入页面，组件用 `web/icons.ts` 的 `iconEl()` 输出 `<svg><use href="#icon-x">`。加新运行期图标只需往 `RUNTIME_ICON_NAMES` 加语义名（lucide 须有该名或其别名）。
+
+> 为什么不用一套：astro-icon 是 SSR 组件，无法在浏览器端 innerHTML 里用；sprite 方案让 Web 组件与模板图标同源（都是 iconify JSON）、零 path 复制。
 
 ### 搜索数据链路
 

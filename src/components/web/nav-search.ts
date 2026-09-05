@@ -1,9 +1,8 @@
-/**
- * <nav-search> 搜索岛：站内搜索 + 引擎搜索 + 搜索历史
- * 站内数据来自 <script id="site-index"> 序列化索引（构建期注入）。
- */
+/** <nav-search>：站内/引擎搜索、历史、键盘导航 */
 import { ENGINES, PLACEHOLDERS, SCOPE_TABS, engineUrl, type SearchScope } from '../../data/search-engines';
 import { searchSites, type SiteRecord } from './search-utils';
+import { escapeHtml as escapeAttr } from './html-escape';
+import { iconEl } from './icons';
 
 const HISTORY_KEY = 'nav:history';
 const SCOPE_KEY = 'nav:scope';
@@ -26,15 +25,6 @@ function storageSet(key: string, value: unknown): void {
     /* 隐私模式等场景忽略 */
   }
 }
-
-function escapeAttr(s: string): string {
-  return s.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]!);
-}
-
-const SEARCH_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>';
-const HISTORY_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg>';
 
 class NavSearch extends HTMLElement {
   private scope: SearchScope = loadScope();
@@ -78,6 +68,15 @@ class NavSearch extends HTMLElement {
     document.removeEventListener('click', this.handleDocClick);
   }
 
+  /** 弹窗属性（data-qr/data-mirrors）：有才带，无则省略——避免空属性命中 nav-dialog 的文档级委托 */
+  private dialogAttrs(r: SiteRecord): string {
+    const qr = r.qr
+      ? ` data-qr="${escapeAttr(r.url)}"${r.qrNote ? ` data-qr-note="${escapeAttr(r.qrNote)}"` : ''}`
+      : '';
+    const mirrors = r.mirrors?.length ? ` data-mirrors="${escapeAttr(JSON.stringify(r.mirrors))}"` : '';
+    return `${qr}${mirrors}`;
+  }
+
   private readIndex(): SiteRecord[] {
     try {
       const el = document.getElementById('site-index');
@@ -97,7 +96,7 @@ class NavSearch extends HTMLElement {
   private render(): void {
     const { scope } = this;
     this.innerHTML = `
-      <!-- 第一层：搜索范围选项卡（分段胶囊，沿用旧版设计；桌面 sm+ 放大一档与输入条协调） -->
+      <!-- 第一层：搜索范围胶囊 tab（sm+ 放大一档） -->
       <div class="mb-3 flex justify-center sm:mb-4">
         <div class="inline-flex items-center gap-1 rounded-full border border-line bg-surface p-1 sm:gap-1.5 sm:p-1.5">
           ${SCOPE_TABS.map(
@@ -114,7 +113,7 @@ class NavSearch extends HTMLElement {
         </div>
       </div>
 
-      <!-- 输入框与下拉共处一个 relative：下拉 absolute 紧贴输入框底、盖住下方按钮 -->
+      <!-- relative：下拉 absolute 紧贴输入框底，盖住下方按钮层 -->
       <div class="relative">
         <div
           class="flex items-center gap-2 rounded-xl border border-line bg-field px-3 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all sm:gap-3 sm:px-4 sm:py-2 dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
@@ -124,16 +123,16 @@ class NavSearch extends HTMLElement {
             class="min-w-0 flex-1 bg-transparent py-1.5 text-sm text-ink outline-none placeholder:text-muted sm:py-2 sm:text-[15px]" />
           <button type="button" data-role="submit" aria-label="搜索"
             class="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] bg-brand text-white transition-colors hover:bg-brand-dark active:scale-95 sm:h-10 sm:w-10 dark:text-[#13161c]">
-            ${SEARCH_SVG}
+            ${iconEl('search', 'h-4 w-4')}
           </button>
         </div>
 
-        <!-- 下拉：顶部盖住底部按钮；内容超高时 max-h + 内滚（search-dropdown 细滚动条） -->
+        <!-- 下拉：超高内滚（max-h-96 + 细滚动条） -->
         <div data-role="dropdown"
           class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 hidden max-h-96 overflow-y-auto rounded-xl border border-line bg-field shadow-[0_4px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)]"></div>
       </div>
 
-      <!-- 第三层：站内收录统计 / 搜索引擎按钮（同放大一档） -->
+      <!-- 第三层：站内收录统计 / 引擎按钮 -->
       <div class="mt-3 flex flex-wrap items-center justify-center gap-2 sm:mt-4">
         ${scope === 'site'
           ? `<span class="rounded-full bg-surface/70 px-3.5 py-1.5 text-[13px] text-muted sm:px-4 sm:text-sm dark:bg-black/25">本网站已收录 ${this.records.length} 个常用链接</span>`
@@ -262,7 +261,7 @@ class NavSearch extends HTMLElement {
       const engine = ENGINES[this.scope][this.engineIdx];
       this.dropdown!.innerHTML = `
         <div class="flex items-center gap-3 px-4 py-3 text-sm text-muted">
-          ${SEARCH_SVG}
+          ${iconEl('search', 'h-4 w-4')}
           <span>按回车在 <span class="font-medium text-brand">${engine.name}</span> 中搜索「<span class="text-ink">${escapeAttr(this.query)}</span>」</span>
         </div>`;
       this.showDropdown();
@@ -278,10 +277,7 @@ class NavSearch extends HTMLElement {
     d.innerHTML = this.results
       .map(
         (r, i) => `
-        <a href="${escapeAttr(r.url)}" data-title="${escapeAttr(r.title)}"
-          data-qr="${r.qr ? escapeAttr(r.url) : ''}"
-          data-qr-note="${r.qr && r.qrNote ? escapeAttr(r.qrNote) : ''}"
-          data-mirrors="${r.mirrors?.length ? escapeAttr(JSON.stringify(r.mirrors)) : ''}"
+        <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener noreferrer"${this.dialogAttrs(r)} data-title="${escapeAttr(r.title)}"
           class="flex items-center gap-3 px-3 py-2 transition-colors ${
             i === this.cursor ? 'bg-surface/80' : 'hover:bg-surface/60'
           }">
@@ -315,7 +311,7 @@ class NavSearch extends HTMLElement {
           (h) => `
           <button type="button" data-history="${escapeAttr(h)}"
             class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-ink transition-colors hover:bg-surface/60">
-            <span class="text-muted">${HISTORY_SVG}</span>
+            <span class="text-muted">${iconEl('history', 'h-3.5 w-3.5')}</span>
             <span class="truncate">${escapeAttr(h)}</span>
           </button>`,
         )

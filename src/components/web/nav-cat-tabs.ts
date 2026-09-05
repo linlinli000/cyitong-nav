@@ -1,15 +1,5 @@
-/**
- * <nav-cat-tabs> 一级分类容器内的子分类 tab 过滤 + 卡片折叠
- * - 点击容器内 .cat-tab 按钮，按 data-filter 显隐 .link-tile 卡片（'' = 全部）
- * - 折叠：全部视图下最多展示 3 排（桌面 ≥1024px）/ 5 排（移动端）卡片，
- *   超出部分通过容器内 .cat-more 按钮展开/收起；过滤视图始终展示全部命中卡片
- * - 文档级委托：点击侧边栏 a.sub-link[data-sub-id] → 切到对应 tab 并滚动到容器
- * 静态标记由 CategoryBlock.astro 服务端渲染，此组件仅负责增强。
- *
- * 注意：卡片显隐用内联 style.display，不能用 hidden 属性——
- * LinkCard 根节点带 .flex，会覆盖 UA 的 [hidden]{display:none}。
- * 「查看更多」按钮用 hidden 属性控制，靠 .cat-more[hidden]{display:none} 兜底。
- */
+/** <nav-cat-tabs>：子分类 tab 过滤 + 卡片折叠 + 侧栏子链接联动。静态标记由 CategoryBlock 渲染，仅增强。
+ *  卡片显隐用 style.display（.link-tile 带 .flex 会覆盖 [hidden]）；.cat-more 用 hidden + CSS 兜底。 */
 let delegated = false;
 
 /** 折叠上限（按排数）：桌面端 3 排，移动端 5 排（与 Tailwind lg=1024px 断点一致） */

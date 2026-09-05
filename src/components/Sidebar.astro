@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { categoryIconSvg } from '../data/category-icons';
+import { Icon } from 'astro-icon/components';
+import { categoryIcon } from '../data/category-icons';
 
 interface Props {
   categories: CollectionEntry<'sites'>[];
@@ -13,8 +14,7 @@ const { categories } = Astro.props;
   id="sidebar"
   class="fixed inset-y-0 left-0 z-40 flex w-56 -translate-x-full flex-col border-r border-line bg-card transition-transform duration-200 lg:translate-x-0"
 >
-  <!-- 折叠状态防闪烁：默认展开；若 localStorage 记过"收起"，在首帧前加回类。
-       放在 aside 开头、.site-content 解析之前执行，避免已收起用户先看到展开再跳动。 -->
+  <!-- 折叠防闪烁：localStorage 记过"收起"则首帧前加回 .is-collapsed（先于内容区解析执行） -->
   <script is:inline>
     (function () {
       try {
@@ -49,21 +49,16 @@ const { categories } = Astro.props;
                 title={cat.data.name}
               >
                 <!-- 图标列恒定（折叠成图标条时图标不位移）；文字区在右侧随条宽收缩被裁切/淡出 -->
-                <span class="sidebar-cat-icon shrink-0 text-brand" set:html={categoryIconSvg(cat.data.icon, 'h-5 w-5')}></span>
+                <span class="sidebar-cat-icon shrink-0 text-brand">
+                  <Icon name={categoryIcon(cat.data.icon)} class="h-5 w-5" />
+                </span>
                 <span class="sidebar-cat-meta">
                   <span class="sidebar-cat-name truncate text-[15px]">{cat.data.name}</span>
                   <span class="sidebar-cat-count shrink-0 text-xs text-muted">{linkCount}</span>
-                  <svg
+                  <Icon
+                    name="lucide:chevron-right"
                     class="sidebar-chevron h-4 w-4 shrink-0 text-muted"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m9 18 6-6-6-6"></path>
-                  </svg>
+                  />
                 </span>
               </button>
               <div class="sidebar-sub">

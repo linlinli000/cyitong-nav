@@ -1,10 +1,4 @@
-/**
- * 顶部栏快速工具下拉（<div data-menu> 增强，无自定义元素注册）
- * - 主要交互为 hover：指针悬停立即展开，移出（含到面板外）短暂延迟后收起
- * - 点击按钮仍可开/合（触摸屏等无 hover 场景 + 键盘可达性）；点击面板外 / Esc 关闭
- * - 同组互斥：开一个自动关其他
- * 面板显隐走 global.css 的 [data-menu-panel] 过渡，此处只切 .open + aria-expanded。
- */
+/** TopBar 快捷下拉（div[data-menu] 增强）*/
 const PANEL_ATTR = 'data-menu-panel';
 const BTN_ATTR = 'data-menu-btn';
 const ITEM_ATTR = 'data-menu-item';
@@ -75,8 +69,7 @@ roots.forEach((root) => {
     if (isOpen(root)) scheduleClose(root);
   });
 
-  // 点击仅负责“打开”（触摸屏 tap 先于 hover 打开它）；已在展开态时点击不再收起，
-  // 避免桌面 hover 展开后一点按钮就关闭。收起走移出/外点/Esc/选中项。
+  // 点击只开不关（防 hover 展开后被误点收起）
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     if (!isOpen(root)) openRoot(root);
