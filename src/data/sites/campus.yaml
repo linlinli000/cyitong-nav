@@ -1,0 +1,117 @@
+order: 1
+id: campus
+name: 成医生活
+icon: building
+subs:
+  - id: portal
+    name: 门户
+    links:
+      - id: main
+        title: 成医官网
+        pinyin: chengyiguanwang
+        pinyinFirst: cygw
+        url: https://www.cmc.edu.cn
+      - id: lib
+        title: 图书馆
+        pinyin: tushuguan
+        pinyinFirst: tsg
+        url: https://lib.cmc.edu.cn
+  - id: teach
+    name: 教学管理
+    links:
+      - id: jwxt
+        title: 教务系统
+        pinyin: jiaowuxitong
+        pinyinFirst: jwxt
+        url: https://jwweb.cmc.edu.cn/
+      - id: xgw
+        title: 学工系统
+        pinyin: xuegongxitong
+        pinyinFirst: xgxt
+        url: https://xg.cmc.edu.cn/cas
+      - id: yjsgl
+        title: 研管系统
+        pinyin: yanguanxitong
+        pinyinFirst: ygxt
+        url: https://yjsgl.cmc.edu.cn/
+  - id: finance
+    name: 财务
+    links:
+      - id: zhifu
+        title: 财务系统
+        pinyin: caiwuxitong
+        pinyinFirst: cwxt
+        url: https://zhifu.cmc.edu.cn/dlpt/
+      - id: alipay
+        title: 计划财务处
+        pinyin: jihuacaiwuchu
+        pinyinFirst: jhcwc
+        url: "alipays://platformapi/startapp?appId=20000042&publicBizType=LIFE_APP&publicId=2018052860256183"
+        qr: true
+        qrNote: 请使用支付宝扫码，将自动打开财务处服务号
+  - id: life
+    name: 校园生活
+    links:
+      - id: ykt
+        title: 一卡通
+        pinyin: yikatong
+        pinyinFirst: ykt
+        url: "http://222.197.128.200/Cardholder/Cardholder.aspx"
+      - id: wbdt
+        title: 网办大厅
+        pinyin: wangbandating
+        pinyinFirst: wbdt
+        url: "https://efw.cmc.edu.cn/EIP/nonlogin/homePage.htm"
+      - id: zhsys
+        title: 智慧实验室
+        pinyin: zhihuishiyanshi
+        pinyinFirst: zhsys
+        url: https://syslab.cmc.edu.cn/
+      - id: carsi
+        title: CARSI资源
+        pinyin: carsiziyuan
+        pinyinFirst: carsizy
+        url: https://ds.carsi.edu.cn/resource/resource.php
+      - id: portal
+        title: 校园网认证
+        pinyin: xiaoyuanwangrenzheng
+        pinyinFirst: xywrz
+        url: "http://192.168.43.4/"
+      - id: a4yun
+        title: 校打印店
+        pinyin: xiaodayindian
+        pinyinFirst: xdyd
+        url: "https://m.q.qq.com/a/p/1110690941?s=%2Fpages%2Ftabbar%2Findex%3Fstore_id%3D32"
+        qr: true
+        qrNote: 请使用QQ扫码，将自动打开A4云铺小程序
+  - id: contact
+    name: 通讯
+    links:
+      - id: qywx
+        title: 校企业微信
+        pinyin: xiaoqiyeweixin
+        pinyinFirst: xqywx
+        url: https://metc.cmc.edu.cn/info/1019/2280.htm
+      - id: qqmail
+        title: QQ邮箱
+        pinyin: qqyouxiang
+        pinyinFirst: qqyx
+        url: https://mail.qq.com
+      - id: mail163
+        title: 163邮箱
+        pinyin: "163youxiang"
+        pinyinFirst: "163yx"
+        url: https://mail.163.com
+  - id: degree
+    name: 学籍/升学
+    links:
+      - id: chsi
+        title: 学信档案
+        pinyin: xuexindangan
+        pinyinFirst: xxda
+        url: https://www.chsi.com.cn
+      - id: yzchsi
+        title: 研招网
+        pinyin: yanzhaowang
+        pinyinFirst: yzw
+        url: https://yz.chsi.com.cn/

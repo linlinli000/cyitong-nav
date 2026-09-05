@@ -1,0 +1,337 @@
+@import "tailwindcss";
+
+/* 类名暗色模式：.dark 作用域下启用 dark: 变体 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
+  /* 调色板沿用旧版成医通（Vue 版）：品牌蓝 #378ADD，页面底 #F4F8FD */
+  --color-surface: #f4f8fd;
+  --color-card: #ffffff;
+  --color-field: #ffffff; /* 输入框/浮层底色（暗色下比卡片略亮） */
+  --color-ink: #1f2937;
+  --color-muted: #6b7280;
+  --color-line: #e5e7eb;
+  --color-brand: #378add;
+  --color-brand-dark: #1a5fa8;
+}
+
+/* 暗色主题语义变量覆盖：One Dark 中性深灰盘，背景不再偏蓝（原为 slate-900/800/700） */
+.dark {
+  color-scheme: dark;
+  --color-surface: #21252b; /* 页面底 */
+  --color-card: #282c34; /* 卡片 */
+  --color-field: #2f343c; /* 输入框/浮层 */
+  --color-ink: #d5d7dc;
+  --color-muted: #949aa4;
+  --color-line: #3e4451;
+  /* 品牌色统一为 One Dark 蓝 #61afef：文本/边框/tab·侧栏高亮/填充按钮共用同一令牌，
+     亮色按钮因其底色变亮，暗色下按钮文字改为深色（见 nav-search） */
+  --color-brand: #61afef;
+  --color-brand-dark: #7fc3f5; /* 填充按钮暗色 hover（更亮一档） */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* 页面底纹沿用旧版：品牌色点状网格（22px 间距），暗色换 slate 淡点 */
+body {
+  @apply bg-surface text-ink antialiased;
+  background-image: radial-gradient(circle, rgba(55, 138, 221, 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.dark body {
+  background-image: radial-gradient(circle, rgba(178, 184, 194, 0.06) 1px, transparent 1px);
+}
+
+/* Web Component 宿主 */
+nav-search {
+  display: block;
+}
+nav-theme-toggle {
+  display: block;
+}
+nav-sidebar {
+  display: block;
+}
+nav-dialog {
+  display: block;
+}
+nav-backtotop {
+  display: block;
+}
+nav-cat-tabs {
+  display: block;
+}
+
+/* 侧边栏折叠面板过渡 */
+.sidebar-sub {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+.sidebar-group.open .sidebar-sub {
+  max-height: 480px;
+  opacity: 1;
+}
+.sidebar-chevron {
+  transition: transform 0.2s ease;
+}
+.sidebar-group.open .sidebar-chevron {
+  transform: rotate(90deg);
+}
+
+/* 侧边栏滚动区域隐藏滚动条 */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* 搜索下拉结果滚动 */
+.search-dropdown {
+  scrollbar-width: thin;
+}
+
+/* 链接卡片 hover 提升 */
+.link-tile {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.link-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+.dark .link-tile:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+.link-tile:hover .link-tile-icon {
+  border-color: var(--color-brand);
+}
+
+.link-tile-icon {
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+.link-tile:hover .link-tile-icon {
+  transform: scale(1.06);
+}
+
+/* 侧边栏分类项滚动监听高亮（颜色统一走 --color-brand，暗色下自动为 One Dark 蓝） */
+.sidebar-cat-link.active {
+  color: var(--color-brand);
+  background: color-mix(in srgb, var(--color-brand) 10%, transparent);
+}
+
+/* ── 折叠几何：图标固定在恒定列位，收起/展开时图标不动 ──────────────────
+   所有内边距在展开与折叠态保持一致（内容起点恒为折叠图标条的中轴 x=32px：
+   nav px-2=8 + 行 pl=14 = 图标左缘 22 → 20px 图标中心 32；header pl=14 →
+   36px logo 中心同样 32）。折叠图标条 4rem=64px（2×32）让图标恰好居中。
+   不再靠切换 justify-content 做"居中"，所以文字被裁切/淡出时图标不会被条宽拖走。 */
+#sidebar .sidebar-header {
+  padding-left: 14px;
+  padding-right: 14px; /* 收起时 logo(36px) 恰好容纳，避免被 .sidebar-brand 裁切 */
+}
+#sidebar .sidebar-brand {
+  overflow: hidden;
+}
+#sidebar .sidebar-brand img {
+  /* 折叠条内可用宽仅 35px（64 − 1px 边框 − 28 内距），preflight 的 img{max-width:100%}
+     会把 36px 图标压到 35，展开后变回 36 → 视觉上 logo"变大"1px。固定不随父宽收缩。 */
+  max-width: none;
+}
+#sidebar .sidebar-brand-text {
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+#sidebar .sidebar-cat-toggle {
+  padding-left: 14px;
+  padding-right: 8px;
+  overflow: hidden;
+  text-align: left; /* 覆盖 <button> UA 默认居中：否则拉满宽度的名字会在盒内居中，图标与文字间留大空 */
+}
+#sidebar .sidebar-cat-meta {
+  display: inline-flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 0.375rem;
+  overflow: hidden;
+  transition: opacity 0.15s ease;
+}
+#sidebar .sidebar-cat-name {
+  /* 名字按内容宽排完即止（不撑满）；数字+箭头簇靠 .count 的 margin-left:auto 钉到行右侧。
+     字到簇的间距由行剩余宽决定 → 由桌面展开宽度控制（见下方 12rem）。min-width:0 保留窄宽截断。 */
+  flex: 0 1 auto;
+  min-width: 0;
+}
+#sidebar .sidebar-cat-count {
+  /* 吃掉名字右侧的剩余空间，把「计数+箭头」整簇推到行的最右，两者仍由 meta 的 gap 保持相邻 */
+  margin-left: auto;
+}
+#sidebar .sidebar-group .sub-link {
+  padding-left: 14px; /* 与父级图标左缘（22px）对齐 */
+}
+
+/* ── 桌面端「折叠成图标条」（≥lg 生效，移动端抽屉始终全宽） ─────────────
+   状态载体是 <aside#sidebar> 的 .is-collapsed（默认展开：SSR 不带该类；
+   若 localStorage[nav:rail]==collapsed，Sidebar 开头的 inline bootstrap 会在
+   内容区解析前加回该类 → 无 FOUC）。状态经 nav-sidebar toggle 持久化到 nav:rail。
+   内容区留白经 nav-sidebar:has(...) + .site-content 推导，两侧永不失同步。 */
+@media (min-width: 1024px) {
+  /* 宽度/留白过渡挂在无条件选择器上，收/展两个方向都会动 */
+  #sidebar {
+    transition: width 0.2s ease;
+  }
+  .site-content {
+    transition: padding-left 0.2s ease;
+  }
+
+  /* 展开宽基础用 .w-56 = 14rem（224px，Sidebar.astro / index.astro lg:pl-56）：
+     7 个一级分类名都 ~4 字，簇钉最右时字↔簇距离由展开宽决定 → 收窄即让两者更近。
+     移动抽屉与桌面共用同一 .w-56。折叠态（图标条）仍单独 4rem。 */
+  nav-sidebar:has(#sidebar:not(.is-collapsed)) + .site-content {
+    padding-left: 14rem;
+  }
+  /* 折叠：内容让位到图标条宽 */
+  nav-sidebar:has(#sidebar.is-collapsed) + .site-content {
+    padding-left: 4rem;
+  }
+  #sidebar:not(.is-collapsed) {
+    width: 14rem;
+  }
+
+  /* 侧边栏收窄为图标条：文字区淡出并被右缘裁切，图标列因内边距恒定而不动 */
+  #sidebar.is-collapsed {
+    width: 4rem;
+  }
+  #sidebar.is-collapsed .sidebar-cat-meta,
+  #sidebar.is-collapsed .sidebar-brand-text {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* 分类手风琴与页脚整体隐藏（它们不在折叠条内）；不用 display:none 处理文字区，
+     否则会跳过上面的淡出过渡 */
+  #sidebar.is-collapsed .sidebar-sub,
+  #sidebar.is-collapsed .sidebar-footer {
+    display: none;
+  }
+}
+
+/* 顶部栏下拉面板（data-menu）：默认隐藏，.open 显示；visibility 延迟隐藏以配合淡出 */
+[data-menu-panel] {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0s linear 0.15s;
+}
+[data-menu-panel].open {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0s;
+}
+
+/* 收起态 hover/focus 浮出子分类面板（nav-sidebar 宿主下，fixed 定位，避让 aside 的 translate） */
+.sidebar-flyout {
+  display: none;
+  position: fixed;
+  z-index: 50;
+  min-width: 12rem;
+  max-width: 14rem;
+  padding: 0.4rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-card);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+.dark .sidebar-flyout {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+.sidebar-flyout.open {
+  display: block;
+}
+.sidebar-flyout-title {
+  padding: 0.15rem 0.6rem 0.4rem;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+/* 克隆来的 .sidebar-sub 无 .open 祖先，会命中 base 的 max-height:0 / opacity:0 —— 必须抵消 */
+.sidebar-flyout .sidebar-sub {
+  max-height: none;
+  opacity: 1;
+  overflow: visible;
+}
+
+/* 分类容器内子分类 tab：一整块分段控件（圆角长方形，非胶囊），按钮本身无独立边框 */
+.cat-tab {
+  border: none;
+  background: transparent;
+  color: var(--color-muted);
+  border-radius: 0.5rem; /* rounded-lg：圆角长方形，不是全圆胶囊 */
+  padding: 0.3rem 0.8rem;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.cat-tab:hover {
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--color-ink) 7%, transparent);
+}
+.cat-tab.active {
+  color: var(--color-brand);
+  background: var(--color-card);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+.dark .cat-tab.active {
+  color: #13161c;
+  background: var(--color-brand);
+}
+
+/* 卡片折叠「查看更多」按钮（hidden 用 JS 切换，需显式兜底 display:none） */
+.cat-more {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0.75rem auto 0;
+  padding: 0.4rem 1.1rem;
+  border: 1px solid var(--color-line);
+  border-radius: 9999px;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.cat-more:hover {
+  color: var(--color-brand);
+  border-color: var(--color-brand);
+}
+.cat-more[hidden] {
+  display: none;
+}
+.cat-more-chevron {
+  transition: transform 0.2s ease;
+}
+.cat-more.expanded .cat-more-chevron {
+  transform: rotate(180deg);
+}

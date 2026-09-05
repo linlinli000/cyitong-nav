@@ -1,0 +1,62 @@
+order: 4
+id: cnlit
+name: 中文文献
+icon: document-text
+subs:
+  - id: journal
+    name: 期刊评价
+    links:
+      - id: fenqubiao
+        title: 中科院期刊分区表
+        pinyin: zhongkeyuanqikanfenqubiao
+        pinyinFirst: zkyqkfqb
+        url: https://www.fenqubiao.com
+  - id: chinese
+    name: 中文数据库
+    links:
+      - id: cnki
+        title: 知网
+        pinyin: zhiwang
+        pinyinFirst: zw
+        url: https://www.cnki.net
+      - id: cqvip
+        title: 维普期刊
+        pinyin: weipuqikan
+        pinyinFirst: wpqk
+        url: https://www.cqvip.com
+      - id: wanfang
+        title: 万方数据
+        pinyin: wanfangshuju
+        pinyinFirst: wfsj
+        url: https://www.wanfangdata.com.cn
+  - id: medlit
+    name: 医学专业文献
+    links:
+      - id: sinomed
+        title: 中国生物医学文献
+        pinyin: zhongguoshengwuyixuewenxian
+        pinyinFirst: zgswyxwx
+        url: https://www.sinomed.ac.cn
+      - id: yiigle
+        title: 中华医学期刊
+        pinyin: zhonghuayixueqikan
+        pinyinFirst: zhyxqk
+        url: https://www.yiigle.com/index/
+  - id: scholsearch
+    name: 综合学术搜索
+    links:
+      - id: baiduxueshu
+        title: 百度学术
+        pinyin: baiduxueshu
+        pinyinFirst: bdxs
+        url: https://xueshu.baidu.com/
+      - id: pubscholar
+        title: PubScholar
+        pinyin: pubscholar
+        pinyinFirst: pubscholar
+        url: https://pubscholar.cn
+      - id: duxiu
+        title: 读秀学术搜索
+        pinyin: duxiuxueshusousuo
+        pinyinFirst: dxxsss
+        url: https://www.duxiu.com

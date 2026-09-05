@@ -1,0 +1,82 @@
+order: 3
+id: exam
+name: 考试比赛
+icon: academic-cap
+subs:
+  - id: domestic
+    name: 国内通用考试
+    links:
+      - id: cet
+        title: 四六级报名
+        pinyin: siliujibaoming
+        pinyinFirst: sljbm
+        url: https://cet-bm.neea.edu.cn
+      - id: ncre
+        title: 计算机报名
+        pinyin: jisuanjibaoming
+        pinyinFirst: jsjbm
+        url: https://ncre-bm.neea.edu.cn
+      - id: putonghua
+        title: 普通话报名
+        pinyin: putonghuabaoming
+        pinyinFirst: pthbm
+        url: https://bm.cltt.org
+      - id: ntce
+        title: 教资报名
+        pinyin: jiaozibaoming
+        pinyinFirst: jzbm
+        url: https://ntce.neea.edu.cn
+  - id: medexam
+    name: 医学考试
+    links:
+      - id: nmec
+        title: 国家医学考试网
+        pinyin: guojiayixuekaoshiwang
+        pinyinFirst: gjyxksw
+        url: https://www1.nmec.org.cn
+  - id: foreign
+    name: 外语考试
+    links:
+      - id: toefl
+        title: 托福
+        pinyin: tuofu
+        pinyinFirst: tf
+        url: https://www.toefl.cn
+      - id: ielts
+        title: 雅思
+        pinyin: yasi
+        pinyinFirst: ys
+        url: https://www.chinaielts.org
+      - id: jlpt
+        title: 日本语能力测试
+        pinyin: ribenyunengliceshi
+        pinyinFirst: rbynlcs
+        url: https://jlpt.neea.cn/index.do
+  - id: contest
+    name: 大学生比赛
+    links:
+      - id: tiaozhanbei
+        title: 挑战杯
+        pinyin: tiaozhanbei
+        pinyinFirst: tzb
+        url: https://www.tiaozhanbei.net
+      - id: cyncss
+        title: CICSIC
+        pinyin: cicsic
+        pinyinFirst: cicsic
+        url: https://cy.ncss.cn
+      - id: culsc
+        title: CULSC
+        pinyin: culsc
+        pinyinFirst: culsc
+        url: https://culsc.cn
+      - id: ucc
+        title: 外研社·国才杯
+        pinyin: "waiyanshe·guocaibei"
+        pinyinFirst: "wys·gcb"
+        url: https://ucc.fltrp.com
+      - id: neccs
+        title: 全国大学生英语竞赛
+        pinyin: quanguodaxueshengyingyujingsai
+        pinyinFirst: qgdxsyyjs
+        url: https://www.chinaneccs.cn

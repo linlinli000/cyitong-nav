@@ -1,0 +1,97 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { categoryIconSvg } from '../data/category-icons';
+
+interface Props {
+  categories: CollectionEntry<'sites'>[];
+}
+
+const { categories } = Astro.props;
+---
+
+<aside
+  id="sidebar"
+  class="fixed inset-y-0 left-0 z-40 flex w-56 -translate-x-full flex-col border-r border-line bg-card transition-transform duration-200 lg:translate-x-0"
+>
+  <!-- 折叠状态防闪烁：默认展开；若 localStorage 记过"收起"，在首帧前加回类。
+       放在 aside 开头、.site-content 解析之前执行，避免已收起用户先看到展开再跳动。 -->
+  <script is:inline>
+    (function () {
+      try {
+        if (localStorage.getItem('nav:rail') === 'collapsed') {
+          document.getElementById('sidebar').classList.add('is-collapsed');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <!-- heading：仅品牌。桌面端折叠/展开汉堡在 TopBar（header）内；h-14 让 logo 中心与 TopBar 行同高 -->
+  <div class="sidebar-header flex h-14 items-center px-4">
+    <a href="#top" class="sidebar-brand flex min-w-0 flex-1 items-center gap-2.5">
+      <img src="/logo.svg" alt="成医通" width="36" height="36" class="h-9 w-9 shrink-0" />
+      <span class="sidebar-brand-text">
+        <span class="block text-lg font-bold leading-tight text-ink">成医通</span>
+        <span class="block text-[11px] text-muted">nav.cyitong.top</span>
+      </span>
+    </a>
+  </div>
+
+  <nav class="scrollbar-hide flex-1 overflow-y-auto px-2 py-4" aria-label="分类导航">
+    <div class="space-y-1">
+      {
+        categories.map((cat) => {
+          const linkCount = cat.data.subs.reduce((n, s) => n + s.links.length, 0);
+          return (
+            <div class:list={['sidebar-group']} data-cat={cat.data.id}>
+              <button
+                type="button"
+                class="sidebar-cat-toggle sidebar-cat-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
+                aria-expanded="true"
+                title={cat.data.name}
+              >
+                <!-- 图标列恒定（折叠成图标条时图标不位移）；文字区在右侧随条宽收缩被裁切/淡出 -->
+                <span class="sidebar-cat-icon shrink-0 text-brand" set:html={categoryIconSvg(cat.data.icon, 'h-5 w-5')}></span>
+                <span class="sidebar-cat-meta">
+                  <span class="sidebar-cat-name truncate text-[15px]">{cat.data.name}</span>
+                  <span class="sidebar-cat-count shrink-0 text-xs text-muted">{linkCount}</span>
+                  <svg
+                    class="sidebar-chevron h-4 w-4 shrink-0 text-muted"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="m9 18 6-6-6-6"></path>
+                  </svg>
+                </span>
+              </button>
+              <div class="sidebar-sub">
+                <div class="space-y-0.5 pt-0.5">
+                  {
+                    cat.data.subs.map((sub) => (
+                      <a
+                        href={`#${cat.data.id}`}
+                        data-sub-id={sub.id}
+                        data-cat={cat.data.id}
+                        class="sub-link block rounded-lg px-3 py-1.5 text-[13px] text-muted transition-colors hover:bg-surface hover:text-ink"
+                      >
+                        {sub.name}
+                      </a>
+                    ))
+                  }
+                </div>
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </nav>
+
+  <div class="sidebar-footer border-t border-line px-5 py-4">
+    <p class="text-xs text-muted">成医通 · 成都医学院</p>
+  </div>
+</aside>
+
+<div data-sidebar-backdrop class="fixed inset-0 z-30 hidden bg-black/50 lg:hidden"></div>

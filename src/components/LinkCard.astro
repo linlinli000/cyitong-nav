@@ -1,0 +1,54 @@
+---
+interface Props {
+  categoryId: string;
+  /** 所属二级分类 id：供 <nav-cat-tabs> 按 tab 过滤显隐 */
+  sub: string;
+  link: {
+    id: string;
+    title: string;
+    url: string;
+    qr?: boolean;
+    qrNote?: string;
+    mirrors?: { label: string; url: string }[];
+  };
+}
+
+const { categoryId, sub, link } = Astro.props;
+const hasQr = !!link.qr;
+const hasMirrors = !!link.mirrors?.length;
+const fallback = link.title.trim().charAt(0) || '·';
+---
+
+<a
+  href={link.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  data-sub={sub}
+  data-title={link.title}
+  data-qr={hasQr ? link.url : undefined}
+  data-qr-note={hasQr ? link.qrNote : undefined}
+  data-mirrors={hasMirrors ? JSON.stringify(link.mirrors) : undefined}
+  title={link.title}
+  class="link-tile group flex items-center gap-3 rounded-2xl border border-line bg-card p-3"
+>
+  <img
+    src={`/icons/${categoryId}/${link.id}.webp`}
+    alt=""
+    width="40"
+    height="40"
+    loading="lazy"
+    decoding="async"
+    data-letter={fallback}
+    class="link-tile-icon h-10 w-10 shrink-0 rounded-xl border border-line object-cover"
+    onerror="var s=document.createElement('span');s.className='link-tile-icon grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-brand/10 text-lg font-bold text-brand';s.textContent=this.dataset.letter;this.replaceWith(s)"
+  />
+  <span class="min-w-0">
+    <span class="block truncate text-sm font-medium text-ink transition-colors group-hover:text-brand">
+      {link.title}
+    </span>
+    <span class="mt-0.5 flex items-center gap-1 text-xs text-muted">
+      {hasMirrors && <span class="rounded bg-brand/10 px-1 py-0.5 font-medium text-brand">镜像</span>}
+      {hasQr && <span class="rounded bg-brand/10 px-1 py-0.5 font-medium text-brand">扫码</span>}
+    </span>
+  </span>
+</a>

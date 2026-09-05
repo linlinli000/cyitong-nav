@@ -1,0 +1,74 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  searchIndexJson?: string;
+}
+
+const {
+  title = '成医通 | 导航服务',
+  description = '成都医学院学生专属导航页，汇集校内系统、医学文献、AI 工具、在线学习等常用链接。',
+  searchIndexJson = '',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta
+      name="keywords"
+      content="成都医学院,成医,成医通,导航,校内系统,医学文献,文献检索,AI工具,在线工具"
+    />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="成医通 | 导航服务" />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:url" content="https://nav.cyitong.top" />
+    <meta property="og:site_name" content="成医通" />
+
+    <!-- 暗色模式防闪烁：优先用户手动选择，未设置时跟随系统 -->
+    <script is:inline>
+      (function () {
+        var stored = null;
+        try { stored = localStorage.getItem('theme'); } catch (e) {}
+        var dark =
+          stored === 'dark' ||
+          (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (dark) document.documentElement.classList.add('dark');
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+          try {
+            if (localStorage.getItem('theme') === null) {
+              document.documentElement.classList.toggle('dark', e.matches);
+            }
+          } catch (ex) {}
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <nav-dialog />
+    <slot />
+
+    <!-- 站内搜索索引：构建期序列化，供 <nav-search> 客户端读取 -->
+    {searchIndexJson && (
+      <script is:inline type="application/json" id="site-index" set:html={searchIndexJson} />
+    )}
+
+    <!-- 自注册自定义元素：升级 <nav-dialog> 宿主 -->
+    <script>
+      import '../components/web/nav-dialog';
+    </script>
+  </body>
+</html>

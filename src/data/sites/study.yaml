@@ -1,0 +1,108 @@
+order: 2
+id: study
+name: 线上学习
+icon: book
+subs:
+  - id: course
+    name: 课程学习
+    links:
+      - id: chaoxing
+        title: 学习通
+        pinyin: xuexitong
+        pinyinFirst: xxt
+        url: https://i.chaoxing.com
+      - id: zhihuishu
+        title: 知到
+        pinyin: zhidao
+        pinyinFirst: zd
+        url: https://www.zhihuishu.com
+      - id: icourse
+        title: 中国大学MOOC
+        pinyin: zhongguodaxuemooc
+        pinyinFirst: zgdxmooc
+        url: https://www.icourse163.org
+      - id: xuetangx
+        title: 学堂在线
+        pinyin: xuetangzaixian
+        pinyinFirst: xtzx
+        url: https://www.xuetangx.com
+      - id: lanqiao
+        title: 蓝桥云课
+        pinyin: lanqiaoyunke
+        pinyinFirst: lqyk
+        url: https://www.lanqiao.cn
+  - id: tools
+    name: 网课工具/题库
+    links:
+      - id: ocs
+        title: OCS网课助手
+        pinyin: ocswangkezhushou
+        pinyinFirst: ocswkzs
+        url: https://docs.ocsjs.com
+      - id: zerror
+        title: ZError
+        pinyin: zerror
+        pinyinFirst: zerror
+        url: https://app.zerror.cc/
+      - id: renwei
+        title: 人卫医学题库
+        pinyin: renweiyixuetiku
+        pinyinFirst: rwyxtk
+        url: https://tk.ipmph.com
+  - id: books
+    name: 图书资源
+    links:
+      - id: nlc
+        title: 国家图书馆
+        pinyin: guojiatushuguan
+        pinyinFirst: gjtsg
+        url: http://www.nlc.cn/
+      - id: annas
+        title: 安娜的档案
+        pinyin: annadedangan
+        pinyinFirst: andda
+        url: https://zh.annas-archive.gl/
+        mirrors:
+          - { label: 镜像站, url: https://zh.annas-archive.gl/ }
+          - { label: 镜像站, url: https://zh.annas-archive.pk/ }
+          - { label: 镜像站, url: https://zh.annas-archive.gd/ }
+      - id: zlib
+        title: Z Library
+        pinyin: zlibrary
+        pinyinFirst: zlibrary
+        url: https://zh.z-library.sk/
+        mirrors:
+          - { label: 主站, url: https://zh.z-lib.sk/ }
+          - { label: 镜像站, url: https://zh.z-library.sk/ }
+          - { label: 镜像站, url: https://zh.z-lib.fm/ }
+  - id: medinfo
+    name: 医学讯息
+    links:
+      - id: dxy
+        title: 丁香园
+        pinyin: dingxiangyuan
+        pinyinFirst: dxy
+        url: https://www.dxy.cn
+      - id: guide
+        title: 临床指南
+        pinyin: linchuangzhinan
+        pinyinFirst: lczn
+        url: https://guide.medlive.cn
+  - id: skills
+    name: 技能拓展
+    links:
+      - id: missing
+        title: 你缺失的计算机课
+        pinyin: niqueshidejisuanjike
+        pinyinFirst: nqsdjsjk
+        url: https://www.criwits.top/missing/
+      - id: wps
+        title: WPS学堂
+        pinyin: wpsxuetang
+        pinyinFirst: wpsxt
+        url: "https://www.wps.cn/learning?spm=5176.28103460.0.0.68e62988EREePp"
+      - id: runoob
+        title: 菜鸟教程
+        pinyin: cainiaojiaocheng
+        pinyinFirst: cnjc
+        url: https://www.runoob.com

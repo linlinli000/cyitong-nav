@@ -1,0 +1,37 @@
+/**
+ * <nav-backtotop> 回到顶部按钮
+ * 滚动超过阈值后淡入，点击平滑回顶。
+ */
+const CHEVRON_UP_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="m18 15-6-6-6 6"></path></svg>';
+
+class NavBackToTop extends HTMLElement {
+  private cleanup: (() => void) | null = null;
+
+  connectedCallback(): void {
+    this.innerHTML = `
+      <button type="button" data-role="btn" aria-label="回到顶部"
+        class="pointer-events-none fixed bottom-6 right-6 z-40 grid h-11 w-11 translate-y-2 place-items-center rounded-xl border border-line bg-card text-ink opacity-0 shadow-lg transition-all duration-200 hover:shadow-xl">
+        ${CHEVRON_UP_SVG}
+      </button>`;
+
+    const btn = this.querySelector<HTMLElement>('[data-role="btn"]')!;
+    const onScroll = (): void => {
+      const show = window.scrollY > 480;
+      btn.classList.toggle('opacity-0', !show);
+      btn.classList.toggle('pointer-events-none', !show);
+      btn.classList.toggle('translate-y-2', !show);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    onScroll();
+
+    this.cleanup = () => window.removeEventListener('scroll', onScroll);
+  }
+
+  disconnectedCallback(): void {
+    this.cleanup?.();
+  }
+}
+
+customElements.define('nav-backtotop', NavBackToTop);

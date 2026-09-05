@@ -1,0 +1,83 @@
+order: 5
+id: enlit
+name: 英文文献
+icon: newspaper
+subs:
+  - id: freefull
+    name: 免费全文
+    links:
+      - id: scihub
+        title: Sci-Hub
+        pinyin: scihub
+        pinyinFirst: scihub
+        url: https://www.sci-hub.shop/
+        mirrors:
+          - { label: 主站, url: https://sci-hub.ru/ }
+          - { label: 主站, url: https://sci-hub.st/ }
+          - { label: 主站, url: https://sci-hub.su/ }
+          - { label: 镜像站（推荐）, url: https://sci-hub.shop/ }
+  - id: schsearch
+    name: 学术搜索
+    links:
+      - id: scholar
+        title: Google Scholar
+        pinyin: googlescholar
+        pinyinFirst: googlescholar
+        url: https://scholar.google.com
+      - id: wos
+        title: Web of Science
+        pinyin: webofscience
+        pinyinFirst: webofscience
+        url: https://www.webofscience.com
+  - id: general
+    name: 综合数据库
+    links:
+      - id: sciencedirect
+        title: ScienceDirect
+        pinyin: sciencedirect
+        pinyinFirst: sciencedirect
+        url: https://www.sciencedirect.com/
+  - id: meddb
+    name: 医学数据库
+    links:
+      - id: pubmed
+        title: PubMed
+        pinyin: pubmed
+        pinyinFirst: pubmed
+        url: https://pubmed.ncbi.nlm.nih.gov
+      - id: embase
+        title: Embase
+        pinyin: embase
+        pinyinFirst: embase
+        url: https://www.embase.com
+      - id: cochrane
+        title: Cochrane Library
+        pinyin: cochranelibrary
+        pinyinFirst: cochranelibrary
+        url: https://www.cochranelibrary.com
+  - id: openaccess
+    name: 开放获取
+    links:
+      - id: doaj
+        title: DOAJ
+        pinyin: doaj
+        pinyinFirst: doaj
+        url: https://doaj.org/
+  - id: topjournal
+    name: 顶刊
+    links:
+      - id: nature
+        title: Nature
+        pinyin: nature
+        pinyinFirst: nature
+        url: https://www.nature.com/
+      - id: cell
+        title: Cell
+        pinyin: cell
+        pinyinFirst: cell
+        url: https://www.cell.com/
+      - id: science
+        title: Science
+        pinyin: science
+        pinyinFirst: science
+        url: https://www.science.org/

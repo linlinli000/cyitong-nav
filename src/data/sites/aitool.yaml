@@ -1,0 +1,89 @@
+order: 6
+id: aitool
+name: AI工具
+icon: sparkles
+subs:
+  - id: cnmodel
+    name: 国产大模型
+    links:
+      - id: deepseek
+        title: DeepSeek
+        pinyin: deepseek
+        pinyinFirst: deepseek
+        url: https://chat.deepseek.com
+      - id: qianwen
+        title: 千问
+        pinyin: qianwen
+        pinyinFirst: qw
+        url: https://tongyi.aliyun.com/qianwen
+      - id: chatglm
+        title: ChatGLM
+        pinyin: chatglm
+        pinyinFirst: chatglm
+        url: https://chatglm.cn
+      - id: kimi
+        title: Kimi
+        pinyin: kimi
+        pinyinFirst: kimi
+        url: https://kimi.moonshot.cn
+      - id: minimax
+        title: MiniMax
+        pinyin: minimax
+        pinyinFirst: minimax
+        url: https://hailuoai.com
+      - id: doubao
+        title: 豆包
+        pinyin: doubao
+        pinyinFirst: db
+        url: https://www.doubao.com
+      - id: yiyan
+        title: 文心一言
+        pinyin: wenxinyiyan
+        pinyinFirst: wxyy
+        url: https://yiyan.baidu.com
+      - id: yuanbao
+        title: 腾讯元宝
+        pinyin: tengxunyuanbao
+        pinyinFirst: txyb
+        url: https://yuanbao.tencent.com
+  - id: foreignmodel
+    name: 国外大模型
+    links:
+      - id: chatgpt
+        title: ChatGPT
+        pinyin: chatgpt
+        pinyinFirst: chatgpt
+        url: https://chatgpt.com
+      - id: grok
+        title: Grok
+        pinyin: grok
+        pinyinFirst: grok
+        url: https://grok.com
+      - id: gemini
+        title: Gemini
+        pinyin: gemini
+        pinyinFirst: gemini
+        url: https://gemini.google.com
+      - id: claude
+        title: Claude
+        pinyin: claude
+        pinyinFirst: claude
+        url: https://claude.ai
+  - id: app
+    name: AI应用
+    links:
+      - id: jimeng
+        title: 即梦AI
+        pinyin: jimengai
+        pinyinFirst: jmai
+        url: https://jimeng.jianying.com/
+      - id: coze
+        title: 扣子
+        pinyin: kouzi
+        pinyinFirst: kz
+        url: https://www.coze.cn/
+      - id: aippt
+        title: AI PPT
+        pinyin: aippt
+        pinyinFirst: aippt
+        url: https://www.aippt.cn/?seller=itab

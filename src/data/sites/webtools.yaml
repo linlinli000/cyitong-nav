@@ -1,0 +1,96 @@
+order: 7
+id: webtools
+name: 在线工具
+icon: wrench
+subs:
+  - id: files
+    name: 文件处理
+    links:
+      - id: easeconvert
+        title: 易工具
+        pinyin: yigongju
+        pinyinFirst: ygj
+        url: https://www.easeconvert.com/
+      - id: ilovepdf
+        title: iLovePDF
+        pinyin: ilovepdf
+        pinyinFirst: ilovepdf
+        url: https://www.ilovepdf.com/zh-cn
+      - id: convertio
+        title: Convertio
+        pinyin: convertio
+        pinyinFirst: convertio
+        url: https://convertio.co/zh/video-converter/
+  - id: design
+    name: 设计/图片
+    links:
+      - id: gaodingps
+        title: 在线PS
+        pinyin: zaixianps
+        pinyinFirst: zxps
+        url: https://ps.gaoding.com/
+      - id: canva
+        title: 可画
+        pinyin: kehua
+        pinyinFirst: kh
+        url: https://www.canva.cn/
+      - id: removebg
+        title: remove.bg
+        pinyin: removebg
+        pinyinFirst: removebg
+        url: https://www.remove.bg/zh
+      - id: iconfont
+        title: Iconfont
+        pinyin: iconfont
+        pinyinFirst: iconfont
+        url: https://www.iconfont.cn/
+  - id: media
+    name: 媒体下载
+    links:
+      - id: greenvideo
+        title: GreenVideo
+        pinyin: greenvideo
+        pinyinFirst: greenvideo
+        url: https://greenvideo.cc/
+  - id: translate
+    name: 翻译/英语
+    links:
+      - id: deepl
+        title: DeepL翻译
+        pinyin: deeplfanyi
+        pinyinFirst: deeplfy
+        url: https://www.deepl.com/
+      - id: grammarly
+        title: Grammarly
+        pinyin: grammarly
+        pinyinFirst: grammarly
+        url: https://www.grammarly.com/
+  - id: writing
+    name: 排版/写作
+    links:
+      - id: latexlive
+        title: LaTeX Live
+        pinyin: latexlive
+        pinyinFirst: latexlive
+        url: https://www.latexlive.com/
+  - id: software
+    name: 软件下载
+    links:
+      - id: ghxi
+        title: 果核剥壳
+        pinyin: guohebaoke
+        pinyinFirst: ghbk
+        url: https://www.ghxi.com/
+  - id: misc
+    name: 其他工具
+    links:
+      - id: cli
+        title: 草料二维码
+        pinyin: caoliaoerweima
+        pinyinFirst: clewm
+        url: https://cli.im/
+      - id: emojimix
+        title: Emoji合成
+        pinyin: emojihecheng
+        pinyinFirst: emojihc
+        url: https://tikolu.net/emojimix/

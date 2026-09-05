@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import TopBar from '../components/TopBar.astro';
+import SearchPanel from '../components/SearchPanel.astro';
+import SiteGrid from '../components/SiteGrid.astro';
+import Footer from '../components/Footer.astro';
+import BackToTop from '../components/BackToTop.astro';
+
+const categories = (await getCollection('sites')).sort((a, b) => a.data.order - b.data.order);
+
+/** 扁平化搜索索引：与 search-utils 的 SiteRecord 一致 */
+const searchIndex = categories.flatMap((c) =>
+  c.data.subs.flatMap((s) =>
+    s.links.map((l) => ({
+      id: l.id,
+      title: l.title,
+      pinyin: l.pinyin,
+      pinyinFirst: l.pinyinFirst,
+      url: l.url,
+      catId: c.data.id,
+      catName: c.data.name,
+      subName: s.name,
+      qr: l.qr,
+      qrNote: l.qrNote,
+      mirrors: l.mirrors,
+      icon: `/icons/${c.data.id}/${l.id}.webp`,
+    })),
+  ),
+);
+const searchIndexJson = JSON.stringify(searchIndex);
+const totalLinks = searchIndex.length;
+---
+
+<Layout searchIndexJson={searchIndexJson}>
+  <nav-sidebar>
+    <Sidebar categories={categories} />
+  </nav-sidebar>
+
+  <div class="site-content min-h-screen lg:pl-56">
+    <TopBar />
+
+    <main class="px-4 py-6 sm:px-6">
+      <SearchPanel />
+
+      <div class="mt-10">
+        <SiteGrid categories={categories} />
+      </div>
+    </main>
+
+    <Footer totalLinks={totalLinks} />
+    <BackToTop />
+  </div>
+</Layout>
+
+<!-- 自注册自定义元素：升级 <nav-sidebar> 宿主 -->
+<script>
+  import '../components/web/nav-sidebar';
+</script>

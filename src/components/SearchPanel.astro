@@ -1,0 +1,20 @@
+---
+---
+<!-- 搜索 Hero：cmc 横幅作背景图（background 随圆角裁剪），搜索岛叠于其上。
+     不用 overflow-hidden，否则 nav-search 的下拉会被裁掉。 -->
+<section
+  class="relative rounded-2xl border border-line px-4 py-12 bg-cover bg-center sm:px-6 sm:py-16"
+  style="background-image: url('/cmc.webp')"
+>
+  <!-- 轻量遮罩：保证图上的搜索控件（暗色下）仍有足够对比；不挡指针 -->
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 rounded-[inherit] bg-black/15 dark:bg-black/35"></div>
+
+  <div class="relative mx-auto max-w-2xl">
+    <nav-search />
+  </div>
+</section>
+
+<!-- 自注册自定义元素：升级 <nav-search> 宿主（搜索框从 header 移到这里） -->
+<script>
+  import '../components/web/nav-search';
+</script>
