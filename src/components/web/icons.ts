@@ -1,6 +1,6 @@
 /**
- * 运行期图标：字形来自 Layout 构建期注入的 lucide symbol sprite，组件只写 `<use href>`，
- * 不存 path、不引 iconify（避免整个 lucide JSON 进客户端 bundle）。
+ * 运行期图标：字形来自 Layout 构建期注入的 symbol sprite（lucide 为主，
+ * 引擎 chip 用 simple-icons 品牌字形），组件只写 `<use href>`，不存 path。
  */
 
 /** 运行期用到的 lucide 图标语义名（sprite 生成与 <use> 引用共用此单一清单） */

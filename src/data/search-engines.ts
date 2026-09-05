@@ -6,6 +6,8 @@ export interface Engine {
   name: string;
   /** URL 模板，{q} 为查询词占位 */
   url: string;
+  /** 品牌字形名（simple-icons 优先，缺品牌标的 MeSH/万方/百度学术 用 lucide 语义字形兜底） */
+  icon: string;
 }
 
 export interface ScopeTab {
@@ -23,23 +25,23 @@ export const SCOPE_TABS: ScopeTab[] = [
 export const ENGINES: Record<SearchScope, Engine[]> = {
   site: [],
   search: [
-    { name: 'Bing', url: 'https://www.bing.com/search?q={q}' },
-    { name: 'Google', url: 'https://www.google.com/search?q={q}' },
-    { name: '百度', url: 'https://www.baidu.com/s?wd={q}' },
-    { name: '搜狗', url: 'https://www.sogou.com/web?query={q}' },
+    { name: 'Bing', url: 'https://www.bing.com/search?q={q}', icon: 'microsoftbing' },
+    { name: 'Google', url: 'https://www.google.com/search?q={q}', icon: 'google' },
+    { name: '百度', url: 'https://www.baidu.com/s?wd={q}', icon: 'baidu' },
+    { name: '搜狗', url: 'https://www.sogou.com/web?query={q}', icon: 'sogou' },
   ],
   community: [
-    { name: '知乎', url: 'https://www.zhihu.com/search?type=content&q={q}' },
-    { name: '公众号', url: 'https://weixin.sogou.com/weixin?type=2&query={q}' },
-    { name: '微博', url: 'https://s.weibo.com/weibo?q={q}' },
-    { name: '豆瓣', url: 'https://www.douban.com/search?q={q}' },
+    { name: '知乎', url: 'https://www.zhihu.com/search?type=content&q={q}', icon: 'zhihu' },
+    { name: '公众号', url: 'https://weixin.sogou.com/weixin?type=2&query={q}', icon: 'wechat' },
+    { name: '微博', url: 'https://s.weibo.com/weibo?q={q}', icon: 'sinaweibo' },
+    { name: '豆瓣', url: 'https://www.douban.com/search?q={q}', icon: 'douban' },
   ],
   literature: [
-    { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term={q}' },
-    { name: 'MeSH', url: 'https://www.ncbi.nlm.nih.gov/mesh/?term={q}' },
-    { name: '万方', url: 'https://s.wanfangdata.com.cn/paper?q={q}' },
-    { name: '百度学术', url: 'https://xueshu.baidu.com/s?wd={q}' },
-    { name: '谷歌学术', url: 'https://scholar.google.com/scholar?q={q}' },
+    { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term={q}', icon: 'pubmed' },
+    { name: 'MeSH', url: 'https://www.ncbi.nlm.nih.gov/mesh/?term={q}', icon: 'tags' },
+    { name: '万方', url: 'https://s.wanfangdata.com.cn/paper?q={q}', icon: 'library' },
+    { name: '百度学术', url: 'https://xueshu.baidu.com/s?wd={q}', icon: 'graduation-cap' },
+    { name: '谷歌学术', url: 'https://scholar.google.com/scholar?q={q}', icon: 'googlescholar' },
   ],
 };
 

@@ -35,8 +35,8 @@ cyitong-nav/
 │   ├── favicon.ico
 │   └── icons/               # 链接图标，路径约定：/icons/{分类id}/{链接id}.webp
 │       ├── aitool/ campus/  cnlit/ enlit/ exam/
-│       ├── study/  webtools/
-│       └── （共 96 个 .webp，与 YAML 里的链接 id 一一对应）
+│       ├── study/  webtools/   topbar/（顶栏下拉 favicon 3 张，非链接图标）
+│       └── （共 93 个 .webp，与 YAML 里的链接 id 一一对应）
 └── src/
     ├── content.config.ts    # ★ Content Layer 定义：glob 加载 + Zod 两级模型校验 + 导出 Mirror 类型
     ├── data/
@@ -103,7 +103,7 @@ subs:
 
 **图标路径约定：** `/icons/{一级分类id}/{链接id}.webp`，图片缺失时 LinkCard 会降级为标题首字。
 
-### 7 个一级分类速览（共 35 个子分类 / 96 个链接）
+### 7 个一级分类速览（共 35 个子分类 / 93 个链接）
 
 | id | 分类 | 子分类数 | 内容 |
 |---|---|---|---|
@@ -134,7 +134,7 @@ subs:
 ### 两套图标系统（勿混淆）
 
 - **SSR 模板图标**（`.astro` 里静态标记，顶栏/分类/箭头等）：`astro-icon` `<Icon name="heroicons:…|lucide:…">`，构建期内联成 sprite，零运行时 JS。来源本地 `@iconify-json/heroicons|lucide`，换图直接用 iconify 集内名字，勿手抄 path。
-- **运行期图标**（自定义元素 `innerHTML` 里动态拼的，如搜索/历史/明暗/关闭/回顶）：用**单一 lucide symbol sprite**——`src/lib/icon-sprite.ts` 构建期从 `@iconify-json/lucide/icons.json` 生成 `<symbol>` 注入页面，组件用 `web/icons.ts` 的 `iconEl()` 输出 `<svg><use href="#icon-x">`。加新运行期图标只需往 `RUNTIME_ICON_NAMES` 加语义名（lucide 须有该名或其别名）。
+- **运行期图标**（自定义元素 `innerHTML` 里动态拼的，如搜索/历史/明暗/关闭/回顶 + 搜索栏引擎 chip）：用 **symbol sprite**——`src/lib/icon-sprite.ts` 构建期生成 `<symbol>` 注入页面，组件用 `web/icons.ts` 的 `iconEl()` 输出 `<svg><use href="#icon-x">`。字形源：UI 图标走 lucide（加语义名到 `RUNTIME_ICON_NAMES`）；**搜索栏引擎 chip 的品牌字形走 `search-engines.ts` 各引擎 `icon` 字段**（simple-icons 品牌标，lucide 无该名时回退；MeSH/万方/百度学术无品牌标用 lucide 兜底），Layout 从 ENGINES 自动汇总生成。
 
 > 为什么不用一套：astro-icon 是 SSR 组件，无法在浏览器端 innerHTML 里用；sprite 方案让 Web 组件与模板图标同源（都是 iconify JSON）、零 path 复制。
 

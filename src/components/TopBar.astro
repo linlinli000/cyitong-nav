@@ -10,7 +10,7 @@ const TOOLS = [
   {
     id: 'translate',
     label: '翻译',
-    icon: 'lucide:globe',
+    icon: 'lucide:languages',
     items: [
       { name: '百度翻译', url: 'https://fanyi.baidu.com/', icon: 'https://fanyi.baidu.com/favicon.ico' },
       {
@@ -81,7 +81,7 @@ const TOOLS = [
       </span>
     </a>
 
-    <div class="flex items-center gap-0.5 lg:gap-2">
+    <div class="flex items-center gap-2">
       <button
         type="button"
         data-mobile-nav-open
@@ -111,7 +111,7 @@ const TOOLS = [
         class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
       >
         <Icon name="lucide:book-open" class="h-5 w-5 shrink-0" aria-hidden="true" />
-        wiki
+        <span class="hidden lg:inline">wiki</span>
       </a>
     </div>
 

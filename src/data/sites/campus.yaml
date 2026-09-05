@@ -92,16 +92,6 @@ subs:
         pinyin: xiaoqiyeweixin
         pinyinFirst: xqywx
         url: https://metc.cmc.edu.cn/info/1019/2280.htm
-      - id: qqmail
-        title: QQ邮箱
-        pinyin: qqyouxiang
-        pinyinFirst: qqyx
-        url: https://mail.qq.com
-      - id: mail163
-        title: 163邮箱
-        pinyin: "163youxiang"
-        pinyinFirst: "163yx"
-        url: https://mail.163.com
   - id: degree
     name: 学籍/升学
     links:

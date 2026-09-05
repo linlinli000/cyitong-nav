@@ -135,16 +135,17 @@ class NavSearch extends HTMLElement {
       <!-- 第三层：站内收录统计 / 引擎按钮 -->
       <div class="mt-3 flex flex-wrap items-center justify-center gap-2 sm:mt-4">
         ${scope === 'site'
-          ? `<span class="rounded-full bg-surface/70 px-3.5 py-1.5 text-[13px] text-muted sm:px-4 sm:text-sm dark:bg-black/25">本网站已收录 ${this.records.length} 个常用链接</span>`
+          ? `<span class="rounded-full bg-surface/70 px-3.5 py-1.5 text-[13px] text-muted sm:px-4 sm:text-sm dark:bg-black/25">本网站已收录 <span class="font-semibold text-brand">${this.records.length}</span> 个常用链接</span>`
           : ENGINES[scope]
               .map(
                 (e, i) => `
                 <button type="button" data-engine="${i}"
-                  class="rounded-full border border-line/80 px-3 py-1.5 text-[13px] transition-all sm:px-4 sm:text-sm ${
+                  class="inline-flex items-center gap-1.5 rounded-full border border-line/80 px-3 py-1.5 text-[13px] transition-all sm:px-4 sm:text-sm ${
                     i === this.engineIdx
                       ? 'border-transparent bg-white font-semibold text-brand shadow-sm dark:bg-brand dark:text-[#13161c]'
                       : 'bg-surface/60 text-muted hover:text-ink dark:bg-black/20'
                   }">
+                  ${iconEl(e.icon, 'h-4 w-4')}
                   ${e.name}
                 </button>`,
               )

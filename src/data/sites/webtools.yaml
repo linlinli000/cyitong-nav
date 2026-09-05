@@ -55,11 +55,6 @@ subs:
   - id: translate
     name: 翻译/英语
     links:
-      - id: deepl
-        title: DeepL翻译
-        pinyin: deeplfanyi
-        pinyinFirst: deeplfy
-        url: https://www.deepl.com/
       - id: grammarly
         title: Grammarly
         pinyin: grammarly
