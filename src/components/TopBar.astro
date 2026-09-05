@@ -1,22 +1,30 @@
 ---
 import { Icon } from 'astro-icon/components';
 
-/** 顶部栏图标统一 lucide（astro-icon 构建期内联，勿手抄 path；换图改 iconify 名即可） */
+/** 顶部栏图标统一 lucide（astro-icon 构建期内联，勿手抄 path；换图改 iconify 名即可）*/
 const MENU_ICON = 'lucide:menu';
 const CARET_ICON = 'lucide:chevron-down';
 
-/* 三个快速工具下拉（右侧，月亮按钮左侧）。服务项图标用首字色块占位，后续可换品牌 logo。 */
+/* 三个快速工具下拉（右侧，月亮按钮左侧）。菜单项 favicon：有道/讯飞/Gmail 无好用的官方源，本地存 public/icons/topbar/*.webp（ffmpeg 无损转，体积减半）；其余直链品牌官网 favicon。 */
 const TOOLS = [
   {
     id: 'translate',
     label: '翻译',
     icon: 'lucide:globe',
     items: [
-      { name: '百度翻译', url: 'https://fanyi.baidu.com/' },
-      { name: '有道翻译', url: 'https://fanyi.youdao.com/indexLLM.html#/' },
-      { name: '搜狗翻译', url: 'https://fanyi.sogou.com/text' },
-      { name: 'DeepL', url: 'https://www.deepl.com/zh/translator' },
-      { name: '讯飞翻译', url: 'https://fanyi.xfyun.cn/console/trans/text' },
+      { name: '百度翻译', url: 'https://fanyi.baidu.com/', icon: 'https://fanyi.baidu.com/favicon.ico' },
+      {
+        name: '有道翻译',
+        url: 'https://fanyi.youdao.com/indexLLM.html#/',
+        icon: '/icons/topbar/youdao.webp',
+      },
+      { name: '搜狗翻译', url: 'https://fanyi.sogou.com/text', icon: 'https://dlweb.sogoucdn.com/translate/favicon.ico' },
+      { name: 'DeepL', url: 'https://www.deepl.com/zh/translator', icon: 'https://www.deepl.com/img/favicon/favicon_32.png' },
+      {
+        name: '讯飞翻译',
+        url: 'https://fanyi.xfyun.cn/console/trans/text',
+        icon: '/icons/topbar/iflytek.webp',
+      },
     ],
   },
   {
@@ -24,11 +32,19 @@ const TOOLS = [
     label: '网盘',
     icon: 'lucide:cloud-download',
     items: [
-      { name: '百度网盘', url: 'https://pan.baidu.com' },
-      { name: '阿里云盘', url: 'https://www.alipan.com' },
-      { name: '夸克网盘', url: 'https://pan.quark.cn' },
-      { name: '蓝奏云', url: 'https://www.lanzou.com' },
-      { name: '迅雷网盘', url: 'https://pan.xunlei.com' },
+      { name: '百度网盘', url: 'https://pan.baidu.com', icon: 'https://nd-static.bdstatic.com/m-static/v20-main/favicon-main.ico' },
+      {
+        name: '阿里云盘',
+        url: 'https://www.alipan.com',
+        icon: 'https://img.alicdn.com/imgextra/i1/O1CN01JDQCi21Dc8EfbRwvF_!!6000000000236-73-tps-64-64.ico',
+      },
+      {
+        name: '夸克网盘',
+        url: 'https://pan.quark.cn',
+        icon: 'https://image.quark.cn/s/uae/g/3o/broccoli/resource/202404/d94d93e0-03a2-11ef-be4c-79ebae2e18ac.vnd.microsoft.icon',
+      },
+      { name: '蓝奏云', url: 'https://www.lanzou.com', icon: 'https://www.lanzou.com/favicon.ico' },
+      { name: '迅雷网盘', url: 'https://pan.xunlei.com', icon: 'https://pan.xunlei.com/icon.png' },
     ],
   },
   {
@@ -36,16 +52,17 @@ const TOOLS = [
     label: '邮箱',
     icon: 'lucide:mail',
     items: [
-      { name: 'QQ邮箱', url: 'https://mail.qq.com' },
-      { name: '163邮箱', url: 'https://mail.163.com' },
-      { name: 'Gmail', url: 'https://mail.google.com' },
-      { name: 'Outlook', url: 'https://outlook.live.com' },
+      {
+        name: 'QQ邮箱',
+        url: 'https://mail.qq.com',
+        icon: 'https://res.wx.qq.com/t/webmail/webmail/res/static/images/base/style/favicon/qqmail_favicon_48h.4e79647.png',
+      },
+      { name: '163邮箱', url: 'https://mail.163.com', icon: 'https://mail.163.com/favicon.ico' },
+      { name: 'Outlook', url: 'https://outlook.live.com', icon: 'https://outlook.live.com/mail/favicon.ico' },
+      { name: 'Gmail', url: 'https://mail.google.com', icon: '/icons/topbar/gmail.webp' },
     ],
   },
 ] as const;
-
-/** 首字色块图标文案（英文取首字母，中文取首字） */
-const initial = (name: string): string => name.trim().charAt(0).toUpperCase() || '·';
 ---
 
 <header class="sticky top-0 z-20 border-b border-line bg-card/80 backdrop-blur">
@@ -64,7 +81,7 @@ const initial = (name: string): string => name.trim().charAt(0).toUpperCase() ||
       </span>
     </a>
 
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-0.5 lg:gap-2">
       <button
         type="button"
         data-mobile-nav-open
@@ -127,11 +144,13 @@ const initial = (name: string): string => name.trim().charAt(0).toUpperCase() ||
                   data-menu-item
                   class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-muted transition-colors hover:bg-surface hover:text-ink"
                 >
-                  <span
-                    class="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-brand/10 text-[11px] font-bold text-brand"
+                  <img
+                    src={item.icon}
+                    alt=""
                     aria-hidden="true"
-                    >{initial(item.name)}</span
-                  >
+                    loading="lazy"
+                    class="h-6 w-6 shrink-0 rounded-md object-contain"
+                  />
                   <span class="truncate">{item.name}</span>
                 </a>
               ))}
@@ -150,7 +169,7 @@ const initial = (name: string): string => name.trim().charAt(0).toUpperCase() ||
         title="GitHub 源码"
         class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink"
       >
-        <Icon name="lucide:github" class="h-6 w-6" aria-hidden="true" />
+        <Icon name="simple-icons:github" class="h-6 w-6" aria-hidden="true" />
       </a>
     </div>
   </div>

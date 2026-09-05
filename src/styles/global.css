@@ -25,8 +25,6 @@
   --color-ink: #d5d7dc;
   --color-muted: #949aa4;
   --color-line: #3e4451;
-  /* 品牌色统一为 One Dark 蓝 #61afef：文本/边框/tab·侧栏高亮/填充按钮共用同一令牌，
-     亮色按钮因其底色变亮，暗色下按钮文字改为深色（见 nav-search） */
   --color-brand: #61afef;
   --color-brand-dark: #7fc3f5; /* 填充按钮暗色 hover（更亮一档） */
 }
@@ -125,8 +123,7 @@ nav-cat-tabs {
   background: color-mix(in srgb, var(--color-brand) 10%, transparent);
 }
 
-/* 折叠几何：文字淡出时图标位置恒定。内容起点 = 折叠条中轴 x=32px（行 pl14 + 20px 图标中心；
-   header pl14 + 36px logo 中心，二者同为 32）。条宽 4rem=64 = 2×32 恰居中。 */
+/* 折叠几何：文字淡出时图标位置恒定。 */
 #sidebar .sidebar-header {
   padding-left: 14px;
   padding-right: 14px; /* 收起时 logo(36px) 恰好容纳，避免被 .sidebar-brand 裁切 */
