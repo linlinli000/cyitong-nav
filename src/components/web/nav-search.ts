@@ -3,26 +3,11 @@ import { ENGINES, PLACEHOLDERS, SCOPE_TABS, engineUrl, type SearchScope } from '
 import { searchSites, type SiteRecord } from './search-utils';
 import { escapeHtml as escapeAttr } from './html-escape';
 import { iconEl } from './icons';
+import { storageGetJson, storageSetJson } from './storage';
 
 const HISTORY_KEY = 'nav:history';
 const SCOPE_KEY = 'nav:scope';
 const MAX_HISTORY = 10;
-
-function storageGet<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(key);
-    if (raw === null) return fallback;
-    return JSON.parse(raw) as T;
-  } catch {
-    return fallback;
-  }
-}
-
-function storageSet(key: string, value: unknown): void {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {}
-}
 
 class NavSearch extends HTMLElement {
   private scope: SearchScope = loadScope();
@@ -30,7 +15,7 @@ class NavSearch extends HTMLElement {
   private query = '';
   private records: SiteRecord[] = [];
   private results: SiteRecord[] = [];
-  private history: string[] = storageGet<string[]>(HISTORY_KEY, []);
+  private history: string[] = storageGetJson<string[]>(HISTORY_KEY, []);
   private cursor = -1;
 
   private input: HTMLInputElement | null = null;
@@ -85,7 +70,7 @@ class NavSearch extends HTMLElement {
   }
 
   private loadEngineIdx(): number {
-    const idx = storageGet<number>(`nav:engine:${this.scope}`, 0);
+    const idx = storageGetJson<number>(`nav:engine:${this.scope}`, 0);
     const len = ENGINES[this.scope]?.length ?? 0;
     return typeof idx === 'number' && idx >= 0 && idx < len ? idx : 0;
   }
@@ -102,7 +87,7 @@ class NavSearch extends HTMLElement {
             <button type="button" data-scope="${tab.id}"
               class="inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-[13px] font-medium transition-all sm:px-5 sm:py-2 sm:text-sm ${
                 tab.id === scope
-                  ? 'bg-white font-semibold text-brand shadow-sm dark:bg-brand dark:text-[#13161c]'
+                  ? 'bg-white font-semibold text-brand shadow-sm dark:bg-brand dark:text-on-accent'
                   : 'text-muted hover:bg-white/60 hover:text-ink dark:hover:bg-white/10'
               }">
               ${tab.label}
@@ -113,19 +98,19 @@ class NavSearch extends HTMLElement {
 
       <div class="relative mx-auto w-full max-w-[45rem]">
         <div
-          class="flex items-center gap-1.5 rounded-2xl border border-line bg-field py-1.5 pl-3.5 pr-1 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all sm:gap-2 sm:pl-5 sm:pr-1.5 dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
+          class="flex items-center gap-1.5 rounded-2xl border border-line bg-field py-1.5 pl-3.5 pr-1 shadow-[var(--shadow-field)] transition-all sm:gap-2 sm:pl-5 sm:pr-1.5">
           <input type="text" autocomplete="off" spellcheck="false" value="${escapeAttr(this.query)}"
             placeholder="${placeholder}"
             aria-label="搜索"
             class="min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none placeholder:text-muted sm:text-base" />
           <button type="button" data-role="submit" aria-label="搜索"
-            class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-white transition-colors hover:bg-brand-dark active:scale-95 sm:h-10 sm:w-10 dark:text-[#13161c]">
+            class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-white transition-colors hover:bg-brand-dark active:scale-95 sm:h-10 sm:w-10 dark:text-on-accent">
             ${iconEl('search', 'h-4 w-4 sm:h-5 sm:w-5')}
           </button>
         </div>
 
         <div data-role="dropdown"
-          class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 hidden max-h-96 overflow-y-auto rounded-xl border border-line bg-field shadow-[0_4px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)]"></div>
+          class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 hidden max-h-96 overflow-y-auto rounded-xl border border-line bg-field shadow-[var(--shadow-dropdown)]"></div>
       </div>
 
       ${scope === 'site'
@@ -140,7 +125,7 @@ class NavSearch extends HTMLElement {
                   <button type="button" data-engine="${i}"
                     class="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-line/80 px-2.5 py-1 text-[13px] backdrop-blur-md transition-all sm:px-3 ${
                       i === this.engineIdx
-                        ? 'border-transparent bg-white font-semibold text-brand shadow-sm dark:bg-brand dark:text-[#13161c]'
+                        ? 'border-transparent bg-white font-semibold text-brand shadow-sm dark:bg-brand dark:text-on-accent'
                         : 'bg-surface/60 text-muted hover:text-ink dark:bg-black/20'
                     }">
                     ${iconEl(e.icon, 'h-3.5 w-3.5')}
@@ -194,7 +179,7 @@ class NavSearch extends HTMLElement {
     }
     if (t.closest('[data-clear-history]')) {
       this.history = [];
-      storageSet(HISTORY_KEY, []);
+      storageSetJson(HISTORY_KEY, []);
       this.showHistory();
       return;
     }
@@ -229,7 +214,7 @@ class NavSearch extends HTMLElement {
   private switchScope(scope: SearchScope): void {
     if (scope === this.scope) return;
     this.scope = scope;
-    storageSet(SCOPE_KEY, scope);
+    storageSetJson(SCOPE_KEY, scope);
     this.engineIdx = this.loadEngineIdx();
     this.query = '';
     this.cursor = -1;
@@ -240,7 +225,7 @@ class NavSearch extends HTMLElement {
 
   private setEngine(i: number): void {
     this.engineIdx = i;
-    storageSet(`nav:engine:${this.scope}`, i);
+    storageSetJson(`nav:engine:${this.scope}`, i);
     this.render();
     this.input?.focus();
   }
@@ -381,12 +366,12 @@ class NavSearch extends HTMLElement {
 
   private saveHistory(q: string): void {
     this.history = [q, ...this.history.filter((h) => h !== q)].slice(0, MAX_HISTORY);
-    storageSet(HISTORY_KEY, this.history);
+    storageSetJson(HISTORY_KEY, this.history);
   }
 }
 
 function loadScope(): SearchScope {
-  const s = storageGet<string>(SCOPE_KEY, 'search');
+  const s = storageGetJson<string>(SCOPE_KEY, 'search');
   return SCOPE_TABS.some((t) => t.id === s) ? (s as SearchScope) : 'search';
 }
 

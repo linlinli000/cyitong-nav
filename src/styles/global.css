@@ -12,6 +12,16 @@
   --color-line: #e5e7eb;
   --color-brand: #378add;
   --color-brand-dark: #1a5fa8;
+  --color-on-accent: #13161c;
+}
+
+:root {
+  --shadow-field: 0 2px 12px rgb(0 0 0 / 0.06);
+  --shadow-dropdown: 0 4px 24px rgb(0 0 0 / 0.12);
+  --shadow-menu: 0 10px 30px rgb(0 0 0 / 0.12);
+  --shadow-flyout: 0 12px 32px rgb(0 0 0 / 0.12);
+  --shadow-card: 0 6px 18px rgb(0 0 0 / 0.08);
+  --shadow-tab: 0 1px 2px rgb(0 0 0 / 0.06);
 }
 
 .dark {
@@ -24,6 +34,11 @@
   --color-line: #3e4451;
   --color-brand: #61afef;
   --color-brand-dark: #7fc3f5;
+  --shadow-field: 0 2px 12px rgb(0 0 0 / 0.3);
+  --shadow-dropdown: 0 4px 24px rgb(0 0 0 / 0.4);
+  --shadow-menu: 0 10px 30px rgb(0 0 0 / 0.45);
+  --shadow-flyout: 0 12px 32px rgb(0 0 0 / 0.5);
+  --shadow-card: 0 6px 18px rgb(0 0 0 / 0.4);
 }
 
 html {
@@ -97,10 +112,7 @@ nav-cat-tabs {
 }
 .link-tile:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-}
-.dark .link-tile:hover {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-card);
 }
 .link-tile:hover .link-tile-icon {
   border-color: var(--color-brand);
@@ -225,10 +237,7 @@ nav-cat-tabs {
   border-radius: 0.75rem;
   border: 1px solid var(--color-line);
   background: var(--color-card);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
-}
-.dark .sidebar-flyout {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-flyout);
 }
 .sidebar-flyout.open {
   display: block;
@@ -269,10 +278,10 @@ nav-cat-tabs {
 .cat-tab.active {
   color: var(--color-brand);
   background: var(--color-card);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-tab);
 }
 .dark .cat-tab.active {
-  color: #13161c;
+  color: var(--color-on-accent);
   background: var(--color-brand);
 }
 

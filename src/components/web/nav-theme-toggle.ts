@@ -1,5 +1,6 @@
 /** <nav-theme-toggle>：切换 .dark 并持久化 theme */
 import { iconEl } from './icons';
+import { storageSet } from './storage';
 
 class NavThemeToggle extends HTMLElement {
   connectedCallback(): void {
@@ -13,9 +14,7 @@ class NavThemeToggle extends HTMLElement {
     btn.addEventListener('click', () => {
       const dark = !document.documentElement.classList.contains('dark');
       document.documentElement.classList.toggle('dark', dark);
-      try {
-        localStorage.setItem('theme', dark ? 'dark' : 'light');
-      } catch {}
+      storageSet('theme', dark ? 'dark' : 'light');
       syncIcons(dark);
     });
 

@@ -1,4 +1,6 @@
 /** <nav-sidebar>：分类手风琴、滚动高亮、移动抽屉、桌面折叠图标条 + 收起态浮层 */
+import { storageGet, storageSet } from './storage';
+
 const RAIL_KEY = 'nav:rail';
 const RAIL_WIDTH = 1024;
 
@@ -91,15 +93,8 @@ class NavSidebar extends HTMLElement {
   }
 
   private restoreRailState(): void {
-    let saved: string | null = null;
-    try {
-      saved = localStorage.getItem(RAIL_KEY);
-    } catch {}
-    if (saved === 'collapsed') {
-      this.aside?.classList.add('is-collapsed');
-    } else {
-      this.aside?.classList.remove('is-collapsed');
-    }
+    const collapsed = storageGet(RAIL_KEY, 'expanded') === 'collapsed';
+    this.aside?.classList.toggle('is-collapsed', collapsed);
   }
 
   // ── 滚动监听 ──
@@ -141,9 +136,7 @@ class NavSidebar extends HTMLElement {
 
   private toggleRail(): void {
     this.aside?.classList.toggle('is-collapsed');
-    try {
-      localStorage.setItem(RAIL_KEY, this.aside?.classList.contains('is-collapsed') ? 'collapsed' : 'expanded');
-    } catch {}
+    storageSet(RAIL_KEY, this.aside?.classList.contains('is-collapsed') ? 'collapsed' : 'expanded');
     this.syncToggleState();
     this.closeFlyout(false);
   }

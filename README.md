@@ -44,7 +44,7 @@ cyitong-nav/
     │   ├── search-engines.ts# 搜索范围 tab + 外部引擎（{q} 模板）
     │   └── category-icons.ts# yaml icon 语义键 → heroicons 名
     ├── lib/icon-sprite.ts   # 运行期图标 symbol sprite（服务端专用）
-    ├── styles/global.css    # Tailwind 令牌 + .dark 覆盖 + 状态类样式
+    ├── styles/global.css    # Tailwind 颜色/投影令牌 + .dark 覆盖 + 状态类样式
     ├── layouts/Layout.astro # html 壳：防闪烁主题、图标 sprite、搜索索引
     ├── pages/               # index.astro（首页）、404.astro
     └── components/
@@ -55,6 +55,7 @@ cyitong-nav/
             ├── nav-search.ts  nav-dialog.ts  nav-cat-tabs.ts
             ├── nav-sidebar.ts nav-theme-toggle.ts  nav-backtotop.ts
             ├── header-dropdown.ts  search-utils.ts  icons.ts  html-escape.ts
+            ├── storage.ts         # localStorage 安全读写（原值/JSON 两组）
 ```
 
 `dist/`（构建产物，不入库）位于仓库根目录。
