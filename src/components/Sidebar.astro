@@ -14,7 +14,6 @@ const { categories } = Astro.props;
   id="sidebar"
   class="fixed inset-y-0 left-0 z-40 flex w-56 -translate-x-full flex-col border-r border-line bg-card transition-transform duration-200 lg:translate-x-0"
 >
-  <!-- 折叠防闪烁：localStorage 记过"收起"则首帧前加回 .is-collapsed（先于内容区解析执行） -->
   <script is:inline>
     (function () {
       try {
@@ -24,7 +23,6 @@ const { categories } = Astro.props;
       } catch (e) {}
     })();
   </script>
-  <!-- heading：仅品牌。桌面端折叠/展开汉堡在 TopBar（header）内；h-14 让 logo 中心与 TopBar 行同高 -->
   <div class="sidebar-header flex h-14 items-center px-4">
     <a href="#top" class="sidebar-brand flex min-w-0 flex-1 items-center gap-2.5">
       <img src="/logo.svg" alt="成医通" width="36" height="36" class="h-9 w-9 shrink-0" />
@@ -48,7 +46,6 @@ const { categories } = Astro.props;
                 aria-expanded="true"
                 title={cat.data.name}
               >
-                <!-- 图标列恒定（折叠成图标条时图标不位移）；文字区在右侧随条宽收缩被裁切/淡出 -->
                 <span class="sidebar-cat-icon shrink-0 text-brand">
                   <Icon name={categoryIcon(cat.data.icon)} class="h-5 w-5" />
                 </span>

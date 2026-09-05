@@ -15,9 +15,7 @@ class NavThemeToggle extends HTMLElement {
       document.documentElement.classList.toggle('dark', dark);
       try {
         localStorage.setItem('theme', dark ? 'dark' : 'light');
-      } catch {
-        /* 忽略 */
-      }
+      } catch {}
       syncIcons(dark);
     });
 

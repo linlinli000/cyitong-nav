@@ -1,6 +1,6 @@
 /** <nav-sidebar>：分类手风琴、滚动高亮、移动抽屉、桌面折叠图标条 + 收起态浮层 */
-const RAIL_KEY = 'nav:rail'; // 折叠状态（localStorage 持久化）
-const RAIL_WIDTH = 1024; // 桌面/移动断点（同 Tailwind lg）
+const RAIL_KEY = 'nav:rail';
+const RAIL_WIDTH = 1024;
 
 class NavSidebar extends HTMLElement {
   private aside: HTMLElement | null = null;
@@ -8,15 +8,12 @@ class NavSidebar extends HTMLElement {
   private observer: IntersectionObserver | null = null;
   private lastActive = '';
 
-  /** 收起态浮层：fixed 面板不能放进 aside——translate 会构成 containing block */
   private flyout: HTMLDivElement | null = null;
   private flyoutTrigger: HTMLButtonElement | null = null;
   private flyoutTimer: number | null = null;
-  /** 焦点还回触发行时抑制 focus → 重开浮层 */
   private suppressFocusOpen = false;
 
   private onDocClick = (e: MouseEvent): void => {
-    // 折叠/展开按钮在 TopBar 内（组件外）→ 文档级委托
     if ((e.target as Element).closest('[data-sidebar-toggle]')) {
       e.preventDefault();
       this.toggleRail();
@@ -31,7 +28,6 @@ class NavSidebar extends HTMLElement {
 
   private onDocKeydown = (e: KeyboardEvent): void => {
     if (e.key !== 'Escape') return;
-    // Esc 优先关浮层（浮层内部 Esc 已 stopPropagation，到此是行外）
     if (this.flyout?.classList.contains('open')) {
       this.closeFlyout(true);
       return;
@@ -73,40 +69,32 @@ class NavSidebar extends HTMLElement {
   // ── 折叠/展开 ──
 
   private initCollapse(): void {
-    // 手风琴仅会话内瞬时开关（用户选择，不持久化）
     this.addEventListener('click', (e) => {
       const toggle = (e.target as Element).closest<HTMLElement>('.sidebar-cat-toggle');
       if (!toggle) return;
       const group = toggle.closest<HTMLElement>('.sidebar-group');
       if (!group) return;
 
-      // 命中箭头：只开合手风琴，不跳转
       const hitChevron = !!(e.target as Element).closest('.sidebar-chevron');
 
       if (window.innerWidth >= RAIL_WIDTH) {
         if (this.isCollapsed()) {
-          // 收起态（图标条）：行点击跳到该分类「全部」；子分类走 hover/focus 浮层
           this.jumpToCategory(group);
           return;
         }
-        // 展开态：开合手风琴；点箭头只开合，点行其余区域再跳「全部」
         group.classList.toggle('open');
         if (!hitChevron) this.jumpToCategory(group);
         return;
       }
-      // 移动抽屉内：仅开合子分类（抽屉盖住内容，不跳转）
       group.classList.toggle('open');
     });
   }
 
-  /** 恢复桌面折叠偏好：Sidebar inline bootstrap 首帧前已处理，这里兜底同步（如 dev HMR） */
   private restoreRailState(): void {
     let saved: string | null = null;
     try {
       saved = localStorage.getItem(RAIL_KEY);
-    } catch {
-      /* 忽略 */
-    }
+    } catch {}
     if (saved === 'collapsed') {
       this.aside?.classList.add('is-collapsed');
     } else {
@@ -155,14 +143,11 @@ class NavSidebar extends HTMLElement {
     this.aside?.classList.toggle('is-collapsed');
     try {
       localStorage.setItem(RAIL_KEY, this.aside?.classList.contains('is-collapsed') ? 'collapsed' : 'expanded');
-    } catch {
-      /* 忽略 */
-    }
+    } catch {}
     this.syncToggleState();
     this.closeFlyout(false);
   }
 
-  /** 汉堡按钮 aria/文案随状态同步（按钮在 TopBar） */
   private syncToggleState(): void {
     const collapsed = this.aside?.classList.contains('is-collapsed') ?? true;
     document.querySelectorAll<HTMLElement>('[data-sidebar-toggle]').forEach((btn) => {
@@ -177,7 +162,6 @@ class NavSidebar extends HTMLElement {
     if (!cat) return;
     const section = document.querySelector<HTMLElement>(`[data-cat-block="${cat}"]`);
     if (!section) return;
-    // nav-cat-tabs 升级后暴露 activate(filter)；'' = 全部视图
     const tabs = section.querySelector('nav-cat-tabs') as { activate: (filter: string) => void } | null;
     tabs?.activate('');
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -198,12 +182,10 @@ class NavSidebar extends HTMLElement {
       btn?.addEventListener('focus', () => {
         if (this.isCollapsed() && !this.suppressFocusOpen) this.openFlyout(group, false);
       });
-      // focusout 到行外且不在浮层 → 关闭（Tab 离开不留残影）
       btn?.addEventListener('focusout', (e) => {
         const rel = e.relatedTarget as Node | null;
         if (!rel || (!group.contains(rel) && !this.flyout?.contains(rel))) this.closeFlyout(false);
       });
-      // 收起态 ←/→ 在图标行与浮层间移焦点
       btn?.addEventListener('keydown', (e) => {
         if (!this.isCollapsed()) return;
         if (e.key === 'ArrowRight') {
@@ -249,7 +231,6 @@ class NavSidebar extends HTMLElement {
     }
   }
 
-  /** 克隆该行 .sidebar-sub 到浮层（保留 data 属性/href，nav-cat-tabs 委托直达） */
   private openFlyout(group: HTMLElement, moveFocus: boolean): void {
     if (!this.isCollapsed() || !this.flyout) return;
     this.cancelFlyoutClose();
@@ -312,7 +293,6 @@ class NavSidebar extends HTMLElement {
       return;
     }
 
-    // Esc：stopPropagation 防再触发文档 Esc → closeDrawer
     e.preventDefault();
     e.stopPropagation();
     this.closeFlyout(true);
@@ -326,7 +306,6 @@ class NavSidebar extends HTMLElement {
 
     this.backdrop?.addEventListener('click', () => this.closeDrawer());
 
-    // 点击抽屉内链接后关闭
     this.addEventListener('click', (e) => {
       if ((e.target as Element).closest('.sub-link')) this.closeDrawer();
     });

@@ -4,8 +4,6 @@ import { RUNTIME_ICON_NAMES } from '../components/web/icons';
 import { buildIconSprite } from '../lib/icon-sprite';
 import { ENGINES } from '../data/search-engines';
 
-/** 运行期图标 symbol sprite（web 组件 `<use href>` 引用）。UI 字形走 RUNTIME_ICON_NAMES，
- * 搜索引擎 chip 字形由 ENGINES.icon 汇总（simple-icons 品牌标，缺名时 lucide 兜底） */
 const engineGlyphs = [...new Set(Object.values(ENGINES).flat().map((e) => e.icon))];
 const iconSymbols = buildIconSprite([...RUNTIME_ICON_NAMES, ...engineGlyphs]);
 
@@ -46,7 +44,6 @@ const {
     <meta property="og:url" content="https://nav.cyitong.top" />
     <meta property="og:site_name" content="成医通" />
 
-    <!-- 暗色模式防闪烁：优先用户手动选择，未设置时跟随系统 -->
     <script is:inline>
       (function () {
         var stored = null;
@@ -66,7 +63,6 @@ const {
     </script>
   </head>
   <body>
-    <!-- 运行期图标 sprite：lucide 符号单一来源（构建期生成），供 web 组件 <use href> 引用 -->
     <svg
       aria-hidden="true"
       style="position:absolute;width:0;height:0;overflow:hidden"
@@ -75,12 +71,10 @@ const {
     <nav-dialog />
     <slot />
 
-    <!-- 站内搜索索引：构建期序列化，供 <nav-search> 客户端读取 -->
     {searchIndexJson && (
       <script is:inline type="application/json" id="site-index" set:html={searchIndexJson} />
     )}
 
-    <!-- 自注册自定义元素：升级 <nav-dialog> 宿主 -->
     <script>
       import '../components/web/nav-dialog';
     </script>

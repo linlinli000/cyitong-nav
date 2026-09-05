@@ -1,11 +1,9 @@
 ---
 import { Icon } from 'astro-icon/components';
 
-/** 顶部栏图标统一 lucide（astro-icon 构建期内联，勿手抄 path；换图改 iconify 名即可）*/
 const MENU_ICON = 'lucide:menu';
 const CARET_ICON = 'lucide:chevron-down';
 
-/* 三个快速工具下拉（右侧，月亮按钮左侧）。菜单项 favicon：有道/讯飞/Gmail 无好用的官方源，本地存 public/icons/topbar/*.webp（ffmpeg 无损转，体积减半）；其余直链品牌官网 favicon。 */
 const TOOLS = [
   {
     id: 'translate',
@@ -67,7 +65,7 @@ const TOOLS = [
 
 <header class="sticky top-0 z-20 border-b border-line bg-card/80 backdrop-blur">
   <div class="relative flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5 lg:px-4">
-    <!-- 移动居中品牌（lg 隐藏，桌面侧栏已有）：左右按钮宽不对称 → 绝对居中而非三列 flex -->
+    <!-- 移动居中品牌 -->
     <a
       href="#top"
       aria-label="成医通"
@@ -76,7 +74,6 @@ const TOOLS = [
       <img src="/logo.svg" alt="" width="32" height="32" class="h-8 w-8 shrink-0" />
       <span class="leading-none">
         <span class="block text-[16px] font-bold text-ink">成医通</span>
-        <!-- ≥360px 才显示：logo 在窄屏将副标题与左侧 wiki 隔开不重叠 -->
         <span class="mt-1 hidden text-[10px] text-muted min-[360px]:block">nav.cyitong.top</span>
       </span>
     </a>
@@ -92,7 +89,6 @@ const TOOLS = [
         <Icon name={MENU_ICON} class="h-6 w-6" aria-hidden="true" />
       </button>
 
-      <!-- 桌面端折叠侧栏（aria 由 nav-sidebar 同步） -->
       <button
         type="button"
         data-sidebar-toggle
@@ -103,10 +99,8 @@ const TOOLS = [
         <Icon name={MENU_ICON} class="h-6 w-6" aria-hidden="true" />
       </button>
 
-      <!-- wiki 入口 -->
       <a
-        href="https://wiki.cyitong.top"
-        aria-label="wiki"
+        href="https://wiki.cyitong.top"        aria-label="wiki"
         title="wiki"
         class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
       >
@@ -116,7 +110,7 @@ const TOOLS = [
     </div>
 
     <div class="flex items-center gap-2">
-      <!-- 翻译/网盘/邮箱 快速工具下拉（图标+文字药丸，月亮左侧；移动端拥挤故 lg 起显示） -->
+      <!-- 翻译/网盘/邮箱 快捷下拉 -->
       {TOOLS.map((tool) => (
         <div class="relative hidden lg:block" data-menu>
           <button
@@ -160,7 +154,6 @@ const TOOLS = [
       ))}
 
       <nav-theme-toggle />
-      <!-- GitHub 源码（最右） -->
       <a
         href="https://github.com/linlinli000/cyitong-nav"
         target="_blank"
@@ -175,12 +168,10 @@ const TOOLS = [
   </div>
 </header>
 
-<!-- 自注册自定义元素：升级 <nav-theme-toggle> 宿主 -->
+<!-- 顶部栏脚本：主题切换 / 下拉交互 -->
 <script>
   import '../components/web/nav-theme-toggle';
 </script>
-
-<!-- 顶部栏下拉交互（data-menu 开关 / 外点关闭 / Esc） -->
 <script>
   import './web/header-dropdown';
 </script>

@@ -1,4 +1,4 @@
-/** <nav-dialog>：文档级拦截 a[data-mirrors]/a[data-qr] 点击 → 二维码/镜像弹窗（覆盖搜索与网格卡片） */
+/** <nav-dialog>：文档级拦截 a[data-mirrors]/a[data-qr] 点击 → 二维码/镜像弹窗 */
 import QRCode from 'qrcode';
 import { escapeHtml } from './html-escape';
 import type { Mirror } from '../../content.config';
@@ -17,15 +17,13 @@ class NavDialog extends HTMLElement {
       try {
         const mirrors = JSON.parse(a.dataset.mirrors) as Mirror[];
         if (mirrors.length) {
-          this.openMirrors(title, mirrors);
+          this.openMirrors(title, a.dataset.icon ?? '', mirrors);
           return;
         }
-      } catch {
-        /* 非法 JSON：忽略镜像，继续走二维码 */
-      }
+      } catch {}
     }
     if (a.dataset.qr) {
-      void this.openQr(title, a.dataset.qr, a.dataset.qrNote);
+      void this.openQr(title, a.dataset.icon ?? '', a.dataset.qr, a.dataset.qrNote);
     }
   };
 
@@ -33,16 +31,15 @@ class NavDialog extends HTMLElement {
     this.innerHTML = `
       <dialog class="m-auto w-[min(90vw,22rem)] rounded-2xl border border-line bg-card p-5 text-ink shadow-2xl backdrop:bg-black/50">
         <div class="flex items-center justify-between gap-4">
-          <h3 data-role="title" class="truncate text-base font-semibold"></h3>
+          <div class="flex min-w-0 items-center gap-2">
+            <img data-role="icon" alt="" class="hidden h-6 w-6 shrink-0 rounded-md object-contain">
+            <h3 data-role="title" class="truncate text-base font-semibold"></h3>
+          </div>
           <button type="button" data-role="close" class="shrink-0 text-muted transition-colors hover:text-ink" aria-label="关闭">
             ${iconEl('x', 'h-5 w-5')}
           </button>
         </div>
         <div data-role="body" class="mt-4"></div>
-        <div class="mt-5 flex justify-end">
-          <button type="button" data-role="close"
-            class="rounded-lg bg-surface px-3 py-1.5 text-sm text-muted transition-colors hover:text-ink">关闭</button>
-        </div>
       </dialog>`;
 
     this.dlg = this.querySelector('dialog');
@@ -60,10 +57,37 @@ class NavDialog extends HTMLElement {
     document.removeEventListener('click', this.onDocClick);
   }
 
-  private async openQr(title: string, url: string, note?: string): Promise<void> {
-    this.dlg!.querySelector('[data-role="title"]')!.textContent = title;
+  private setHeader(title: string, icon: string): void {
+    const t = this.dlg!.querySelector('[data-role="title"]')!;
+    t.textContent = title;
+    const img = this.dlg!.querySelector<HTMLImageElement>('[data-role="icon"]')!;
+    if (icon) {
+      img.src = icon;
+      img.classList.remove('hidden');
+    } else {
+      img.removeAttribute('src');
+      img.classList.add('hidden');
+    }
+  }
+
+  private async openQr(title: string, icon: string, url: string, note?: string): Promise<void> {
+    this.setHeader(title, icon);
     const body = this.dlg!.querySelector('[data-role="body"]')!;
     body.innerHTML = '';
+    const go = document.createElement('a');
+    go.href = url;
+    go.target = '_blank';
+    go.rel = 'noopener noreferrer';
+    go.title = url;
+    go.className =
+      'mb-3 flex items-center justify-between gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-ink transition-colors hover:border-brand sm:hidden';
+    go.innerHTML = `
+      <span class="min-w-0">
+        <span class="block truncate text-sm font-medium">移动端点击此处打开链接</span>
+        <span class="block truncate text-xs text-muted">${escapeHtml(url)}</span>
+      </span>
+      <span class="shrink-0 text-brand">↗</span>`;
+    body.appendChild(go);
     const img = document.createElement('img');
     img.alt = `${title} 二维码`;
     img.className = 'mx-auto h-64 w-64 rounded-xl bg-white p-2';
@@ -82,8 +106,8 @@ class NavDialog extends HTMLElement {
     if (!this.dlg!.open) this.dlg!.showModal();
   }
 
-  private openMirrors(title: string, mirrors: Mirror[]): void {
-    this.dlg!.querySelector('[data-role="title"]')!.textContent = title;
+  private openMirrors(title: string, icon: string, mirrors: Mirror[]): void {
+    this.setHeader(title, icon);
     this.dlg!.querySelector('[data-role="body"]')!.innerHTML = `
       <ul class="space-y-2">
         ${mirrors
@@ -91,9 +115,12 @@ class NavDialog extends HTMLElement {
             (m) => `
           <li>
             <a href="${escapeHtml(m.url)}" target="_blank" rel="noopener noreferrer"
-              class="flex items-center justify-between rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink transition-colors hover:border-brand">
-              <span>${escapeHtml(m.label)}</span>
-              <span class="text-brand">↗</span>
+              class="flex items-center justify-between gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-ink transition-colors hover:border-brand">
+              <span class="min-w-0" title="${escapeHtml(m.url)}">
+                <span class="block truncate text-sm font-medium">${escapeHtml(m.label)}</span>
+                <span class="block truncate text-xs text-muted">${escapeHtml(m.url)}</span>
+              </span>
+              <span class="shrink-0 text-brand">↗</span>
             </a>
           </li>`,
           )

@@ -7,13 +7,11 @@ interface IconifyDataSet {
   aliases?: Record<string, { parent: string }>;
 }
 
-/** 按语义名生成 `<symbol>` 串，id 形如 icon-<name>，供 web 组件 `<use href="#icon-x">` 引用 */
 export function buildIconSprite(names: readonly string[]): string {
   const bodyOf = (name: string, data: IconifyDataSet): string | undefined => {
     const aliases = data.aliases ?? {};
     return data.icons[name]?.body ?? (name in aliases ? data.icons[aliases[name].parent]?.body : undefined);
   };
-  // lucide 优先：`x`/`search` 等常规字形两集同名（simple-icons 的 x 是 Twitter 标），先查 lucide 才不串味
   return names
     .map((name) => {
       const body = bodyOf(name, lucide as IconifyDataSet) ?? bodyOf(name, simpleIcons as IconifyDataSet);

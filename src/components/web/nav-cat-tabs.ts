@@ -1,8 +1,6 @@
-/** <nav-cat-tabs>：子分类 tab 过滤 + 卡片折叠 + 侧栏子链接联动。静态标记由 CategoryBlock 渲染，仅增强。
- *  卡片显隐用 style.display（.link-tile 带 .flex 会覆盖 [hidden]）；.cat-more 用 hidden + CSS 兜底。 */
+/** <nav-cat-tabs>：子分类 tab 过滤 + 卡片折叠 + 侧栏子链接联动，仅增强 CategoryBlock 静态标记 */
 let delegated = false;
 
-/** 折叠上限（按排数）：桌面端 3 排，移动端 5 排（与 Tailwind lg=1024px 断点一致） */
 const ROWS_DESKTOP = 3;
 const ROWS_MOBILE = 5;
 
@@ -43,7 +41,6 @@ class NavCatTabs extends HTMLElement {
     this.activate(btn.dataset.filter ?? '');
   };
 
-  /** 切换到指定 filter（'' = 全部），并同步高亮 + 显隐卡片 */
   activate(filter: string): void {
     this.filter = filter;
     this.querySelectorAll<HTMLButtonElement>('.cat-tab').forEach((b) => {
@@ -52,7 +49,6 @@ class NavCatTabs extends HTMLElement {
     this.applyDisplay();
   }
 
-  /** 一级分类容器（卡片网格/查看更多按钮与 <nav-cat-tabs> 同 section 并列，非子节点） */
   private block(): HTMLElement {
     return this.closest<HTMLElement>('[data-cat-block]') ?? this;
   }
@@ -61,7 +57,6 @@ class NavCatTabs extends HTMLElement {
     return this.block().querySelector<HTMLElement>('.cat-grid');
   }
 
-  /** 当前视口下最多展示的卡片数 = 实际列数 × 排数（列数随断点自适应） */
   private computeMaxCards(): number {
     const grid = this.grid();
     if (!grid) return Infinity;
@@ -75,13 +70,11 @@ class NavCatTabs extends HTMLElement {
 
     cards.forEach((card, i) => {
       const match = this.filter === '' || (card.dataset.sub ?? '') === this.filter;
-      // 过滤视图展示全部命中卡片；全部视图受折叠上限约束
       const show = this.filter !== '' ? match : this.expanded || i < this.maxCards;
       card.style.display = show ? '' : 'none';
     });
 
     if (this.moreBtn) {
-      // 仅「全部」视图且存在溢出卡片时显示查看更多
       const hasOverflow = this.filter === '' && cards.length > this.maxCards;
       this.moreBtn.hidden = !hasOverflow;
       if (hasOverflow) {
@@ -92,7 +85,6 @@ class NavCatTabs extends HTMLElement {
     }
   }
 
-  /** 侧边栏二级分类链接联动（文档级委托，全站只注册一次） */
   private ensureDelegated(): void {
     if (delegated) return;
     delegated = true;

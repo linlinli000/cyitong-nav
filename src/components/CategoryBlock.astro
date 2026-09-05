@@ -18,7 +18,6 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
   data-cat-block={category.data.id}
   class="scroll-mt-24 rounded-2xl border border-line bg-card p-4 sm:p-5"
 >
-  <!-- 标题 + tab 同行：桌面端同一排，移动端两排（tab 在下） -->
   <div class="mb-4 flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
     <div class="flex shrink-0 items-center gap-2.5">
       <span class="text-brand">
@@ -28,10 +27,8 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
       <span class="rounded-full bg-surface px-2 py-0.5 text-xs text-muted">{total} 个链接</span>
     </div>
 
-    <!-- 单行 tab：显示不下时横向滑动（滚动条隐藏） -->
     <nav-cat-tabs class="min-w-0 flex-1">
       <div class="scrollbar-hide -mx-1 overflow-x-auto px-1">
-        <!-- 一整块分段控件（圆角长方形，非胶囊）：外框一体，active 单独白/品牌高亮 -->
         <div class="flex w-max items-center gap-0.5 rounded-xl border border-line bg-surface p-1">
           <button type="button" class="cat-tab active" data-filter="">
             全部
@@ -58,14 +55,12 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
     }
   </div>
 
-  <!-- 卡片折叠：超出 3 排（桌面）/ 5 排（移动）时显示查看更多，点击展开/收起 -->
   <button type="button" class="cat-more" hidden>
     <span class="cat-more-label">查看更多</span>
     <Icon name="lucide:chevron-down" class="cat-more-chevron h-3.5 w-3.5" />
   </button>
 </section>
 
-<!-- 自注册自定义元素：升级 <nav-cat-tabs> 宿主 -->
 <script>
   import './web/nav-cat-tabs';
 </script>

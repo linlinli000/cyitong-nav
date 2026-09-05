@@ -1,14 +1,12 @@
 @import "tailwindcss";
 
-/* 类名暗色模式：.dark 作用域下启用 dark: 变体 */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
-  /* 调色板沿用旧版成医通（Vue 版）：品牌蓝 #378ADD，页面底 #F4F8FD */
   --color-surface: #f4f8fd;
   --color-card: #ffffff;
-  --color-field: #ffffff; /* 输入框/浮层底色（暗色下比卡片略亮） */
+  --color-field: #ffffff;
   --color-ink: #1f2937;
   --color-muted: #6b7280;
   --color-line: #e5e7eb;
@@ -16,24 +14,22 @@
   --color-brand-dark: #1a5fa8;
 }
 
-/* 暗色主题语义变量覆盖：One Dark 中性深灰盘，背景不再偏蓝（原为 slate-900/800/700） */
 .dark {
   color-scheme: dark;
-  --color-surface: #21252b; /* 页面底 */
-  --color-card: #282c34; /* 卡片 */
-  --color-field: #2f343c; /* 输入框/浮层 */
+  --color-surface: #21252b;
+  --color-card: #282c34;
+  --color-field: #2f343c;
   --color-ink: #d5d7dc;
   --color-muted: #949aa4;
   --color-line: #3e4451;
   --color-brand: #61afef;
-  --color-brand-dark: #7fc3f5; /* 填充按钮暗色 hover（更亮一档） */
+  --color-brand-dark: #7fc3f5;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* 页面底纹沿用旧版：品牌色点状网格（22px 间距），暗色换 slate 淡点 */
 body {
   @apply bg-surface text-ink antialiased;
   background-image: radial-gradient(circle, rgba(55, 138, 221, 0.07) 1px, transparent 1px);
@@ -43,7 +39,7 @@ body {
   background-image: radial-gradient(circle, rgba(178, 184, 194, 0.06) 1px, transparent 1px);
 }
 
-/* Web Component 宿主 */
+/* 自定义元素宿主置块 */
 nav-search {
   display: block;
 }
@@ -117,23 +113,21 @@ nav-cat-tabs {
   transform: scale(1.06);
 }
 
-/* 侧边栏分类项滚动监听高亮（颜色统一走 --color-brand，暗色下自动为 One Dark 蓝） */
+/* 侧边栏分类项滚动高亮 */
 .sidebar-cat-link.active {
   color: var(--color-brand);
   background: color-mix(in srgb, var(--color-brand) 10%, transparent);
 }
 
-/* 折叠几何：文字淡出时图标位置恒定。 */
+/* 折叠图标条的几何 */
 #sidebar .sidebar-header {
   padding-left: 14px;
-  padding-right: 14px; /* 收起时 logo(36px) 恰好容纳，避免被 .sidebar-brand 裁切 */
+  padding-right: 14px;
 }
 #sidebar .sidebar-brand {
   overflow: hidden;
 }
 #sidebar .sidebar-brand img {
-  /* 折叠条内可用宽仅 35px（64 − 1px 边框 − 28 内距），preflight 的 img{max-width:100%}
-     会把 36px 图标压到 35，展开后变回 36 → 视觉上 logo"变大"1px。固定不随父宽收缩。 */
   max-width: none;
 }
 #sidebar .sidebar-brand-text {
@@ -145,7 +139,7 @@ nav-cat-tabs {
   padding-left: 14px;
   padding-right: 8px;
   overflow: hidden;
-  text-align: left; /* 覆盖 <button> UA 默认居中：否则拉满宽度的名字会在盒内居中，图标与文字间留大空 */
+  text-align: left;
 }
 #sidebar .sidebar-cat-meta {
   display: inline-flex;
@@ -157,23 +151,18 @@ nav-cat-tabs {
   transition: opacity 0.15s ease;
 }
 #sidebar .sidebar-cat-name {
-  /* 名字按内容宽排完即止；min-width:0 保留窄宽截断 */
   flex: 0 1 auto;
   min-width: 0;
 }
 #sidebar .sidebar-cat-count {
-  /* 占满名字右侧剩余空间，把「计数+箭头」整簇推到行最右 */
   margin-left: auto;
 }
 #sidebar .sidebar-group .sub-link {
-  padding-left: 14px; /* 与父级图标左缘（22px）对齐 */
+  padding-left: 14px;
 }
 
-/* 桌面「折叠成图标条」（≥lg；移动端抽屉始终全宽）。状态 = aside#sidebar 的 .is-collapsed，
-   默认展开（SSR 不带）；localStorage[nav:rail]==collapsed 时 Sidebar inline bootstrap 首帧前加回（无 FOUC）。
-   内容留白由 nav-sidebar:has(...) + .site-content 同源推导，两侧不失同步。 */
+/* 桌面折叠成图标条（≥lg） */
 @media (min-width: 1024px) {
-  /* 过渡挂无条件选择器：收/展双向都动 */
   #sidebar {
     transition: width 0.2s ease;
   }
@@ -181,8 +170,6 @@ nav-cat-tabs {
     transition: padding-left 0.2s ease;
   }
 
-  /* 展开宽 .w-56 = 14rem：字↔簇距离由展开宽决定（簇钉最右），移动抽屉与桌面共用。
-     折叠（图标条）单独 4rem。 */
   nav-sidebar:has(#sidebar:not(.is-collapsed)) + .site-content {
     padding-left: 14rem;
   }
@@ -193,7 +180,6 @@ nav-cat-tabs {
     width: 14rem;
   }
 
-  /* 侧边栏收窄为图标条：文字区淡出并被右缘裁切，图标列因内边距恒定而不动 */
   #sidebar.is-collapsed {
     width: 4rem;
   }
@@ -202,14 +188,13 @@ nav-cat-tabs {
     opacity: 0;
     pointer-events: none;
   }
-  /* 手风琴/页脚不在折叠条内，整体隐藏（文字区走上面 opacity 淡出，不用 display:none） */
   #sidebar.is-collapsed .sidebar-sub,
   #sidebar.is-collapsed .sidebar-footer {
     display: none;
   }
 }
 
-/* 顶部栏下拉面板（data-menu）：默认隐藏，.open 显示；visibility 延迟隐藏以配合淡出 */
+/* 顶栏下拉面板 */
 [data-menu-panel] {
   visibility: hidden;
   opacity: 0;
@@ -229,7 +214,7 @@ nav-cat-tabs {
     visibility 0s;
 }
 
-/* 收起态 hover/focus 浮出子分类面板（nav-sidebar 宿主下，fixed 定位，避让 aside 的 translate） */
+/* 收起态浮出的子分类面板 */
 .sidebar-flyout {
   display: none;
   position: fixed;
@@ -250,23 +235,22 @@ nav-cat-tabs {
 }
 .sidebar-flyout-title {
   padding: 0.15rem 0.6rem 0.4rem;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--color-muted);
+  color: color-mix(in srgb, var(--color-ink) 65%, var(--color-muted));
 }
-/* 克隆来的 .sidebar-sub 无 .open 祖先，会命中 base 的 max-height:0 / opacity:0 —— 必须抵消 */
 .sidebar-flyout .sidebar-sub {
   max-height: none;
   opacity: 1;
   overflow: visible;
 }
 
-/* 分类容器内子分类 tab：一整块分段控件（圆角长方形，非胶囊），按钮本身无独立边框 */
+/* 分类子分类 tab（分段控件） */
 .cat-tab {
   border: none;
   background: transparent;
   color: var(--color-muted);
-  border-radius: 0.5rem; /* rounded-lg：圆角长方形，不是全圆胶囊 */
+  border-radius: 0.5rem;
   padding: 0.3rem 0.8rem;
   font-size: 13px;
   line-height: 1.5;
@@ -292,7 +276,7 @@ nav-cat-tabs {
   background: var(--color-brand);
 }
 
-/* 卡片折叠「查看更多」按钮（hidden 用 JS 切换，需显式兜底 display:none） */
+/* 卡片折叠「查看更多」按钮 */
 .cat-more {
   display: flex;
   align-items: center;

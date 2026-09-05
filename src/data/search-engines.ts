@@ -4,9 +4,7 @@ export type SearchScope = 'site' | 'search' | 'community' | 'literature';
 
 export interface Engine {
   name: string;
-  /** URL 模板，{q} 为查询词占位 */
   url: string;
-  /** 品牌字形名（simple-icons 优先，缺品牌标的 MeSH/万方/百度学术 用 lucide 语义字形兜底） */
   icon: string;
 }
 
@@ -39,6 +37,7 @@ export const ENGINES: Record<SearchScope, Engine[]> = {
   literature: [
     { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term={q}', icon: 'pubmed' },
     { name: 'MeSH', url: 'https://www.ncbi.nlm.nih.gov/mesh/?term={q}', icon: 'tags' },
+    { name: '知网', url: 'https://kns.cnki.net/kns8s/defaultresult/index?korder=&kw={q}', icon: 'database' },
     { name: '万方', url: 'https://s.wanfangdata.com.cn/paper?q={q}', icon: 'library' },
     { name: '百度学术', url: 'https://xueshu.baidu.com/s?wd={q}', icon: 'graduation-cap' },
     { name: '谷歌学术', url: 'https://scholar.google.com/scholar?q={q}', icon: 'googlescholar' },

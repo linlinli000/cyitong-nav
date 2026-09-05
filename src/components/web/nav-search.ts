@@ -21,9 +21,7 @@ function storageGet<T>(key: string, fallback: T): T {
 function storageSet(key: string, value: unknown): void {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* 隐私模式等场景忽略 */
-  }
+  } catch {}
 }
 
 class NavSearch extends HTMLElement {
@@ -68,7 +66,6 @@ class NavSearch extends HTMLElement {
     document.removeEventListener('click', this.handleDocClick);
   }
 
-  /** 弹窗属性（data-qr/data-mirrors）：有才带，无则省略——避免空属性命中 nav-dialog 的文档级委托 */
   private dialogAttrs(r: SiteRecord): string {
     const qr = r.qr
       ? ` data-qr="${escapeAttr(r.url)}"${r.qrNote ? ` data-qr-note="${escapeAttr(r.qrNote)}"` : ''}`
@@ -95,17 +92,18 @@ class NavSearch extends HTMLElement {
 
   private render(): void {
     const { scope } = this;
+    const placeholder =
+      scope === 'site' ? PLACEHOLDERS.site : `在 ${ENGINES[scope][this.engineIdx].name} 中搜索…`;
     this.innerHTML = `
-      <!-- 第一层：搜索范围胶囊 tab（sm+ 放大一档） -->
-      <div class="mb-3 flex justify-center sm:mb-4">
-        <div class="inline-flex items-center gap-1 rounded-full border border-line bg-surface p-1 sm:gap-1.5 sm:p-1.5">
+      <div class="mb-2 flex justify-center sm:mb-3">
+        <div class="inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-line/80 bg-surface/60 p-1 backdrop-blur-md sm:gap-1.5">
           ${SCOPE_TABS.map(
             (tab) => `
             <button type="button" data-scope="${tab.id}"
-              class="shrink-0 rounded-full px-4 py-1.5 text-[13px] font-medium transition-all sm:px-5 sm:py-2 sm:text-sm ${
+              class="inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-[13px] font-medium transition-all sm:px-5 sm:py-2 sm:text-sm ${
                 tab.id === scope
-                  ? 'bg-white text-brand shadow-sm dark:bg-brand dark:text-[#13161c]'
-                  : 'text-muted hover:text-ink'
+                  ? 'bg-white font-semibold text-brand shadow-sm dark:bg-brand dark:text-[#13161c]'
+                  : 'text-muted hover:bg-white/60 hover:text-ink dark:hover:bg-white/10'
               }">
               ${tab.label}
             </button>`,
@@ -113,50 +111,51 @@ class NavSearch extends HTMLElement {
         </div>
       </div>
 
-      <!-- relative：下拉 absolute 紧贴输入框底，盖住下方按钮层 -->
-      <div class="relative">
+      <div class="relative mx-auto w-full max-w-[45rem]">
         <div
-          class="flex items-center gap-2 rounded-xl border border-line bg-field px-3 py-1.5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all sm:gap-3 sm:px-4 sm:py-2 dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
+          class="flex items-center gap-1.5 rounded-2xl border border-line bg-field py-1.5 pl-3.5 pr-1 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all sm:gap-2 sm:pl-5 sm:pr-1.5 dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
           <input type="text" autocomplete="off" spellcheck="false" value="${escapeAttr(this.query)}"
-            placeholder="${PLACEHOLDERS[scope]}"
+            placeholder="${placeholder}"
             aria-label="搜索"
-            class="min-w-0 flex-1 bg-transparent py-1.5 text-sm text-ink outline-none placeholder:text-muted sm:py-2 sm:text-[15px]" />
+            class="min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none placeholder:text-muted sm:text-base" />
           <button type="button" data-role="submit" aria-label="搜索"
-            class="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] bg-brand text-white transition-colors hover:bg-brand-dark active:scale-95 sm:h-10 sm:w-10 dark:text-[#13161c]">
-            ${iconEl('search', 'h-4 w-4')}
+            class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-white transition-colors hover:bg-brand-dark active:scale-95 sm:h-10 sm:w-10 dark:text-[#13161c]">
+            ${iconEl('search', 'h-4 w-4 sm:h-5 sm:w-5')}
           </button>
         </div>
 
-        <!-- 下拉：超高内滚（max-h-96 + 细滚动条） -->
         <div data-role="dropdown"
           class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 hidden max-h-96 overflow-y-auto rounded-xl border border-line bg-field shadow-[0_4px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)]"></div>
       </div>
 
-      <!-- 第三层：站内收录统计 / 引擎按钮 -->
-      <div class="mt-3 flex flex-wrap items-center justify-center gap-2 sm:mt-4">
-        ${scope === 'site'
-          ? `<span class="rounded-full bg-surface/70 px-3.5 py-1.5 text-[13px] text-muted sm:px-4 sm:text-sm dark:bg-black/25">本网站已收录 <span class="font-semibold text-brand">${this.records.length}</span> 个常用链接</span>`
-          : ENGINES[scope]
-              .map(
-                (e, i) => `
-                <button type="button" data-engine="${i}"
-                  class="inline-flex items-center gap-1.5 rounded-full border border-line/80 px-3 py-1.5 text-[13px] transition-all sm:px-4 sm:text-sm ${
-                    i === this.engineIdx
-                      ? 'border-transparent bg-white font-semibold text-brand shadow-sm dark:bg-brand dark:text-[#13161c]'
-                      : 'bg-surface/60 text-muted hover:text-ink dark:bg-black/20'
-                  }">
-                  ${iconEl(e.icon, 'h-4 w-4')}
-                  ${e.name}
-                </button>`,
-              )
-              .join('')}
-      </div>
+      ${scope === 'site'
+        ? `<div class="mt-2 flex justify-center sm:mt-3">
+            <span class="inline-flex items-center gap-1 rounded-full border border-line/80 bg-surface/60 px-3.5 py-1 text-[13px] text-muted backdrop-blur-md sm:px-4 dark:bg-black/20">本网站已收录<span class="font-semibold text-brand">${this.records.length}</span>个常用链接</span>
+          </div>`
+        : `<div class="mt-2 flex overflow-x-auto scrollbar-hide sm:mt-3">
+            <div class="mx-auto flex shrink-0 items-center gap-2">
+              ${ENGINES[scope]
+                .map(
+                  (e, i) => `
+                  <button type="button" data-engine="${i}"
+                    class="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-line/80 px-2.5 py-1 text-[13px] backdrop-blur-md transition-all sm:px-3 ${
+                      i === this.engineIdx
+                        ? 'border-transparent bg-white font-semibold text-brand shadow-sm dark:bg-brand dark:text-[#13161c]'
+                        : 'bg-surface/60 text-muted hover:text-ink dark:bg-black/20'
+                    }">
+                    ${iconEl(e.icon, 'h-3.5 w-3.5')}
+                    ${e.name}
+                  </button>`,
+                )
+                .join('')}
+            </div>
+          </div>`}
     `;
     this.input = this.querySelector('input');
     this.dropdown = this.querySelector('[data-role="dropdown"]');
   }
 
-  // ── 事件（委托到宿主元素，避免重渲染后丢失绑定） ──
+  // ── 事件（委托到宿主元素） ──
 
   private onInput = (e: Event): void => {
     if (e.target !== this.input) return;
@@ -199,7 +198,6 @@ class NavSearch extends HTMLElement {
       this.showHistory();
       return;
     }
-    // 结果项为 <a>：默认跳转；带二维码/镜像的由 <nav-dialog> 文档级委托拦截
   };
 
   private onKeydown = (e: KeyboardEvent): void => {
@@ -278,7 +276,7 @@ class NavSearch extends HTMLElement {
     d.innerHTML = this.results
       .map(
         (r, i) => `
-        <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener noreferrer"${this.dialogAttrs(r)} data-title="${escapeAttr(r.title)}"
+        <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener noreferrer"${this.dialogAttrs(r)} data-title="${escapeAttr(r.title)}" data-icon="${escapeAttr(r.icon)}"
           class="flex items-center gap-3 px-3 py-2 transition-colors ${
             i === this.cursor ? 'bg-surface/80' : 'hover:bg-surface/60'
           }">
@@ -356,10 +354,10 @@ class NavSearch extends HTMLElement {
 
   private openResult(r: SiteRecord): void {
     if (r.mirrors?.length || r.qr) {
-      // 构造临时 <a> 并派发点击，让 <nav-dialog> 的文档级委托拦截
       const a = document.createElement('a');
       a.href = r.url;
       a.dataset.title = r.title;
+      a.dataset.icon = r.icon;
       if (r.qr) {
         a.dataset.qr = r.url;
         a.dataset.qrNote = r.qrNote ?? '';
@@ -388,8 +386,8 @@ class NavSearch extends HTMLElement {
 }
 
 function loadScope(): SearchScope {
-  const s = storageGet<string>(SCOPE_KEY, 'site');
-  return SCOPE_TABS.some((t) => t.id === s) ? (s as SearchScope) : 'site';
+  const s = storageGet<string>(SCOPE_KEY, 'search');
+  return SCOPE_TABS.some((t) => t.id === s) ? (s as SearchScope) : 'search';
 }
 
 customElements.define('nav-search', NavSearch);

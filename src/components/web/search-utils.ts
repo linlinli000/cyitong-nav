@@ -19,7 +19,6 @@ export interface SiteRecord {
 
 const FIELD = { title: 100, cat: 45, sub: 40, pinyin: 30, first: 22, url: 18 } as const;
 
-/** bigram Dice 系数 —— 容错的模糊相似度 */
 function bigramDice(a: string, b: string): number {
   if (a.length < 2 || b.length < 2) return 0;
   const grams = new Map<string, number>();
@@ -39,7 +38,6 @@ function bigramDice(a: string, b: string): number {
   return (2 * overlap) / Math.max(1, a.length - 1 + b.length - 1);
 }
 
-/** 单个 token 对单条记录的打分；0 = 不匹配 */
 function tokenScore(rec: SiteRecord, tok: string): number {
   const t = tok.toLowerCase();
   const title = rec.title.toLowerCase();
@@ -48,14 +46,12 @@ function tokenScore(rec: SiteRecord, tok: string): number {
   if (title.startsWith(t)) return Math.round(FIELD.title * 0.8);
   if (title.includes(t)) return Math.round(FIELD.title * 0.55);
 
-  // 拼音首字母前缀最宽容：如 "xxt" → 学习通
   if (rec.pinyinFirst.toLowerCase().startsWith(t)) return Math.round(FIELD.first * 0.9);
   if (rec.pinyin.toLowerCase().includes(t)) return FIELD.pinyin;
 
   if (rec.catName.toLowerCase().includes(t)) return FIELD.cat;
   if (rec.subName.toLowerCase().includes(t)) return FIELD.sub;
 
-  // 短词（1-2 字符）跳过 url 与模糊档，控制噪音
   if (t.length >= 3) {
     if (rec.url.toLowerCase().includes(t)) return FIELD.url;
     const dice = Math.max(bigramDice(title, t), bigramDice(rec.pinyin, t));
@@ -65,12 +61,10 @@ function tokenScore(rec: SiteRecord, tok: string): number {
   return 0;
 }
 
-/** 分词：空格、中英文逗号顿号分号句号分隔 */
 function tokenize(query: string): string[] {
   return query.toLowerCase().split(/[\s,，、;；.。]+/).filter(Boolean);
 }
 
-/** 站内搜索：token AND，结果按相关度降序，平局按 pinyinFirst 稳定排序 */
 export function searchSites(records: SiteRecord[], query: string, limit = 30): SiteRecord[] {
   const tokens = tokenize(query);
   if (tokens.length === 0) return [];
