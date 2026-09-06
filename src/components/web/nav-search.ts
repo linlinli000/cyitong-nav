@@ -94,13 +94,13 @@ class NavSearch extends HTMLElement {
       scope === 'site' ? PLACEHOLDERS.site : `在 ${ENGINES[scope][this.engineIdx].name} 中搜索…`;
     this.innerHTML = `
       <div class="mb-2 flex justify-center sm:mb-3">
-        <div class="inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-line bg-ink/5 p-1 sm:gap-1.5 dark:bg-white/10">
+        <div class="inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-line bg-card p-1 shadow-[var(--shadow-field)] sm:gap-1.5 dark:border-line/60">
           ${SCOPE_TABS.map(
             (tab) => `
             <button type="button" data-scope="${tab.id}"
               class="inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-[13px] font-medium transition-all sm:px-5 sm:py-2 sm:text-sm ${
                 tab.id === scope
-                  ? 'bg-card font-semibold text-brand shadow-sm dark:bg-brand-solid dark:text-on-solid'
+                  ? 'bg-brand-solid font-semibold text-on-solid shadow-sm'
                   : 'text-muted hover:bg-ink/5 hover:text-ink dark:hover:bg-white/10'
               }">
               ${tab.label}
@@ -117,7 +117,7 @@ class NavSearch extends HTMLElement {
             aria-label="搜索"
             class="min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none placeholder:text-muted sm:text-base" />
           <button type="button" data-role="submit" aria-label="搜索"
-            class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-white transition-colors hover:bg-brand-dark active:scale-95 sm:h-10 sm:w-10">
+            class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand-solid text-on-solid transition-colors hover:brightness-110 active:scale-95 sm:h-10 sm:w-10">
             ${iconEl('search', 'h-4 w-4 sm:h-5 sm:w-5')}
           </button>
         </div>
@@ -127,19 +127,19 @@ class NavSearch extends HTMLElement {
       </div>
 
       ${scope === 'site'
-        ? `<div class="mt-2 flex justify-center py-1 sm:mt-3">
-            <span class="inline-flex items-center gap-1 rounded-full border border-line bg-ink/5 px-3.5 py-1 text-[13px] text-muted sm:px-4 dark:bg-white/10">本网站已收录<span class="font-semibold text-brand dark:text-on-solid">${this.records.length}</span>个常用链接</span>
+        ? `<div class="mt-2 flex min-h-[2.75rem] items-center justify-center sm:mt-3">
+            <span class="inline-flex items-center gap-1 rounded-full border border-line bg-card px-3.5 py-1 text-[13px] text-muted shadow-[var(--shadow-field)] sm:px-4 dark:border-line/60">本网站已收录<span class="font-semibold text-brand dark:text-on-solid">${this.records.length}</span>个常用链接</span>
           </div>`
-        : `<div data-role="engine-bar" class="mt-2 flex overflow-x-auto scrollbar-hide py-1 sm:mt-3">
-              <div class="mx-auto flex shrink-0 items-center gap-1.5">
+        : `<div data-role="engine-bar" class="mt-2 flex min-h-[2.75rem] items-center overflow-x-auto scrollbar-hide sm:mt-3">
+              <div class="mx-auto flex shrink-0 items-center gap-1 rounded-full border border-line bg-card p-1 shadow-[var(--shadow-field)] dark:border-line/60">
               ${ENGINES[scope]
                 .map(
                   (e, i) => `
                   <button type="button" data-engine="${i}"
-                    class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[13px] transition-all sm:px-3 ${
+                    class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[13px] transition-all sm:px-3 ${
                       i === this.engineIdx
-                        ? 'border-transparent bg-card font-semibold text-brand shadow-sm dark:bg-brand-solid dark:text-on-solid'
-                        : 'border-line bg-ink/5 text-muted hover:bg-card hover:text-ink dark:bg-white/10'
+                        ? 'bg-brand-solid font-semibold text-on-solid shadow-sm'
+                        : 'text-muted hover:bg-ink/5 hover:text-ink dark:hover:bg-white/10'
                     }">
                     ${iconEl(e.icon, 'h-3.5 w-3.5')}
                     ${e.name}

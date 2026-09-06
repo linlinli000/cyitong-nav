@@ -1,111 +1,97 @@
 # 成医通（cyitong-nav）
 
-成都医学院师生专属导航页，WebStack 侧边栏风格：汇集校内系统、医学文献、AI 工具与实用工具，另有站内/引擎搜索、二维码/镜像弹窗等增强。
+成都医学院师生导航页，汇集校内系统、医学文献、AI 工具与实用工具；支持站内/引擎搜索、扫码、镜像站。
 
 线上地址：<https://nav.cyitong.top>
 
-## 技术栈
+## 添加一个链接
 
-| 层面 | 方案 |
-|---|---|
-| 框架 | Astro 7（纯静态输出，Content Layer） |
-| 数据 | `src/data/sites/*.yaml` 唯一数据源 + Zod v4 构建期校验 |
-| 样式 | Tailwind CSS v4（`@theme` 语义令牌 + 类名暗色） |
-| 图标 | `astro-icon` 构建期内联；运行期走 lucide symbol sprite |
-| 交互 | 原生 TypeScript Web Components（无框架，无 island） |
-| 二维码 | `qrcode`（浏览器端生成） |
+数据是三层结构：**一级分类 → 二级分类 → 链接**，存在 `src/data/sites/*.yaml`。加一条链接只需三步。
 
-## 常用命令
+### 1. 确定分类
 
-```bash
-npm install
-npm run dev       # 开发服务器 → http://localhost:4321
-npm run build     # 类型检查(astro check) + 生产构建 → dist/
-npm run check     # 仅类型检查
-npm run preview   # 本地预览构建产物
-```
+七个一级分类，文件同名（`src/data/sites/{id}.yaml`）：
 
-无测试框架：**改完代码必须 `npm run build`**，Content Layer 的 Zod 会在构建期拦截数据错误。
+| id | 名称 | | id | 名称 |
+|---|---|---|---|---|
+| `campus` | 成医生活 | | `enlit` | 英文文献 |
+| `study` | 线上学习 | | `aitool` | AI 工具 |
+| `exam` | 考试比赛 | | `tools` | 实用工具 |
+| `cnlit` | 中文文献 | | | |
 
-## 目录结构
+链接加进最贴切的二级分类 `subs[].links[]` 即可（必要时也可新增一个二级分类）。
+
+### 2. 放图标
+
+图标保存为 webp，放到 `public/icons/{一级分类}/{链接id}.webp`，如：
 
 ```
-cyitong-nav/
-├── astro.config.ts      # site、astro-icon integration、vite 插件(tailwindcss)
-├── public/
-│   ├── logo.svg         # 品牌 logo / favicon
-│   ├── cmc.webp         # 首页搜索 Hero 背景图
-│   └── icons/           # 链接图标：/icons/{分类id}/{链接id}.webp（93 张）
-│       └── topbar/      # 顶栏下拉本地 favicon（有道/讯飞/Gmail，共 3 张）
-└── src/
-    ├── content.config.ts    # Content Layer：glob + Zod 校验 + 图标存在性对账
-    ├── data/
-    │   ├── sites/*.yaml     # 数据源：一个一级分类一个文件（7 个）
-    │   ├── search-engines.ts# 搜索范围 tab + 外部引擎（{q} 模板）
-    │   └── category-icons.ts# yaml icon 语义键 → heroicons 名
-    ├── lib/icon-sprite.ts   # 运行期图标 symbol sprite（服务端专用）
-    ├── styles/global.css    # Tailwind 颜色/投影令牌 + .dark 覆盖 + 状态类样式
-    ├── layouts/Layout.astro # html 壳：防闪烁主题、图标 sprite、搜索索引
-    ├── pages/               # index.astro（首页）、404.astro
-    └── components/
-        ├── Sidebar.astro  TopBar.astro  SearchPanel.astro
-        ├── CategoryBlock.astro  LinkCard.astro  SiteGrid.astro
-        ├── Footer.astro   BackToTop.astro
-        └── web/              # 客户端运行时（自定义元素 + 纯工具）
-            ├── nav-search.ts  nav-dialog.ts  nav-cat-tabs.ts
-            ├── nav-sidebar.ts nav-theme-toggle.ts  nav-backtotop.ts
-            ├── header-dropdown.ts  link-tip.ts  search-utils.ts  icons.ts  html-escape.ts
-            ├── storage.ts         # localStorage 安全读写（原值/JSON 两组）
+public/icons/campus/alipay.webp
 ```
 
-`dist/`（构建产物，不入库）位于仓库根目录。
+建议从官网取 favicon，压缩到小尺寸。
 
-## 数据与添加链接
+### 3. 写数据条目
 
-数据是三级结构：**一级分类 → 二级分类 → 链接**。
+在对应 yaml 的 `links[]` 追加一条，**必填**字段要齐，**可选**按需：
 
 ```yaml
-# src/data/sites/campus.yaml
-order: 1              # 一级分类排序（glob 不保证顺序，必填）
-id: campus            # 与文件名一致
-name: 成医生活
-icon: building        # 语义键 → category-icons.ts → heroicons 图标
 subs:
-  - id: finance       # 二级分类 id
+  - id: finance            # 二级分类 id（新增时自取小写英文）
     name: 财务
     links:
-      - id: alipay    # 链接 id，必须与图标文件名一致
-        title: 计划财务处
-        desc: 计划财务处服务号，扫码打开   # 可选：卡片简介/悬浮 tip/站内搜索
-        pinyin: jihuacaiwuchu    # 全拼，供搜索
-        pinyinFirst: jhcwc       # 拼音首字母，供搜索
-        url: "alipays://…"        # 支持非 http scheme；含 # & ? 须加引号
-        qr: true                 # 可选：点击弹二维码
-        qrNote: 请使用支付宝扫码…
-        mirrors:                 # 可选：镜像站（优先级高于 qr）
+      - id: alipay             # 必填：小写字母/数字，与图标文件名一致
+        title: 计划财务处       # 必填：卡片显示名
+        pinyin: jihuacaiwuchu  # 必填：全拼
+        pinyinFirst: jhcwc     # 必填：首字母
+        url: "alipays://…"     # 必填：带协议头的绝对地址；含 # & ? 需加引号
+        desc: 校园缴费支付宝服务号  # 可选：一行简介（≤40 字）
+        qr: true               # 可选：点击弹二维码
+        qrNote: 请使用支付宝扫码   # qr 提示语
+        mirrors:               # 可选：镜像站列表（点击优先弹镜像）
           - label: 镜像一
             url: https://…
 ```
 
-### 添加一个链接
+> `pinyin` / `pinyinFirst` 供站内搜索命中（全拼与首字母都能搜到）；`desc` 会出现在卡片、悬浮提示和搜索结果里。
 
-1. 下载图标为 webp，放入 `public/icons/{分类id}/{链接id}.webp`（id 与文件名必须一致）；
-2. 在对应 `src/data/sites/{分类id}.yaml` 的 `subs[].links[]` 追加条目，补全 `pinyin` / `pinyinFirst`；
-3. 需要卡片简介就加 `desc`（一行 ≤40 字中文；卡片第二行 + 悬浮白字黑底 tip，并参与站内搜索匹配）；
-4. 需扫码/镜像就加 `qr: true` / `mirrors` 字段；
-5. 跑 `npm run build` —— 缺图、id 不一致、URL 无 scheme 等都会在构建期报错。
+### 4. 校验
 
-新图标建议用 favicon.io 或官方站点抓取，压缩到 favicon 级尺寸。
+在仓库根目录跑：
 
-### 7 个一级分类
-
-`campus` 成医生活 · `study` 线上学习 · `exam` 考试比赛 · `cnlit` 中文文献 · `enlit` 英文文献 · `aitool` AI 工具 · `tools` 实用工具（共 35 子分类 / 93 链接）。
-
-## 部署
-
-纯静态站，`npm run build` 后把 `dist/` 托管到任意静态平台（Nginx / Vercel / Cloudflare / GitHub Pages）即可，目标域名 `nav.cyitong.top`。Nginx 伪静态示例：
-
-```nginx
-root /var/www/nav/dist;
-try_files $uri $uri/ /404.html;
+```bash
+npm run build
 ```
+
+构建期自动拦截以下问题，出错会报文件与原因：
+
+- 图标文件缺失，或 `id` 与图标文件名不一致；
+- `url` 没有协议头（须为 `https://`、`alipays://` 这类绝对地址）；
+- 新增一级分类缺 `order` 排序号。
+
+构建通过后，在 GitHub 提 Pull Request（页面侧栏有「添加链接」直达入口）。
+
+## 本地运行
+
+```bash
+npm install
+npm run dev       # 开发预览 → http://localhost:4321
+npm run build     # 类型检查 + 构建（改数据/代码后必跑）
+```
+
+## 目录简览
+
+```
+public/icons/        # 链接图标：{一级分类}/{链接id}.webp
+src/
+├── content.config.ts     # 数据 schema 与构建期校验（Zod）
+├── data/sites/*.yaml     # 唯一数据源
+├── styles/global.css     # 颜色令牌、暗色覆盖与全局状态样式
+├── layouts/Layout.astro  # 页面壳：防闪烁主题、图标 sprite、搜索索引
+├── pages/                # index.astro / 404.astro
+└── components/           # 页面组件与 web/ 客户端运行时（原生 TS）
+```
+
+## 技术栈与部署
+
+Astro 7 纯静态站（Content Layer + Zod v4）+ Tailwind CSS v4 + 原生 TypeScript Web Components。部署只需把 `npm run build` 产出的 `dist/` 托管到任意静态平台。
