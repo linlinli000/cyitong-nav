@@ -87,7 +87,7 @@ class NavSearch extends HTMLElement {
             <button type="button" data-scope="${tab.id}"
               class="inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-[13px] font-medium transition-all sm:px-5 sm:py-2 sm:text-sm ${
                 tab.id === scope
-                  ? 'bg-white font-semibold text-brand shadow-sm dark:bg-brand dark:text-on-accent'
+                  ? 'bg-white font-semibold text-brand shadow-sm dark:bg-brand-solid dark:text-on-solid'
                   : 'text-muted hover:bg-white/60 hover:text-ink dark:hover:bg-white/10'
               }">
               ${tab.label}
@@ -115,7 +115,7 @@ class NavSearch extends HTMLElement {
 
       ${scope === 'site'
         ? `<div class="mt-2 flex justify-center sm:mt-3">
-            <span class="inline-flex items-center gap-1 rounded-full border border-line/80 bg-surface/60 px-3.5 py-1 text-[13px] text-muted backdrop-blur-md sm:px-4 dark:bg-black/20">本网站已收录<span class="font-semibold text-brand">${this.records.length}</span>个常用链接</span>
+            <span class="inline-flex items-center gap-1 rounded-full border border-line/80 bg-surface/60 px-3.5 py-1 text-[13px] text-muted backdrop-blur-md sm:px-4 dark:bg-black/20">本网站已收录<span class="font-semibold text-brand dark:text-on-solid">${this.records.length}</span>个常用链接</span>
           </div>`
         : `<div class="mt-2 flex overflow-x-auto scrollbar-hide sm:mt-3">
             <div class="mx-auto flex shrink-0 items-center gap-2">
@@ -125,7 +125,7 @@ class NavSearch extends HTMLElement {
                   <button type="button" data-engine="${i}"
                     class="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border border-line/80 px-2.5 py-1 text-[13px] backdrop-blur-md transition-all sm:px-3 ${
                       i === this.engineIdx
-                        ? 'border-transparent bg-white font-semibold text-brand shadow-sm dark:bg-brand dark:text-on-accent'
+                        ? 'border-transparent bg-white font-semibold text-brand shadow-sm dark:bg-brand-solid dark:text-on-solid'
                         : 'bg-surface/60 text-muted hover:text-ink dark:bg-black/20'
                     }">
                     ${iconEl(e.icon, 'h-3.5 w-3.5')}

@@ -12,6 +12,8 @@
   --color-line: #e5e7eb;
   --color-brand: #378add;
   --color-brand-dark: #1a5fa8;
+  --color-brand-solid: #378add;
+  --color-on-solid: #ffffff;
   --color-on-accent: #13161c;
 }
 
@@ -129,6 +131,10 @@ nav-cat-tabs {
 .sidebar-cat-link.active {
   color: var(--color-brand);
   background: color-mix(in srgb, var(--color-brand) 10%, transparent);
+}
+.dark .sidebar-cat-link.active {
+  color: var(--color-on-solid);
+  background: var(--color-brand-solid);
 }
 
 /* 折叠图标条的几何 */
@@ -281,8 +287,8 @@ nav-cat-tabs {
   box-shadow: var(--shadow-tab);
 }
 .dark .cat-tab.active {
-  color: var(--color-on-accent);
-  background: var(--color-brand);
+  color: var(--color-on-solid);
+  background: var(--color-brand-solid);
 }
 
 /* 卡片折叠「查看更多」按钮 */

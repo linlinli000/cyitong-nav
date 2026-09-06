@@ -10,7 +10,7 @@ subs:
         title: DeepSeek
         pinyin: deepseek
         pinyinFirst: deepseek
-        url: https://chat.deepseek.com
+        url: https://www.deepseek.com/
       - id: qianwen
         title: 千问
         pinyin: qianwen

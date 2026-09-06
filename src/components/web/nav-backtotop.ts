@@ -7,7 +7,7 @@ class NavBackToTop extends HTMLElement {
   connectedCallback(): void {
     this.innerHTML = `
       <button type="button" data-role="btn" aria-label="回到顶部"
-        class="pointer-events-none fixed bottom-6 right-6 z-40 grid h-11 w-11 translate-y-2 place-items-center rounded-xl border border-line bg-card text-ink opacity-0 shadow-lg transition-all duration-200 hover:shadow-xl">
+        class="pointer-events-none fixed bottom-24 right-6 z-40 grid h-11 w-11 translate-y-2 place-items-center rounded-xl border border-line bg-card text-brand opacity-0 shadow-lg transition-all duration-200 hover:shadow-xl dark:text-on-solid">
         ${iconEl('chevron-up', 'h-5 w-5')}
       </button>`;
 
