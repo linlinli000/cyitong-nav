@@ -8,7 +8,7 @@ subs:
     links:
       - id: fenqubiao
         title: 中科院期刊分区表
-        desc: 中科院期刊分区，查大类分区
+        desc: 查期刊分区与影响因子，投稿选刊参考
         pinyin: zhongkeyuanqikanfenqubiao
         pinyinFirst: zkyqkfqb
         url: https://www.fenqubiao.com
@@ -17,19 +17,19 @@ subs:
     links:
       - id: cnki
         title: 知网
-        desc: 知网，期刊/硕博论文检索下载
+        desc: 中文期刊与硕博论文检索下载
         pinyin: zhiwang
         pinyinFirst: zw
         url: https://www.cnki.net
       - id: cqvip
         title: 维普期刊
-        desc: 维普期刊，中文期刊文献
+        desc: 中文期刊文献检索与全文下载
         pinyin: weipuqikan
         pinyinFirst: wpqk
         url: https://www.cqvip.com
       - id: wanfang
         title: 万方数据
-        desc: 万方数据，学位/会议论文库
+        desc: 中文学位论文与会议文献检索
         pinyin: wanfangshuju
         pinyinFirst: wfsj
         url: https://www.wanfangdata.com.cn
@@ -38,13 +38,13 @@ subs:
     links:
       - id: sinomed
         title: 中国生物医学文献
-        desc: 中国生物医学文献数据库
+        desc: 国内生物医学文献题录免费检索
         pinyin: zhongguoshengwuyixuewenxian
         pinyinFirst: zgswyxwx
         url: https://www.sinomed.ac.cn
       - id: yiigle
         title: 中华医学期刊
-        desc: 中华医学期刊全文平台
+        desc: 中华医学会系列期刊全文阅读
         pinyin: zhonghuayixueqikan
         pinyinFirst: zhyxqk
         url: https://www.yiigle.com/index/
@@ -53,19 +53,19 @@ subs:
     links:
       - id: baiduxueshu
         title: 百度学术
-        desc: 百度学术，中英文文献检索
+        desc: 中英文学术文献聚合检索与引用
         pinyin: baiduxueshu
         pinyinFirst: bdxs
         url: https://xueshu.baidu.com/
       - id: pubscholar
         title: PubScholar
-        desc: 中科院 PubScholar 学术检索
+        desc: 中科院公益学术平台，跨库检索
         pinyin: pubscholar
         pinyinFirst: pubscholar
         url: https://pubscholar.cn
       - id: duxiu
         title: 读秀学术搜索
-        desc: 读秀，图书文献传递
+        desc: 图书深度检索与原文文献传递
         pinyin: duxiuxueshusousuo
         pinyinFirst: dxxsss
         url: https://www.duxiu.com

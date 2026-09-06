@@ -8,49 +8,49 @@ subs:
     links:
       - id: deepseek
         title: DeepSeek
-        desc: DeepSeek 大模型对话
+        desc: 国产开源，擅长深度推理与写代码
         pinyin: deepseek
         pinyinFirst: deepseek
         url: https://www.deepseek.com/
       - id: qianwen
         title: 千问
-        desc: 通义千问，阿里大模型
+        desc: 阿里大模型，中文理解与文档处理
         pinyin: qianwen
         pinyinFirst: qw
         url: https://tongyi.aliyun.com/qianwen
       - id: chatglm
         title: ChatGLM
-        desc: 智谱 ChatGLM 大模型
+        desc: 智谱开源模型，编程与逻辑推理
         pinyin: chatglm
         pinyinFirst: chatglm
         url: https://chatglm.cn
       - id: kimi
         title: Kimi
-        desc: Kimi，长文本智能助手
+        desc: 超长文本处理，论文 PDF 速读总结
         pinyin: kimi
         pinyinFirst: kimi
         url: https://kimi.moonshot.cn
       - id: minimax
         title: MiniMax
-        desc: MiniMax，海螺AI 视频生成
+        desc: 海螺AI，视频生成与角色对话
         pinyin: minimax
         pinyinFirst: minimax
         url: https://hailuoai.com
       - id: doubao
         title: 豆包
-        desc: 字节豆包 AI 助手
+        desc: 字节全能助手，学习办公常用
         pinyin: doubao
         pinyinFirst: db
         url: https://www.doubao.com
       - id: yiyan
         title: 文心一言
-        desc: 文心一言，百度大模型
+        desc: 百度大模型，文生图与文档分析
         pinyin: wenxinyiyan
         pinyinFirst: wxyy
         url: https://yiyan.baidu.com
       - id: yuanbao
         title: 腾讯元宝
-        desc: 腾讯元宝大模型助手
+        desc: 腾讯助手，公众号文章与文档问答
         pinyin: tengxunyuanbao
         pinyinFirst: txyb
         url: https://yuanbao.tencent.com
@@ -59,25 +59,25 @@ subs:
     links:
       - id: chatgpt
         title: ChatGPT
-        desc: ChatGPT 对话助手官网
+        desc: 通用对话与内容创作助手
         pinyin: chatgpt
         pinyinFirst: chatgpt
         url: https://chatgpt.com
       - id: grok
         title: Grok
-        desc: xAI Grok 对话助手
+        desc: 强调实时信息与自由表达
         pinyin: grok
         pinyinFirst: grok
         url: https://grok.com
       - id: gemini
         title: Gemini
-        desc: Google Gemini 多模态助手
+        desc: Google 多模态，长上下文理解
         pinyin: gemini
         pinyinFirst: gemini
         url: https://gemini.google.com
       - id: claude
         title: Claude
-        desc: Claude，Anthropic 对话助手
+        desc: 长文分析、编程与写作能力强
         pinyin: claude
         pinyinFirst: claude
         url: https://claude.ai
@@ -86,19 +86,19 @@ subs:
     links:
       - id: jimeng
         title: 即梦AI
-        desc: 即梦 AI，图片/视频创作
+        desc: AI 图片/视频生成与数字人创作
         pinyin: jimengai
         pinyinFirst: jmai
         url: https://jimeng.jianying.com/
       - id: coze
         title: 扣子
-        desc: 扣子，智能体搭建平台
+        desc: 可视化搭建 AI 智能体与工作流
         pinyin: kouzi
         pinyinFirst: kz
         url: https://www.coze.cn/
       - id: aippt
         title: AiPPT
-        desc: 一句话生成演示文稿
+        desc: 一句话生成 PPT，自动配图排版
         pinyin: aippt
         pinyinFirst: aippt
         url: https://www.aippt.cn/?seller=itab

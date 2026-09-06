@@ -8,7 +8,7 @@ subs:
     links:
       - id: scihub
         title: Sci-Hub
-        desc: Sci-Hub，免费下载论文全文
+        desc: 凭 DOI/标题免费获取论文 PDF
         pinyin: scihub
         pinyinFirst: scihub
         url: https://www.sci-hub.shop/
@@ -22,13 +22,13 @@ subs:
     links:
       - id: scholar
         title: Google Scholar
-        desc: Google Scholar，英文文献检索
+        desc: 英文文献检索与引文/被引追踪
         pinyin: googlescholar
         pinyinFirst: googlescholar
         url: https://scholar.google.com
       - id: wos
         title: Web of Science
-        desc: Web of Science 引文数据库
+        desc: SCI/SSCI 引文索引与期刊评价
         pinyin: webofscience
         pinyinFirst: webofscience
         url: https://www.webofscience.com
@@ -37,7 +37,7 @@ subs:
     links:
       - id: sciencedirect
         title: ScienceDirect
-        desc: ScienceDirect 爱思唯尔全文库
+        desc: 爱思唯尔英文期刊全文库
         pinyin: sciencedirect
         pinyinFirst: sciencedirect
         url: https://www.sciencedirect.com/
@@ -46,19 +46,19 @@ subs:
     links:
       - id: pubmed
         title: PubMed
-        desc: PubMed，生物医学文献检索
+        desc: 全球生物医学文献免费题录检索
         pinyin: pubmed
         pinyinFirst: pubmed
         url: https://pubmed.ncbi.nlm.nih.gov
       - id: embase
         title: Embase
-        desc: Embase 生物医学文献库
+        desc: 生物医学与药学文献、会议摘要
         pinyin: embase
         pinyinFirst: embase
         url: https://www.embase.com
       - id: cochrane
         title: Cochrane Library
-        desc: Cochrane Library，循证医学评价库
+        desc: 循证医学系统评价证据库
         pinyin: cochranelibrary
         pinyinFirst: cochranelibrary
         url: https://www.cochranelibrary.com
@@ -67,7 +67,7 @@ subs:
     links:
       - id: doaj
         title: DOAJ
-        desc: DOAJ，开放获取期刊目录
+        desc: 开放获取期刊目录，筛可下载期刊
         pinyin: doaj
         pinyinFirst: doaj
         url: https://doaj.org/
@@ -76,19 +76,19 @@ subs:
     links:
       - id: nature
         title: Nature
-        desc: Nature 官网与最新研究
+        desc: 国际科研顶刊，看前沿进展
         pinyin: nature
         pinyinFirst: nature
         url: https://www.nature.com/
       - id: cell
         title: Cell
-        desc: Cell 期刊官网
+        desc: 生命科学顶刊，高影响力研究
         pinyin: cell
         pinyinFirst: cell
         url: https://www.cell.com/
       - id: science
         title: Science
-        desc: Science 期刊官网
+        desc: 国际科研周刊，前沿科研新闻
         pinyin: science
         pinyinFirst: science
         url: https://www.science.org/

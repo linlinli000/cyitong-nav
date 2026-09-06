@@ -8,31 +8,31 @@ subs:
     links:
       - id: chaoxing
         title: 学习通
-        desc: 超星学习通，刷课/签到/章节任务
+        desc: 上课签到、看课程视频与做章节测验
         pinyin: xuexitong
         pinyinFirst: xxt
         url: https://i.chaoxing.com
       - id: zhihuishu
         title: 知到
-        desc: 智慧树知到，看课与在线考试
+        desc: 名校慕课，支持见面课直播与在线考试
         pinyin: zhidao
         pinyinFirst: zd
         url: https://www.zhihuishu.com
       - id: icourse
         title: 中国大学MOOC
-        desc: 中国大学MOOC，名校免费公开课
+        desc: 海量名校免费公开课，可申请结业证书
         pinyin: zhongguodaxuemooc
         pinyinFirst: zgdxmooc
         url: https://www.icourse163.org
       - id: xuetangx
         title: 学堂在线
-        desc: 学堂在线，清华慕课平台
+        desc: 清华等名校慕课，部分课程可拿证书
         pinyin: xuetangzaixian
         pinyinFirst: xtzx
         url: https://www.xuetangx.com
       - id: lanqiao
         title: 蓝桥云课
-        desc: 蓝桥云课，在线编程与实验
+        desc: 浏览器编程实训环境，蓝桥杯备赛
         pinyin: lanqiaoyunke
         pinyinFirst: lqyk
         url: https://www.lanqiao.cn
@@ -41,19 +41,19 @@ subs:
     links:
       - id: ocs
         title: OCS网课助手
-        desc: OCS 网课助手，油猴脚本文档
+        desc: 网课辅助油猴脚本，支持多学习平台
         pinyin: ocswangkezhushou
         pinyinFirst: ocswkzs
         url: https://docs.ocsjs.com
       - id: zerror
         title: ZError
-        desc: ZError，网课辅助工具
+        desc: 网课自动化辅助工具（浏览器使用）
         pinyin: zerror
         pinyinFirst: zerror
         url: https://app.zerror.cc/
       - id: renwei
         title: 人卫医学题库
-        desc: 人卫医学题库，医学刷题
+        desc: 医学考试官方题库，覆盖执业与职称
         pinyin: renweiyixuetiku
         pinyinFirst: rwyxtk
         url: https://tk.ipmph.com
@@ -62,13 +62,13 @@ subs:
     links:
       - id: nlc
         title: 国家图书馆
-        desc: 国家图书馆，书目检索与数字馆藏
+        desc: 馆藏检索、办证与数字资源服务
         pinyin: guojiatushuguan
         pinyinFirst: gjtsg
         url: http://www.nlc.cn/
       - id: annas
         title: 安娜的档案
-        desc: 安娜的档案，电子书镜像检索
+        desc: 聚合多书库的电子书检索与下载
         pinyin: annadedangan
         pinyinFirst: andda
         url: https://zh.annas-archive.gl/
@@ -78,7 +78,7 @@ subs:
           - { label: 镜像站, url: https://zh.annas-archive.gd/ }
       - id: zlib
         title: Z Library
-        desc: Z-Library，电子书下载库
+        desc: 大型电子书库，免费下载电子书
         pinyin: zlibrary
         pinyinFirst: zlibrary
         url: https://zh.z-library.sk/
@@ -91,13 +91,13 @@ subs:
     links:
       - id: dxy
         title: 丁香园
-        desc: 丁香园，医学资讯与论坛
+        desc: 医学资讯与同行交流社区
         pinyin: dingxiangyuan
         pinyinFirst: dxy
         url: https://www.dxy.cn
       - id: guide
         title: 临床指南
-        desc: 医脉通临床指南，诊疗参考
+        desc: 各科临床指南与专家共识检索
         pinyin: linchuangzhinan
         pinyinFirst: lczn
         url: https://guide.medlive.cn
@@ -106,19 +106,19 @@ subs:
     links:
       - id: missing
         title: 你缺失的计算机课
-        desc: 你缺失的计算机课，自学编程基础
+        desc: 零基础补全计算机通识与技能
         pinyin: niqueshidejisuanjike
         pinyinFirst: nqsdjsjk
         url: https://www.criwits.top/missing/
       - id: wps
         title: WPS学堂
-        desc: WPS 学堂，办公软件技巧教程
+        desc: 免费学习 WPS/Office 办公技巧
         pinyin: wpsxuetang
         pinyinFirst: wpsxt
         url: "https://www.wps.cn/learning?spm=5176.28103460.0.0.68e62988EREePp"
       - id: runoob
         title: 菜鸟教程
-        desc: 菜鸟教程，编程入门文档
+        desc: 各语言入门教程与在线运行工具
         pinyin: cainiaojiaocheng
         pinyinFirst: cnjc
         url: https://www.runoob.com

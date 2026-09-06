@@ -54,7 +54,7 @@ cyitong-nav/
         └── web/              # 客户端运行时（自定义元素 + 纯工具）
             ├── nav-search.ts  nav-dialog.ts  nav-cat-tabs.ts
             ├── nav-sidebar.ts nav-theme-toggle.ts  nav-backtotop.ts
-            ├── header-dropdown.ts  search-utils.ts  icons.ts  html-escape.ts
+            ├── header-dropdown.ts  link-tip.ts  search-utils.ts  icons.ts  html-escape.ts
             ├── storage.ts         # localStorage 安全读写（原值/JSON 两组）
 ```
 

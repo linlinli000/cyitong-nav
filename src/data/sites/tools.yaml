@@ -8,19 +8,19 @@ subs:
     links:
       - id: easeconvert
         title: 易转换
-        desc: 多格式文件在线转换
+        desc: 文档/图片/PDF 在线批量转换
         pinyin: yizhuanhuan
         pinyinFirst: yzh
         url: https://www.easeconvert.com/
       - id: ilovepdf
         title: iLovePDF
-        desc: PDF 合并/拆分/压缩处理
+        desc: PDF 合并、拆分、压缩与互转
         pinyin: ilovepdf
         pinyinFirst: ilovepdf
         url: https://www.ilovepdf.com/zh-cn
       - id: convertio
         title: Convertio
-        desc: 300+ 音视频与文档格式转换
+        desc: 300+ 格式文件在线互转
         pinyin: convertio
         pinyinFirst: convertio
         url: https://convertio.co/zh/video-converter/
@@ -28,26 +28,26 @@ subs:
     name: 设计/图片
     links:
       - id: gaodingps
-        title: 在线PS
-        desc: 稿定在线 PS 修图
+        title: 稿定
+        desc: 浏览器在线 PS，修图抠图调色
         pinyin: zaixianps
         pinyinFirst: zxps
         url: https://ps.gaoding.com/
       - id: canva
         title: 可画
-        desc: 可画，海报/PPT 在线设计
+        desc: 海报/PPT/简历拖拽在线设计
         pinyin: kehua
         pinyinFirst: kh
         url: https://www.canva.cn/
       - id: removebg
         title: remove.bg
-        desc: 一键抠图，去除背景
+        desc: AI 一键抠图，去除人像背景
         pinyin: removebg
         pinyinFirst: removebg
         url: https://www.remove.bg/zh
       - id: iconfont
         title: Iconfont
-        desc: 阿里矢量图标库下载
+        desc: 海量矢量图标检索与下载
         pinyin: iconfont
         pinyinFirst: iconfont
         url: https://www.iconfont.cn/
@@ -56,7 +56,7 @@ subs:
     links:
       - id: greenvideo
         title: GreenVideo
-        desc: 视频去水印与解析下载
+        desc: 视频解析与去水印下载
         pinyin: greenvideo
         pinyinFirst: greenvideo
         url: https://greenvideo.cc/
@@ -65,7 +65,7 @@ subs:
     links:
       - id: grammarly
         title: Grammarly
-        desc: 英文语法检查与润色
+        desc: 英文写作纠错与润色建议
         pinyin: grammarly
         pinyinFirst: grammarly
         url: https://www.grammarly.com/
@@ -74,7 +74,7 @@ subs:
     links:
       - id: latexlive
         title: LaTeX Live
-        desc: LaTeX 在线公式编辑器
+        desc: LaTeX 公式在线编辑与转图片
         pinyin: latexlive
         pinyinFirst: latexlive
         url: https://www.latexlive.com/
@@ -83,7 +83,7 @@ subs:
     links:
       - id: ghxi
         title: 果核剥壳
-        desc: 果核剥壳，绿色软件下载站
+        desc: Windows 绿色便携软件资源站
         pinyin: guohebaoke
         pinyinFirst: ghbk
         url: https://www.ghxi.com/
@@ -92,13 +92,13 @@ subs:
     links:
       - id: cli
         title: 草料二维码
-        desc: 草料二维码，生成与管理
+        desc: 二维码/活码生成与批量管理
         pinyin: caoliaoerweima
         pinyinFirst: clewm
         url: https://cli.im/
       - id: emojimix
         title: Emoji合成
-        desc: Emoji 表情合成器
+        desc: 两个 Emoji 合成新表情
         pinyin: emojihecheng
         pinyinFirst: emojihc
         url: https://tikolu.net/emojimix/
