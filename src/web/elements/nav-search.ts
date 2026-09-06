@@ -1,9 +1,9 @@
 /** <nav-search>：站内/引擎搜索、历史、键盘导航 */
 import { ENGINES, PLACEHOLDERS, SCOPE_TABS, engineUrl, type SearchScope } from '../../data/search-engines';
-import { queryTokens, searchSites, type SiteRecord } from './search-utils';
-import { escapeHtml as escapeAttr } from './html-escape';
-import { iconEl } from './icons';
-import { storageGetJson, storageSetJson } from './storage';
+import { queryTokens, searchSites, type SiteRecord } from '../search-utils';
+import { escapeHtml as escapeAttr } from '../html-escape';
+import { iconEl } from '../icons';
+import { storageGetJson, storageSetJson } from '../storage';
 
 const HISTORY_KEY = 'nav:history';
 const SCOPE_KEY = 'nav:scope';

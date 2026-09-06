@@ -1,8 +1,9 @@
 /** <nav-sidebar>：分类手风琴、滚动高亮、移动抽屉、桌面折叠图标条 + 收起态浮层 */
-import { storageGet, storageSet } from './storage';
+import { CloseGate } from '../close-gate';
+import { storageSet } from '../storage';
+import { BREAKPOINT_LG } from '../breakpoints';
 
 const RAIL_KEY = 'nav:rail';
-const RAIL_WIDTH = 1024;
 
 class NavSidebar extends HTMLElement {
   private aside: HTMLElement | null = null;
@@ -12,7 +13,7 @@ class NavSidebar extends HTMLElement {
 
   private flyout: HTMLDivElement | null = null;
   private flyoutTrigger: HTMLElement | null = null;
-  private flyoutTimer: number | null = null;
+  private closeGate = new CloseGate(150, () => this.closeFlyout(false));
   private suppressFocusOpen = false;
 
   private onDocClick = (e: MouseEvent): void => {
@@ -50,7 +51,6 @@ class NavSidebar extends HTMLElement {
     this.backdrop = this.querySelector('[data-sidebar-backdrop]');
 
     this.initCollapse();
-    this.restoreRailState();
     this.initSpy();
     this.initDrawer();
     this.initFlyout();
@@ -63,7 +63,6 @@ class NavSidebar extends HTMLElement {
     document.removeEventListener('keydown', this.onDocKeydown);
     document.removeEventListener('scroll', this.onDocScroll, true);
     document.removeEventListener('click', this.onDocClickCapture, true);
-    if (this.flyoutTimer !== null) window.clearTimeout(this.flyoutTimer);
     this.flyout?.remove();
     document.body.classList.remove('overflow-hidden');
   }
@@ -79,7 +78,7 @@ class NavSidebar extends HTMLElement {
 
       const hitChevron = !!(e.target as Element).closest('.sidebar-chevron');
 
-      if (window.innerWidth >= RAIL_WIDTH) {
+      if (window.innerWidth >= BREAKPOINT_LG) {
         if (this.isCollapsed()) {
           this.jumpToCategory(group);
           return;
@@ -90,11 +89,6 @@ class NavSidebar extends HTMLElement {
       }
       group.classList.toggle('open');
     });
-  }
-
-  private restoreRailState(): void {
-    const collapsed = storageGet(RAIL_KEY, 'expanded') === 'collapsed';
-    this.aside?.classList.toggle('is-collapsed', collapsed);
   }
 
   // ── 滚动监听 ──
@@ -131,7 +125,7 @@ class NavSidebar extends HTMLElement {
   // ── 桌面端图标条（折叠/展开 + 收起态浮层） ──
 
   private isCollapsed(): boolean {
-    return !!this.aside?.classList.contains('is-collapsed') && window.innerWidth >= RAIL_WIDTH;
+    return !!this.aside?.classList.contains('is-collapsed') && window.innerWidth >= BREAKPOINT_LG;
   }
 
   private toggleRail(): void {
@@ -206,8 +200,8 @@ class NavSidebar extends HTMLElement {
       });
     });
 
-    this.flyout.addEventListener('pointerenter', () => this.cancelFlyoutClose());
-    this.flyout.addEventListener('pointerleave', () => this.scheduleFlyoutClose());
+    this.flyout.addEventListener('pointerenter', () => this.closeGate.cancel());
+    this.flyout.addEventListener('pointerleave', () => this.closeGate.schedule());
     this.flyout.addEventListener('click', (e) => {
       if ((e.target as Element).closest('a.sub-link')) this.closeFlyout(false);
     });
@@ -224,24 +218,12 @@ class NavSidebar extends HTMLElement {
   private onFlyoutLeave(e: PointerEvent, item: HTMLElement): void {
     const rel = e.relatedTarget as Node | null;
     if (rel && (item.contains(rel) || this.flyout?.contains(rel))) return;
-    this.scheduleFlyoutClose();
-  }
-
-  private scheduleFlyoutClose(): void {
-    this.cancelFlyoutClose();
-    this.flyoutTimer = window.setTimeout(() => this.closeFlyout(false), 150);
-  }
-
-  private cancelFlyoutClose(): void {
-    if (this.flyoutTimer !== null) {
-      window.clearTimeout(this.flyoutTimer);
-      this.flyoutTimer = null;
-    }
+    this.closeGate.schedule();
   }
 
   private openFlyout(group: HTMLElement, moveFocus: boolean): void {
     if (!this.isCollapsed() || !this.flyout) return;
-    this.cancelFlyoutClose();
+    this.closeGate.cancel();
 
     const sub = group.querySelector<HTMLElement>('.sidebar-sub');
     if (!sub) return;
@@ -267,7 +249,7 @@ class NavSidebar extends HTMLElement {
 
   private openTip(link: HTMLElement): void {
     if (!this.isCollapsed() || !this.flyout) return;
-    this.cancelFlyoutClose();
+    this.closeGate.cancel();
 
     const label = document.createElement('span');
     label.className = 'sidebar-tip-text';
@@ -293,7 +275,7 @@ class NavSidebar extends HTMLElement {
   }
 
   private closeFlyout(returnFocus: boolean): void {
-    this.cancelFlyoutClose();
+    this.closeGate.cancel();
     if (!this.flyout?.classList.contains('open')) return;
     this.flyout.classList.remove('open');
     if (returnFocus) {

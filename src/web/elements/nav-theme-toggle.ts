@@ -1,6 +1,6 @@
 /** <nav-theme-toggle>：切换 .dark 并持久化 theme */
-import { iconEl } from './icons';
-import { storageSet } from './storage';
+import { iconEl } from '../icons';
+import { storageSet } from '../storage';
 
 class NavThemeToggle extends HTMLElement {
   connectedCallback(): void {

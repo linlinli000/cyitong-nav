@@ -1,8 +1,8 @@
 /** <nav-dialog>：文档级拦截 a[data-mirrors]/a[data-qr] 点击 → 二维码/镜像弹窗 */
 import QRCode from 'qrcode';
-import { escapeHtml } from './html-escape';
+import { escapeHtml } from '../html-escape';
 import type { Mirror } from '../../content.config';
-import { iconEl } from './icons';
+import { iconEl } from '../icons';
 
 class NavDialog extends HTMLElement {
   private dlg: HTMLDialogElement | null = null;

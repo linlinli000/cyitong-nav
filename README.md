@@ -6,7 +6,7 @@
 
 ## 添加一个链接
 
-数据是三层结构：**一级分类 → 二级分类 → 链接**，存在 `src/data/sites/*.yaml`。加一条链接只需三步。
+数据是三层结构：**一级分类 → 二级分类 → 链接**，存在 `src/data/sites/*.yaml`。加一条链接按下面步骤操作。
 
 ### 1. 确定分类
 
@@ -82,14 +82,25 @@ npm run build     # 类型检查 + 构建（改数据/代码后必跑）
 ## 目录简览
 
 ```
-public/icons/        # 链接图标：{一级分类}/{链接id}.webp
+public/
+├── icons/            # 链接图标 {一级分类}/{链接id}.webp
+└── logo.svg          # 站点图标
+
 src/
-├── content.config.ts     # 数据 schema 与构建期校验（Zod）
-├── data/sites/*.yaml     # 唯一数据源
-├── styles/global.css     # 颜色令牌、暗色覆盖与全局状态样式
-├── layouts/Layout.astro  # 页面壳：防闪烁主题、图标 sprite、搜索索引
-├── pages/                # index.astro / 404.astro
-└── components/           # 页面组件与 web/ 客户端运行时（原生 TS）
+├── content.config.ts     # 数据 schema 与构建期校验
+├── data/
+│   ├── sites/*.yaml      # 唯一数据源
+│   ├── category-icons.ts # 分类 icon 语义键 → iconify 包名
+│   └── search-engines.ts # 搜索引擎与品牌字形
+├── lib/
+│   └── icon-sprite.ts    # 运行期图标 → <symbol>（服务端）
+├── layouts/Layout.astro  # 页面壳：防闪烁主题 / 图标 sprite / 搜索索引
+├── pages/                # index / 404
+├── components/           # 纯 .astro 模板组件
+├── styles/global.css     # 颜色令牌与全局状态
+└── web/                  # 客户端运行时（原生 TS）
+    ├── elements/         # 自注册元素 <nav-*>，副作用导入
+    └── *.ts              # 纯工具 / 文档增强（storage、icons…）
 ```
 
 ## 技术栈与部署

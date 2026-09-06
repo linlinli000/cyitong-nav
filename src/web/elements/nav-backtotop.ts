@@ -1,5 +1,5 @@
 /** <nav-backtotop>：滚动超过阈值淡入，点击平滑回顶 */
-import { iconEl } from './icons';
+import { iconEl } from '../icons';
 
 class NavBackToTop extends HTMLElement {
   private cleanup: (() => void) | null = null;

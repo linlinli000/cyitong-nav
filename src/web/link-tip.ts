@@ -1,4 +1,6 @@
 /** 链接卡简介浮层：单例按视口空间自动上/下 + 三角指向卡片 */
+import { CloseGate } from './close-gate';
+
 const TILE_SEL = 'a.link-tile[data-desc]';
 const HIDE_DELAY_MS = 90;
 const GAP = 4;
@@ -8,7 +10,7 @@ const ARROW_INSET = 10;
 let pop: HTMLDivElement | null = null;
 let hover: HTMLElement | null = null;
 let shown: HTMLElement | null = null;
-let hideTimer = 0;
+const gate = new CloseGate(HIDE_DELAY_MS, hide);
 
 function ensurePop(): HTMLDivElement {
   if (!pop) {
@@ -25,7 +27,7 @@ function clamp(v: number, min: number, max: number): number {
 }
 
 function hide(): void {
-  window.clearTimeout(hideTimer);
+  gate.cancel();
   if (!shown) return;
   shown = null;
   pop?.classList.remove('show');
@@ -60,11 +62,6 @@ function show(tile: HTMLElement): void {
   p.classList.add('show');
 }
 
-function scheduleHide(): void {
-  window.clearTimeout(hideTimer);
-  hideTimer = window.setTimeout(hide, HIDE_DELAY_MS);
-}
-
 document.addEventListener(
   'pointerover',
   (e) => {
@@ -72,9 +69,9 @@ document.addEventListener(
     const tile = (e.target as Element).closest<HTMLElement>(TILE_SEL);
     if (tile === hover) return;
     hover = tile;
-    window.clearTimeout(hideTimer);
+    gate.cancel();
     if (tile) show(tile);
-    else scheduleHide();
+    else gate.schedule();
   },
   { passive: true },
 );
@@ -83,13 +80,13 @@ document.addEventListener('pointerout', (e) => {
   const from = (e.target as Element).closest<HTMLElement>(TILE_SEL);
   if (!from) return;
   const to = (e.relatedTarget as Element | null)?.closest?.<HTMLElement>(TILE_SEL);
-  if (!to) scheduleHide();
+  if (!to) gate.schedule();
 });
 
 document.addEventListener('focusin', (e) => {
   const tile = (e.target as Element).closest<HTMLElement>(TILE_SEL);
   if (!tile) return;
-  window.clearTimeout(hideTimer);
+  gate.cancel();
   show(tile);
 });
 

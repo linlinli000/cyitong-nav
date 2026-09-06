@@ -1,4 +1,6 @@
 /** <nav-cat-tabs>：子分类 tab 过滤 + 卡片折叠 + 侧栏子链接联动，仅增强 CategoryBlock 静态标记 */
+import { BREAKPOINT_LG } from '../breakpoints';
+
 let delegated = false;
 
 const ROWS_DESKTOP = 3;
@@ -61,7 +63,7 @@ class NavCatTabs extends HTMLElement {
     const grid = this.grid();
     if (!grid) return Infinity;
     const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length || 1;
-    const rows = window.innerWidth >= 1024 ? ROWS_DESKTOP : ROWS_MOBILE;
+    const rows = window.innerWidth >= BREAKPOINT_LG ? ROWS_DESKTOP : ROWS_MOBILE;
     return cols * rows;
   }
 
