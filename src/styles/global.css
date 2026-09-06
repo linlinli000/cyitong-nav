@@ -28,12 +28,12 @@
 
 .dark {
   color-scheme: dark;
-  --color-surface: #21252b;
-  --color-card: #282c34;
-  --color-field: #2f343c;
-  --color-ink: #d5d7dc;
-  --color-muted: #949aa4;
-  --color-line: #3e4451;
+  --color-surface: #1e1f22;
+  --color-card: #26272b;
+  --color-field: #2e2f34;
+  --color-ink: #dcdee2;
+  --color-muted: #9da1a8;
+  --color-line: #3a3b40;
   --color-brand: #61afef;
   --color-brand-dark: #7fc3f5;
   --shadow-field: 0 2px 12px rgb(0 0 0 / 0.3);

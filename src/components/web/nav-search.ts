@@ -109,7 +109,7 @@ class NavSearch extends HTMLElement {
         </div>
       </div>
 
-      <div class="relative mx-auto w-full max-w-[45rem]">
+      <div class="relative mx-auto w-full max-w-[50rem]">
         <div
           class="flex items-center gap-1.5 rounded-2xl border border-line bg-field py-1.5 pl-3.5 pr-1 shadow-[var(--shadow-field)] transition-all sm:gap-2 sm:pl-5 sm:pr-1.5">
           <input type="text" autocomplete="off" spellcheck="false" value="${escapeAttr(this.query)}"
