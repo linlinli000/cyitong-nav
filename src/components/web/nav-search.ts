@@ -130,7 +130,7 @@ class NavSearch extends HTMLElement {
         ? `<div class="mt-2 flex justify-center py-1 sm:mt-3">
             <span class="inline-flex items-center gap-1 rounded-full border border-line bg-ink/5 px-3.5 py-1 text-[13px] text-muted sm:px-4 dark:bg-white/10">本网站已收录<span class="font-semibold text-brand dark:text-on-solid">${this.records.length}</span>个常用链接</span>
           </div>`
-        : `<div class="mt-2 flex overflow-x-auto scrollbar-hide py-1 sm:mt-3">
+        : `<div data-role="engine-bar" class="mt-2 flex overflow-x-auto scrollbar-hide py-1 sm:mt-3">
               <div class="mx-auto flex shrink-0 items-center gap-1.5">
               ${ENGINES[scope]
                 .map(
@@ -241,9 +241,13 @@ class NavSearch extends HTMLElement {
   }
 
   private setEngine(i: number): void {
+    const bar = this.querySelector<HTMLElement>('[data-role="engine-bar"]');
+    const pos = bar?.scrollLeft ?? 0;
     this.engineIdx = i;
     storageSetJson(`nav:engine:${this.scope}`, i);
     this.render();
+    const next = this.querySelector<HTMLElement>('[data-role="engine-bar"]');
+    if (next) next.scrollLeft = pos;
     this.input?.focus();
   }
 
