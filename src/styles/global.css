@@ -317,6 +317,18 @@ nav-cat-tabs {
   opacity: 1;
   overflow: visible;
 }
+/* 收起态底部链接的迷你弹层 */
+.sidebar-flyout.sidebar-tip {
+  min-width: 0;
+  max-width: none;
+  padding: 0.5rem 0.8rem;
+}
+.sidebar-tip-text {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--color-ink) 65%, var(--color-muted));
+}
 
 /* 分类子分类 tab（分段控件） */
 .cat-tab {

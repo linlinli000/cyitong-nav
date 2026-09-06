@@ -11,7 +11,7 @@ class NavSidebar extends HTMLElement {
   private lastActive = '';
 
   private flyout: HTMLDivElement | null = null;
-  private flyoutTrigger: HTMLButtonElement | null = null;
+  private flyoutTrigger: HTMLElement | null = null;
   private flyoutTimer: number | null = null;
   private suppressFocusOpen = false;
 
@@ -169,7 +169,7 @@ class NavSidebar extends HTMLElement {
       group.addEventListener('pointerenter', () => {
         if (this.isCollapsed()) this.openFlyout(group, false);
       });
-      group.addEventListener('pointerleave', (e) => this.onGroupLeave(e, group));
+      group.addEventListener('pointerleave', (e) => this.onFlyoutLeave(e, group));
 
       const btn = group.querySelector<HTMLButtonElement>('.sidebar-cat-toggle');
       btn?.addEventListener('focus', () => {
@@ -191,6 +191,21 @@ class NavSidebar extends HTMLElement {
       });
     });
 
+    this.querySelectorAll<HTMLElement>('.sidebar-footer-link').forEach((link) => {
+      link.addEventListener('pointerenter', () => {
+        if (this.isCollapsed()) this.openTip(link);
+      });
+      link.addEventListener('pointerleave', (e) => this.onFlyoutLeave(e, link));
+      link.addEventListener('click', () => this.closeFlyout(false));
+      link.addEventListener('focus', () => {
+        if (this.isCollapsed() && !this.suppressFocusOpen) this.openTip(link);
+      });
+      link.addEventListener('focusout', (e) => {
+        const rel = e.relatedTarget as Node | null;
+        if (!rel || (!link.contains(rel) && !this.flyout?.contains(rel))) this.closeFlyout(false);
+      });
+    });
+
     this.flyout.addEventListener('pointerenter', () => this.cancelFlyoutClose());
     this.flyout.addEventListener('pointerleave', () => this.scheduleFlyoutClose());
     this.flyout.addEventListener('click', (e) => {
@@ -206,9 +221,9 @@ class NavSidebar extends HTMLElement {
     document.addEventListener('click', this.onDocClickCapture, true);
   }
 
-  private onGroupLeave(e: PointerEvent, group: HTMLElement): void {
+  private onFlyoutLeave(e: PointerEvent, item: HTMLElement): void {
     const rel = e.relatedTarget as Node | null;
-    if (rel && (group.contains(rel) || this.flyout?.contains(rel))) return;
+    if (rel && (item.contains(rel) || this.flyout?.contains(rel))) return;
     this.scheduleFlyoutClose();
   }
 
@@ -235,16 +250,10 @@ class NavSidebar extends HTMLElement {
     title.className = 'sidebar-flyout-title';
     title.textContent = group.querySelector('.sidebar-cat-name')?.textContent ?? '';
 
+    this.flyout.classList.remove('sidebar-tip');
     this.flyout.replaceChildren(title, sub.cloneNode(true));
     this.flyoutTrigger = group.querySelector<HTMLButtonElement>('.sidebar-cat-toggle');
-
-    const r = group.getBoundingClientRect();
-    this.flyout.classList.add('open');
-    const fw = this.flyout.offsetWidth;
-    const fh = this.flyout.offsetHeight;
-    const maxTop = Math.max(8, window.innerHeight - fh - 8);
-    this.flyout.style.left = `${Math.max(8, Math.min(r.right + 8, window.innerWidth - fw - 8))}px`;
-    this.flyout.style.top = `${Math.min(maxTop, Math.max(8, r.top))}px`;
+    this.layoutFlyout(group, false);
 
     if (moveFocus) {
       const first = this.flyout.querySelector<HTMLElement>('a.sub-link');
@@ -254,6 +263,33 @@ class NavSidebar extends HTMLElement {
         this.suppressFocusOpen = false;
       }, 0);
     }
+  }
+
+  private openTip(link: HTMLElement): void {
+    if (!this.isCollapsed() || !this.flyout) return;
+    this.cancelFlyoutClose();
+
+    const label = document.createElement('span');
+    label.className = 'sidebar-tip-text';
+    label.textContent = link.querySelector('.sidebar-footer-label')?.textContent?.trim() ?? '';
+    if (!label.textContent) return;
+
+    this.flyout.classList.add('sidebar-tip');
+    this.flyout.replaceChildren(label);
+    this.flyoutTrigger = link;
+    this.layoutFlyout(link, true);
+  }
+
+  private layoutFlyout(anchor: HTMLElement, centerVertical: boolean): void {
+    if (!this.flyout) return;
+    const r = anchor.getBoundingClientRect();
+    this.flyout.classList.add('open');
+    const fw = this.flyout.offsetWidth;
+    const fh = this.flyout.offsetHeight;
+    const maxTop = Math.max(8, window.innerHeight - fh - 8);
+    this.flyout.style.left = `${Math.max(8, Math.min(r.right + 8, window.innerWidth - fw - 8))}px`;
+    const top = centerVertical ? r.top + r.height / 2 - fh / 2 : r.top;
+    this.flyout.style.top = `${Math.min(maxTop, Math.max(8, top))}px`;
   }
 
   private closeFlyout(returnFocus: boolean): void {
