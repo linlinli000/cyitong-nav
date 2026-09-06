@@ -8,11 +8,13 @@ subs:
     links:
       - id: main
         title: 成医官网
+        desc: 成都医学院官网，学校概况/招生与新闻
         pinyin: chengyiguanwang
         pinyinFirst: cygw
         url: https://www.cmc.edu.cn
       - id: lib
         title: 图书馆
+        desc: 图书馆，馆藏检索与借阅服务
         pinyin: tushuguan
         pinyinFirst: tsg
         url: https://lib.cmc.edu.cn
@@ -21,16 +23,19 @@ subs:
     links:
       - id: jwxt
         title: 教务系统
+        desc: 教务系统，查课表/选课/成绩
         pinyin: jiaowuxitong
         pinyinFirst: jwxt
         url: https://jwweb.cmc.edu.cn/
       - id: xgw
         title: 学工系统
+        desc: 学工系统，请假/勤工助学等学生事务
         pinyin: xuegongxitong
         pinyinFirst: xgxt
         url: https://xg.cmc.edu.cn/cas
       - id: yjsgl
         title: 研管系统
+        desc: 研究生管理系统，招生/培养与学位
         pinyin: yanguanxitong
         pinyinFirst: ygxt
         url: https://yjsgl.cmc.edu.cn/
@@ -39,11 +44,13 @@ subs:
     links:
       - id: zhifu
         title: 财务系统
+        desc: 财务系统，报销/缴费与经费查询
         pinyin: caiwuxitong
         pinyinFirst: cwxt
         url: https://zhifu.cmc.edu.cn/dlpt/
       - id: alipay
         title: 计划财务处
+        desc: 计划财务处服务号，支付宝扫码打开
         pinyin: jihuacaiwuchu
         pinyinFirst: jhcwc
         url: "alipays://platformapi/startapp?appId=20000042&publicBizType=LIFE_APP&publicId=2018052860256183"
@@ -54,31 +61,37 @@ subs:
     links:
       - id: ykt
         title: 一卡通
+        desc: 一卡通门户，查余额/流水与挂失
         pinyin: yikatong
         pinyinFirst: ykt
         url: "http://222.197.128.200/Cardholder/Cardholder.aspx"
       - id: wbdt
         title: 网办大厅
+        desc: 网上办事大厅，在线申办校内事务
         pinyin: wangbandating
         pinyinFirst: wbdt
         url: "https://efw.cmc.edu.cn/EIP/nonlogin/homePage.htm"
       - id: zhsys
         title: 智慧实验室
+        desc: 智慧实验室，实验设备预约
         pinyin: zhihuishiyanshi
         pinyinFirst: zhsys
         url: https://syslab.cmc.edu.cn/
       - id: carsi
         title: CARSI资源
+        desc: CARSI 认证，校外访问学术数据库
         pinyin: carsiziyuan
         pinyinFirst: carsizy
         url: https://ds.carsi.edu.cn/resource/resource.php
       - id: portal
         title: 校园网认证
+        desc: 校园网认证登录入口
         pinyin: xiaoyuanwangrenzheng
         pinyinFirst: xywrz
         url: "http://192.168.43.4/"
       - id: a4yun
         title: 校打印店
+        desc: 校园打印店 A4云铺（QQ 扫码打开）
         pinyin: xiaodayindian
         pinyinFirst: xdyd
         url: "https://m.q.qq.com/a/p/1110690941?s=%2Fpages%2Ftabbar%2Findex%3Fstore_id%3D32"
@@ -89,6 +102,7 @@ subs:
     links:
       - id: qywx
         title: 校企业微信
+        desc: 校企业微信，移动办公与通讯录
         pinyin: xiaoqiyeweixin
         pinyinFirst: xqywx
         url: https://metc.cmc.edu.cn/info/1019/2280.htm
@@ -96,12 +110,14 @@ subs:
     name: 学籍/升学
     links:
       - id: chsi
-        title: 学信档案
-        pinyin: xuexindangan
-        pinyinFirst: xxda
+        title: 学信网
+        desc: 学信档案，学籍学历查询与验证
+        pinyin: xuexinwang
+        pinyinFirst: xxw
         url: https://www.chsi.com.cn
       - id: yzchsi
         title: 研招网
+        desc: 研究生招生信息网，报名与调剂
         pinyin: yanzhaowang
         pinyinFirst: yzw
         url: https://yz.chsi.com.cn/

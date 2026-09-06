@@ -15,6 +15,7 @@ const searchIndex = categories.flatMap((c) =>
     s.links.map((l) => ({
       id: l.id,
       title: l.title,
+      desc: l.desc ?? '',
       pinyin: l.pinyin,
       pinyinFirst: l.pinyinFirst,
       url: l.url,
@@ -55,4 +56,5 @@ const totalLinks = searchIndex.length;
 
 <script>
   import '../components/web/nav-sidebar';
+  import '../components/web/link-tip';
 </script>

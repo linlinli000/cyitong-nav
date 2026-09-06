@@ -7,6 +7,7 @@ interface Props {
   link: {
     id: string;
     title: string;
+    desc?: string;
     url: string;
     qr?: boolean;
     qrNote?: string;
@@ -26,12 +27,12 @@ const fallback = link.title.trim().charAt(0) || '·';
   rel="noopener noreferrer"
   data-sub={sub}
   data-title={link.title}
+  data-desc={link.desc ? link.desc : undefined}
   data-icon={`/icons/${categoryId}/${link.id}.webp`}
   data-qr={hasQr ? link.url : undefined}
   data-qr-note={hasQr ? link.qrNote : undefined}
   data-mirrors={hasMirrors ? JSON.stringify(link.mirrors) : undefined}
-  title={link.title}
-  class="link-tile group flex items-center gap-3 rounded-2xl border border-line bg-card p-3"
+  class="link-tile group relative flex items-center gap-3 rounded-2xl border border-line bg-card p-3"
 >
   <img
     src={`/icons/${categoryId}/${link.id}.webp`}
@@ -44,13 +45,14 @@ const fallback = link.title.trim().charAt(0) || '·';
     class="link-tile-icon h-10 w-10 shrink-0 rounded-xl border border-line object-cover"
     onerror="var s=document.createElement('span');s.className='link-tile-icon grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-brand/10 text-lg font-bold text-brand';s.textContent=this.dataset.letter;this.replaceWith(s)"
   />
-  <span class="min-w-0">
-    <span class="block truncate text-sm font-medium text-ink transition-colors group-hover:text-brand">
-      {link.title}
+  <span class="min-w-0 flex-1">
+    <span class="flex min-w-0 items-center gap-1">
+      <span class="truncate text-sm font-semibold text-ink transition-colors group-hover:text-brand">
+        {link.title}
+      </span>
+      {hasMirrors && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">镜像</span>}
+      {hasQr && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">扫码</span>}
     </span>
-    <span class="mt-0.5 flex items-center gap-1 text-xs text-muted">
-      {hasMirrors && <span class="rounded bg-brand/10 px-1 py-0.5 font-medium text-brand">镜像</span>}
-      {hasQr && <span class="rounded bg-brand/10 px-1 py-0.5 font-medium text-brand">扫码</span>}
-    </span>
+    {link.desc && <span class="mt-0.5 block truncate text-xs text-muted">{link.desc}</span>}
   </span>
 </a>

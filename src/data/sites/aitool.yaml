@@ -8,41 +8,49 @@ subs:
     links:
       - id: deepseek
         title: DeepSeek
+        desc: DeepSeek 大模型对话
         pinyin: deepseek
         pinyinFirst: deepseek
         url: https://www.deepseek.com/
       - id: qianwen
         title: 千问
+        desc: 通义千问，阿里大模型
         pinyin: qianwen
         pinyinFirst: qw
         url: https://tongyi.aliyun.com/qianwen
       - id: chatglm
         title: ChatGLM
+        desc: 智谱 ChatGLM 大模型
         pinyin: chatglm
         pinyinFirst: chatglm
         url: https://chatglm.cn
       - id: kimi
         title: Kimi
+        desc: Kimi，长文本智能助手
         pinyin: kimi
         pinyinFirst: kimi
         url: https://kimi.moonshot.cn
       - id: minimax
         title: MiniMax
+        desc: MiniMax，海螺AI 视频生成
         pinyin: minimax
         pinyinFirst: minimax
         url: https://hailuoai.com
       - id: doubao
         title: 豆包
+        desc: 字节豆包 AI 助手
         pinyin: doubao
         pinyinFirst: db
         url: https://www.doubao.com
       - id: yiyan
         title: 文心一言
+        desc: 文心一言，百度大模型
         pinyin: wenxinyiyan
         pinyinFirst: wxyy
         url: https://yiyan.baidu.com
       - id: yuanbao
         title: 腾讯元宝
+        desc: 腾讯元宝大模型助手
         pinyin: tengxunyuanbao
         pinyinFirst: txyb
         url: https://yuanbao.tencent.com
@@ -51,21 +59,25 @@ subs:
     links:
       - id: chatgpt
         title: ChatGPT
+        desc: ChatGPT 对话助手官网
         pinyin: chatgpt
         pinyinFirst: chatgpt
         url: https://chatgpt.com
       - id: grok
         title: Grok
+        desc: xAI Grok 对话助手
         pinyin: grok
         pinyinFirst: grok
         url: https://grok.com
       - id: gemini
         title: Gemini
+        desc: Google Gemini 多模态助手
         pinyin: gemini
         pinyinFirst: gemini
         url: https://gemini.google.com
       - id: claude
         title: Claude
+        desc: Claude，Anthropic 对话助手
         pinyin: claude
         pinyinFirst: claude
         url: https://claude.ai
@@ -74,16 +86,19 @@ subs:
     links:
       - id: jimeng
         title: 即梦AI
+        desc: 即梦 AI，图片/视频创作
         pinyin: jimengai
         pinyinFirst: jmai
         url: https://jimeng.jianying.com/
       - id: coze
         title: 扣子
+        desc: 扣子，智能体搭建平台
         pinyin: kouzi
         pinyinFirst: kz
         url: https://www.coze.cn/
       - id: aippt
-        title: AI PPT
+        title: AiPPT
+        desc: 一句话生成演示文稿
         pinyin: aippt
         pinyinFirst: aippt
         url: https://www.aippt.cn/?seller=itab

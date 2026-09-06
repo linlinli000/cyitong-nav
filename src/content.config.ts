@@ -3,7 +3,7 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import { existsSync } from 'node:fs';
 
-const CATEGORY_IDS = ['campus', 'study', 'exam', 'cnlit', 'enlit', 'aitool', 'webtools'] as const;
+const CATEGORY_IDS = ['campus', 'study', 'exam', 'cnlit', 'enlit', 'aitool', 'tools'] as const;
 
 const mirrorSchema = z.object({
   label: z.string().min(1),
@@ -15,6 +15,7 @@ export type Mirror = z.infer<typeof mirrorSchema>;
 const linkSchema = z.object({
   id: z.string().regex(/^[a-z0-9]+$/i, '链接 id 需与图标文件名一致（小写字母/数字）'),
   title: z.string().min(1),
+  desc: z.string().max(40).optional(),
   pinyin: z.string().default(''),
   pinyinFirst: z.string().default(''),
   url: z.string().refine((s) => /^[a-z][a-z0-9+.-]*:\/\//i.test(s), {

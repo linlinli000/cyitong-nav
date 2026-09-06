@@ -24,7 +24,12 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
         <Icon name={categoryIcon(category.data.icon)} class="h-5 w-5" />
       </span>
       <h2 class="text-lg font-bold text-ink">{category.data.name}</h2>
-      <span class="rounded-full bg-surface px-2 py-0.5 text-xs text-muted">{total} 个链接</span>
+      <span
+        class="inline-flex shrink-0 items-center gap-1 rounded-full border border-line bg-surface px-2.5 py-0.5 text-xs text-muted"
+      >
+        <span class="font-semibold text-brand">{total}</span>
+        个链接
+      </span>
     </div>
 
     <nav-cat-tabs class="min-w-0 flex-1">

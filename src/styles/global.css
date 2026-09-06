@@ -4,7 +4,7 @@
 
 @theme {
   --font-sans: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
-  --color-surface: #f4f8fd;
+  --color-surface: #f5f5f5;
   --color-card: #ffffff;
   --color-field: #ffffff;
   --color-ink: #1f2937;
@@ -49,7 +49,7 @@ html {
 
 body {
   @apply bg-surface text-ink antialiased;
-  background-image: radial-gradient(circle, rgba(55, 138, 221, 0.07) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(120, 130, 145, 0.08) 1px, transparent 1px);
   background-size: 22px 22px;
 }
 .dark body {
@@ -107,6 +107,12 @@ nav-cat-tabs {
 .search-dropdown {
   scrollbar-width: thin;
 }
+/* 搜索命中词高亮 */
+.search-hit {
+  background: color-mix(in srgb, var(--color-brand) 18%, transparent);
+  color: inherit;
+  border-radius: 2px;
+}
 
 /* 链接卡片 hover 提升 */
 .link-tile {
@@ -125,6 +131,45 @@ nav-cat-tabs {
 }
 .link-tile:hover .link-tile-icon {
   transform: scale(1.06);
+}
+
+/* 卡片悬浮简介浮层 tip*/
+.link-tip-pop {
+  position: fixed;
+  z-index: 90;
+  max-width: 16rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.5rem;
+  background: #111;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.55;
+  pointer-events: none;
+  box-shadow: var(--shadow-dropdown);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease, visibility 0s linear 0.12s;
+}
+.link-tip-pop.show {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.12s ease;
+}
+.link-tip-pop::after {
+  content: '';
+  position: absolute;
+  left: var(--ax, 50%);
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  background: #111;
+  transform: rotate(45deg);
+}
+.link-tip-pop[data-side='bottom']::after {
+  top: -4px;
+}
+.link-tip-pop[data-side='top']::after {
+  bottom: -4px;
 }
 
 /* 侧边栏分类项滚动高亮 */
@@ -285,6 +330,7 @@ nav-cat-tabs {
   color: var(--color-brand);
   background: var(--color-card);
   box-shadow: var(--shadow-tab);
+  font-weight: 600;
 }
 .dark .cat-tab.active {
   color: var(--color-on-solid);

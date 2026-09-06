@@ -8,6 +8,7 @@ subs:
     links:
       - id: scihub
         title: Sci-Hub
+        desc: Sci-Hub，免费下载论文全文
         pinyin: scihub
         pinyinFirst: scihub
         url: https://www.sci-hub.shop/
@@ -21,11 +22,13 @@ subs:
     links:
       - id: scholar
         title: Google Scholar
+        desc: Google Scholar，英文文献检索
         pinyin: googlescholar
         pinyinFirst: googlescholar
         url: https://scholar.google.com
       - id: wos
         title: Web of Science
+        desc: Web of Science 引文数据库
         pinyin: webofscience
         pinyinFirst: webofscience
         url: https://www.webofscience.com
@@ -34,6 +37,7 @@ subs:
     links:
       - id: sciencedirect
         title: ScienceDirect
+        desc: ScienceDirect 爱思唯尔全文库
         pinyin: sciencedirect
         pinyinFirst: sciencedirect
         url: https://www.sciencedirect.com/
@@ -42,16 +46,19 @@ subs:
     links:
       - id: pubmed
         title: PubMed
+        desc: PubMed，生物医学文献检索
         pinyin: pubmed
         pinyinFirst: pubmed
         url: https://pubmed.ncbi.nlm.nih.gov
       - id: embase
         title: Embase
+        desc: Embase 生物医学文献库
         pinyin: embase
         pinyinFirst: embase
         url: https://www.embase.com
       - id: cochrane
         title: Cochrane Library
+        desc: Cochrane Library，循证医学评价库
         pinyin: cochranelibrary
         pinyinFirst: cochranelibrary
         url: https://www.cochranelibrary.com
@@ -60,6 +67,7 @@ subs:
     links:
       - id: doaj
         title: DOAJ
+        desc: DOAJ，开放获取期刊目录
         pinyin: doaj
         pinyinFirst: doaj
         url: https://doaj.org/
@@ -68,16 +76,19 @@ subs:
     links:
       - id: nature
         title: Nature
+        desc: Nature 官网与最新研究
         pinyin: nature
         pinyinFirst: nature
         url: https://www.nature.com/
       - id: cell
         title: Cell
+        desc: Cell 期刊官网
         pinyin: cell
         pinyinFirst: cell
         url: https://www.cell.com/
       - id: science
         title: Science
+        desc: Science 期刊官网
         pinyin: science
         pinyinFirst: science
         url: https://www.science.org/

@@ -1,6 +1,6 @@
 # 成医通（cyitong-nav）
 
-成都医学院师生专属导航页，WebStack 侧边栏风格：汇集校内系统、医学文献、AI 工具与常用在线工具，另有站内/引擎搜索、二维码/镜像弹窗等增强。
+成都医学院师生专属导航页，WebStack 侧边栏风格：汇集校内系统、医学文献、AI 工具与实用工具，另有站内/引擎搜索、二维码/镜像弹窗等增强。
 
 线上地址：<https://nav.cyitong.top>
 
@@ -76,6 +76,7 @@ subs:
     links:
       - id: alipay    # 链接 id，必须与图标文件名一致
         title: 计划财务处
+        desc: 计划财务处服务号，扫码打开   # 可选：卡片简介/悬浮 tip/站内搜索
         pinyin: jihuacaiwuchu    # 全拼，供搜索
         pinyinFirst: jhcwc       # 拼音首字母，供搜索
         url: "alipays://…"        # 支持非 http scheme；含 # & ? 须加引号
@@ -90,14 +91,15 @@ subs:
 
 1. 下载图标为 webp，放入 `public/icons/{分类id}/{链接id}.webp`（id 与文件名必须一致）；
 2. 在对应 `src/data/sites/{分类id}.yaml` 的 `subs[].links[]` 追加条目，补全 `pinyin` / `pinyinFirst`；
-3. 需扫码/镜像就加 `qr: true` / `mirrors` 字段；
-4. 跑 `npm run build` —— 缺图、id 不一致、URL 无 scheme 等都会在构建期报错。
+3. 需要卡片简介就加 `desc`（一行 ≤40 字中文；卡片第二行 + 悬浮白字黑底 tip，并参与站内搜索匹配）；
+4. 需扫码/镜像就加 `qr: true` / `mirrors` 字段；
+5. 跑 `npm run build` —— 缺图、id 不一致、URL 无 scheme 等都会在构建期报错。
 
 新图标建议用 favicon.io 或官方站点抓取，压缩到 favicon 级尺寸。
 
 ### 7 个一级分类
 
-`campus` 成医生活 · `study` 线上学习 · `exam` 考试比赛 · `cnlit` 中文文献 · `enlit` 英文文献 · `aitool` AI 工具 · `webtools` 在线工具（共 35 子分类 / 93 链接）。
+`campus` 成医生活 · `study` 线上学习 · `exam` 考试比赛 · `cnlit` 中文文献 · `enlit` 英文文献 · `aitool` AI 工具 · `tools` 实用工具（共 35 子分类 / 93 链接）。
 
 ## 部署
 

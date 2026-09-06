@@ -1,6 +1,6 @@
 /** <nav-search>：站内/引擎搜索、历史、键盘导航 */
 import { ENGINES, PLACEHOLDERS, SCOPE_TABS, engineUrl, type SearchScope } from '../../data/search-engines';
-import { searchSites, type SiteRecord } from './search-utils';
+import { queryTokens, searchSites, type SiteRecord } from './search-utils';
 import { escapeHtml as escapeAttr } from './html-escape';
 import { iconEl } from './icons';
 import { storageGetJson, storageSetJson } from './storage';
@@ -9,12 +9,25 @@ const HISTORY_KEY = 'nav:history';
 const SCOPE_KEY = 'nav:scope';
 const MAX_HISTORY = 10;
 
+/** 命中词高亮 */
+function markHit(text: string, tokens: string[]): string {
+  if (!text) return '';
+  const esc = escapeAttr(text);
+  if (tokens.length === 0) return esc;
+  const re = new RegExp(
+    tokens.filter(Boolean).map((tk) => tk.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'),
+    'gi',
+  );
+  return esc.replace(re, (m) => `<mark class="search-hit">${m}</mark>`);
+}
+
 class NavSearch extends HTMLElement {
   private scope: SearchScope = loadScope();
   private engineIdx = 0;
   private query = '';
   private records: SiteRecord[] = [];
   private results: SiteRecord[] = [];
+  private tokens: string[] = [];
   private history: string[] = storageGetJson<string[]>(HISTORY_KEY, []);
   private cursor = -1;
 
@@ -183,6 +196,10 @@ class NavSearch extends HTMLElement {
       this.showHistory();
       return;
     }
+    const resultLink = t.closest<HTMLAnchorElement>('a[data-title]');
+    if (resultLink) {
+      this.saveHistory(this.query.trim());
+    }
   };
 
   private onKeydown = (e: KeyboardEvent): void => {
@@ -233,11 +250,12 @@ class NavSearch extends HTMLElement {
   // ── 下拉面板 ──
 
   private updateDropdown(): void {
-    if (!this.query) {
+    if (!this.query.trim()) {
       this.showHistory();
       return;
     }
     if (this.scope === 'site') {
+      this.tokens = queryTokens(this.query);
       this.results = searchSites(this.records, this.query);
       this.renderResults();
       this.showDropdown();
@@ -262,18 +280,23 @@ class NavSearch extends HTMLElement {
       .map(
         (r, i) => `
         <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener noreferrer"${this.dialogAttrs(r)} data-title="${escapeAttr(r.title)}" data-icon="${escapeAttr(r.icon)}"
+          title="${escapeAttr(`${r.title} · ${r.catName}/${r.subName}（首字母 ${r.pinyinFirst}）`)}"
           class="flex items-center gap-3 px-3 py-2 transition-colors ${
             i === this.cursor ? 'bg-surface/80' : 'hover:bg-surface/60'
           }">
           <img src="${escapeAttr(r.icon)}" alt="" loading="lazy" class="h-8 w-8 shrink-0 rounded-lg object-cover"
             onerror="this.style.display='none'">
           <span class="min-w-0 flex-1">
-            <span class="block truncate text-sm font-medium text-ink">${escapeAttr(r.title)}</span>
-            <span class="block truncate text-xs text-muted">${escapeAttr(r.catName)} · ${escapeAttr(r.subName)}${
-              r.qr ? ' · 扫码' : ''
-            }${r.mirrors?.length ? ' · 镜像' : ''}</span>
+            <span class="flex min-w-0 items-center gap-1.5">
+              <span class="min-w-0 truncate text-sm font-semibold text-ink">${markHit(r.title, this.tokens)}</span>
+              ${r.mirrors?.length ? '<span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">镜像</span>' : ''}
+              ${r.qr ? '<span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">扫码</span>' : ''}
+            </span>
+            ${r.desc ? `<span class="mt-0.5 block truncate text-xs text-muted">${markHit(r.desc, this.tokens)}</span>` : ''}
           </span>
-          <span class="shrink-0 text-xs text-muted">${escapeAttr(r.pinyinFirst)}</span>
+          <span class="flex shrink-0 items-center pl-2">
+            <span class="max-w-36 truncate rounded-full border border-line/80 bg-surface/70 px-1.5 py-px text-[10px] text-muted">${escapeAttr(r.catName)} · ${escapeAttr(r.subName)}</span>
+          </span>
         </a>`,
       )
       .join('');
@@ -320,6 +343,7 @@ class NavSearch extends HTMLElement {
     if (n === 0) return;
     this.cursor = (this.cursor + dir + n) % n;
     this.renderResults();
+    this.dropdown?.querySelectorAll('a')[this.cursor]?.scrollIntoView({ block: 'nearest' });
   }
 
   private doSearch(): void {
