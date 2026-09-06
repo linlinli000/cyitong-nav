@@ -32,7 +32,7 @@ const fallback = link.title.trim().charAt(0) || '·';
   data-qr={hasQr ? link.url : undefined}
   data-qr-note={hasQr ? link.qrNote : undefined}
   data-mirrors={hasMirrors ? JSON.stringify(link.mirrors) : undefined}
-  class="link-tile group relative flex items-center gap-3 rounded-2xl border border-line bg-card p-3"
+  class="link-tile group relative flex items-center gap-3 rounded-2xl border border-line bg-card p-3 dark:border-line/60"
 >
   <img
     src={`/icons/${categoryId}/${link.id}.webp`}
