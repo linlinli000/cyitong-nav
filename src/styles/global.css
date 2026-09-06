@@ -223,6 +223,15 @@ nav-cat-tabs {
 #sidebar .sidebar-group .sub-link {
   padding-left: 14px;
 }
+#sidebar .sidebar-footer-link {
+  padding-left: 14px;
+  padding-right: 8px;
+  min-width: 0;
+}
+/* 侧栏底部链接文字随折叠淡出 */
+.sidebar-footer-label {
+  transition: opacity 0.15s ease;
+}
 
 /* 桌面折叠成图标条（≥lg） */
 @media (min-width: 1024px) {
@@ -251,9 +260,13 @@ nav-cat-tabs {
     opacity: 0;
     pointer-events: none;
   }
-  #sidebar.is-collapsed .sidebar-sub,
-  #sidebar.is-collapsed .sidebar-footer {
+  #sidebar.is-collapsed .sidebar-sub {
     display: none;
+  }
+  /* 折叠态侧栏底部*/
+  #sidebar.is-collapsed .sidebar-footer-label {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 

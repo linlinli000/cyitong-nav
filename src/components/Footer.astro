@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 interface Props {
   totalLinks: number;
 }
@@ -10,28 +12,14 @@ const year = new Date().getFullYear();
 <footer class="mt-10 border-t border-line py-10">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col items-center gap-3 text-center text-sm text-muted">
-      <p>成医通已收录 {totalLinks} 个常用链接 · 成都医学院师生专属导航页</p>
-      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-        <a
-          href="https://github.com/linlinli000/cyitong-nav"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="transition-colors hover:text-brand"
-        >GitHub</a>
-        <a
-          href="https://github.com/linlinli000/cyitong-nav/issues"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="transition-colors hover:text-brand"
-        >反馈问题</a>
-        <a
-          href="https://github.com/linlinli000/cyitong-nav/pulls"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="transition-colors hover:text-brand"
-        >添加链接</a>
-        <a href="mailto:s1077529874@163.com" class="transition-colors hover:text-brand">投稿邮箱</a>
-      </div>
+      <p>成医通已收录 <span class="font-semibold text-brand dark:text-on-solid">{totalLinks}</span> 个常用链接 · 成都医学院师生导航</p>
+      <p
+        class="inline-flex items-center gap-1.5 text-xs text-muted"
+        title="本导航由学生个人维护，与成都医学院官方无关"
+      >
+        <Icon name="lucide:shield-check" class="h-3.5 w-3.5 shrink-0 text-brand" aria-hidden="true" />
+        第三方非官方站 · 学生个人维护
+      </p>
       <p class="text-xs text-muted/70">© {year} 成医通 · Made with ♥ for CMC</p>
     </div>
   </div>

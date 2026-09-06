@@ -81,8 +81,43 @@ const { categories } = Astro.props;
     </div>
   </nav>
 
-  <div class="sidebar-footer border-t border-line px-5 py-4">
-    <p class="text-xs text-muted">成医通 · 成都医学院</p>
+  <div class="sidebar-footer border-t border-line px-2 py-4">
+    <div class="space-y-1">
+      <a
+        href="https://github.com/linlinli000/cyitong-nav/issues"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="反馈问题"
+        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
+      >
+        <span class="sidebar-footer-icon shrink-0 text-brand">
+          <Icon name="heroicons:chat-bubble-left-right-solid" class="h-5 w-5" aria-hidden="true" />
+        </span>
+        <span class="sidebar-footer-label min-w-0 flex-1 truncate text-[15px]">反馈问题</span>
+      </a>
+      <a
+        href="mailto:s1077529874@163.com"
+        title="投稿邮箱"
+        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
+      >
+        <span class="sidebar-footer-icon shrink-0 text-brand">
+          <Icon name="heroicons:envelope-solid" class="h-5 w-5" aria-hidden="true" />
+        </span>
+        <span class="sidebar-footer-label min-w-0 flex-1 truncate text-[15px]">投稿邮箱</span>
+      </a>
+      <a
+        href="https://github.com/linlinli000/cyitong-nav/pulls"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="添加链接"
+        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
+      >
+        <span class="sidebar-footer-icon shrink-0 text-brand">
+          <Icon name="heroicons:plus-circle-solid" class="h-5 w-5" aria-hidden="true" />
+        </span>
+        <span class="sidebar-footer-label min-w-0 flex-1 truncate text-[15px]">添加链接</span>
+      </a>
+    </div>
   </div>
 </aside>
 

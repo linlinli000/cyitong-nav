@@ -117,7 +117,7 @@ class NavSearch extends HTMLElement {
             aria-label="搜索"
             class="min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none placeholder:text-muted sm:text-base" />
           <button type="button" data-role="submit" aria-label="搜索"
-            class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-white transition-colors hover:bg-brand-dark active:scale-95 sm:h-10 sm:w-10 dark:text-on-accent">
+            class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-white transition-colors hover:bg-brand-dark active:scale-95 sm:h-10 sm:w-10">
             ${iconEl('search', 'h-4 w-4 sm:h-5 sm:w-5')}
           </button>
         </div>
