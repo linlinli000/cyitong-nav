@@ -15,9 +15,19 @@ interface Props {
 
 const {
   title = '成医通 | 导航服务',
-  description = '成都医学院学生专属导航页，汇集校内系统、医学文献、AI 工具、在线学习等常用链接。',
+  description = '成医学生维护的第三方导航：一站式汇集校内系统、医学文献、AI 工具与在线学习等校园常用网站，为师生提供直达入口。',
   searchIndexJson = '',
 } = Astro.props;
+
+const webSiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: '成医通',
+  alternateName: '成医导航',
+  url: 'https://nav.cyitong.top/',
+  description,
+  inLanguage: 'zh-CN',
+};
 ---
 
 <!doctype html>
@@ -35,6 +45,7 @@ const {
       content="成都医学院,成医,成医通,导航,校内系统,医学文献,文献检索,AI工具,实用工具"
     />
     <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://nav.cyitong.top/" />
 
     <!-- Open Graph -->
     <meta property="og:title" content="成医通 | 导航服务" />
@@ -43,6 +54,8 @@ const {
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:url" content="https://nav.cyitong.top" />
     <meta property="og:site_name" content="成医通" />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(webSiteSchema)}></script>
 
     <script is:inline>
       (function () {
