@@ -24,6 +24,12 @@ subs:
         pinyin: convertio
         pinyinFirst: convertio
         url: https://convertio.co/zh/video-converter/
+      - id: baimiao
+        title: 白描
+        desc: 截图/纸质/表格转文字，图片转 Excel
+        pinyin: baimiao
+        pinyinFirst: bm
+        url: https://web.baimiaoapp.com/
   - id: design
     name: 设计/图片
     links:
@@ -45,12 +51,18 @@ subs:
         pinyin: removebg
         pinyinFirst: removebg
         url: https://www.remove.bg/zh
-      - id: iconfont
-        title: Iconfont
-        desc: 海量矢量图标检索与下载
-        pinyin: iconfont
-        pinyinFirst: iconfont
-        url: https://www.iconfont.cn/
+      - id: iloveimg
+        title: iLoveIMG
+        desc: 在线图片压缩、缩放与格式转换
+        pinyin: iloveimg
+        pinyinFirst: iloveimg
+        url: https://www.iloveimg.com/zh-cn
+      - id: tinypng
+        title: TinyPNG
+        desc: PNG/JPEG 智能压缩，画质近乎无损
+        pinyin: tinypng
+        pinyinFirst: tinypng
+        url: https://tinypng.com/
   - id: media
     name: 媒体下载
     links:
@@ -60,17 +72,8 @@ subs:
         pinyin: greenvideo
         pinyinFirst: greenvideo
         url: https://greenvideo.cc/
-  - id: translate
-    name: 翻译/英语
-    links:
-      - id: grammarly
-        title: Grammarly
-        desc: 英文写作纠错与润色建议
-        pinyin: grammarly
-        pinyinFirst: grammarly
-        url: https://www.grammarly.com/
   - id: writing
-    name: 排版/写作
+    name: 排版
     links:
       - id: latexlive
         title: LaTeX Live
@@ -87,6 +90,12 @@ subs:
         pinyin: guohebaoke
         pinyinFirst: ghbk
         url: https://www.ghxi.com/
+      - id: msdn
+        title: MSDN
+        desc: 微软原版镜像与系统软件资源站
+        pinyin: msdn
+        pinyinFirst: msdn
+        url: https://next.itellyou.cn/
   - id: misc
     name: 其他工具
     links:
@@ -102,3 +111,10 @@ subs:
         pinyin: emojihecheng
         pinyinFirst: emojihc
         url: https://tikolu.net/emojimix/
+      - id: magicalbox
+        title: 奇妙工具箱
+        desc: 免费在线工具箱，视频图片压缩与转换
+        pinyin: qimiaogongjuxiang
+        pinyinFirst: qmgjx
+        url: https://www.magicalbox.cn/
+      

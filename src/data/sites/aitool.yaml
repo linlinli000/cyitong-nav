@@ -18,30 +18,18 @@ subs:
         pinyin: qianwen
         pinyinFirst: qw
         url: https://tongyi.aliyun.com/qianwen
-      - id: chatglm
-        title: ChatGLM
-        desc: 智谱开源模型，编程与逻辑推理
-        pinyin: chatglm
-        pinyinFirst: chatglm
-        url: https://chatglm.cn
-      - id: kimi
-        title: Kimi
-        desc: 超长文本处理，论文 PDF 速读总结
-        pinyin: kimi
-        pinyinFirst: kimi
-        url: https://kimi.moonshot.cn
-      - id: minimax
-        title: MiniMax
-        desc: 海螺AI，视频生成与角色对话
-        pinyin: minimax
-        pinyinFirst: minimax
-        url: https://hailuoai.com
       - id: doubao
         title: 豆包
         desc: 字节全能助手，学习办公常用
         pinyin: doubao
         pinyinFirst: db
         url: https://www.doubao.com
+      - id: kimi
+        title: Kimi
+        desc: 超长文本处理，论文 PDF 速读总结
+        pinyin: kimi
+        pinyinFirst: kimi
+        url: https://kimi.moonshot.cn
       - id: yiyan
         title: 文心一言
         desc: 百度大模型，文生图与文档分析
@@ -54,6 +42,24 @@ subs:
         pinyin: tengxunyuanbao
         pinyinFirst: txyb
         url: https://yuanbao.tencent.com
+      - id: xinghuo
+        title: 讯飞星火
+        desc: 讯飞大模型，中文理解与多模态创作
+        pinyin: xunfeixinghuo
+        pinyinFirst: xfxh
+        url: https://xinghuo.xfyun.cn
+      - id: chatglm
+        title: ChatGLM
+        desc: 智谱开源模型，编程与逻辑推理
+        pinyin: chatglm
+        pinyinFirst: chatglm
+        url: https://chatglm.cn
+      - id: zai
+        title: Z.ai
+        desc: 智谱官方新站，免费体验 GLM 最新模型
+        pinyin: zai
+        pinyinFirst: zai
+        url: https://z.ai
   - id: foreignmodel
     name: 国外大模型
     links:
@@ -63,26 +69,71 @@ subs:
         pinyin: chatgpt
         pinyinFirst: chatgpt
         url: https://chatgpt.com
-      - id: grok
-        title: Grok
-        desc: 强调实时信息与自由表达
-        pinyin: grok
-        pinyinFirst: grok
-        url: https://grok.com
-      - id: gemini
-        title: Gemini
-        desc: Google 多模态，长上下文理解
-        pinyin: gemini
-        pinyinFirst: gemini
-        url: https://gemini.google.com
       - id: claude
         title: Claude
         desc: 长文分析、编程与写作能力强
         pinyin: claude
         pinyinFirst: claude
         url: https://claude.ai
-  - id: app
-    name: AI应用
+      - id: gemini
+        title: Gemini
+        desc: Google 多模态，长上下文理解
+        pinyin: gemini
+        pinyinFirst: gemini
+        url: https://gemini.google.com
+      - id: copilot
+        title: Copilot
+        desc: 微软 AI 助手，Windows 与 Office 生态
+        pinyin: copilot
+        pinyinFirst: copilot
+        url: https://copilot.microsoft.com
+      - id: grok
+        title: Grok
+        desc: 强调实时信息与自由表达
+        pinyin: grok
+        pinyinFirst: grok
+        url: https://grok.com
+  - id: office
+    name: AI办公
+    links:
+      - id: aippt
+        title: AiPPT
+        desc: 一句话生成 PPT，自动配图排版
+        pinyin: aippt
+        pinyinFirst: aippt
+        url: https://www.aippt.cn/?seller=itab
+      - id: gamma
+        title: Gamma
+        desc: AI 生成演示文稿与网页，自动排版
+        pinyin: gamma
+        pinyinFirst: gamma
+        url: https://gamma.app/zh-cn
+      - id: grammarly
+        title: Grammarly
+        desc: 英文写作纠错与润色建议
+        pinyin: grammarly
+        pinyinFirst: grammarly
+        url: https://www.grammarly.com/
+      - id: ima
+        title: 腾讯ima
+        desc: 微信生态个人知识库，搜读写一体
+        pinyin: tengxunima
+        pinyinFirst: txima
+        url: https://ima.qq.com
+      - id: coze
+        title: 扣子
+        desc: 可视化搭建 AI 智能体与工作流
+        pinyin: kouzi
+        pinyinFirst: kz
+        url: https://www.coze.cn/
+      - id: metaso
+        title: 秘塔AI搜索
+        desc: AI 智能搜索，学术检索自动引文溯源
+        pinyin: mitaai
+        pinyinFirst: mtai
+        url: https://metaso.cn/
+  - id: media
+    name: AI影像
     links:
       - id: jimeng
         title: 即梦AI
@@ -90,15 +141,42 @@ subs:
         pinyin: jimengai
         pinyinFirst: jmai
         url: https://jimeng.jianying.com/
-      - id: coze
-        title: 扣子
-        desc: 可视化搭建 AI 智能体与工作流
-        pinyin: kouzi
-        pinyinFirst: kz
-        url: https://www.coze.cn/
-      - id: aippt
-        title: AiPPT
-        desc: 一句话生成 PPT，自动配图排版
-        pinyin: aippt
-        pinyinFirst: aippt
-        url: https://www.aippt.cn/?seller=itab
+      - id: kling
+        title: 可灵AI
+        desc: 快手 AI 图像与视频生成
+        pinyin: kelingai
+        pinyinFirst: klai
+        url: https://klingai.com
+      - id: minimax
+        title: MiniMax
+        desc: 海螺AI，视频生成与角色对话
+        pinyin: minimax
+        pinyinFirst: minimax
+        url: https://hailuoai.com
+      - id: midjourney
+        title: Midjourney
+        desc: AI 图像生成，风格化插画与概念设计
+        pinyin: midjourney
+        pinyinFirst: midjourney
+        url: https://www.midjourney.com
+      - id: sora
+        title: Sora
+        desc: OpenAI 文生视频，电影质感
+        pinyin: sora
+        pinyinFirst: sora
+        url: https://sora.com
+      - id: updream
+        title: Updream
+        desc: B 站 AI 视频创作，画布工作流与技能社区
+        pinyin: updream
+        pinyinFirst: updream
+        url: https://www.updream.cn
+  - id: audio
+    name: AI音频
+    links:
+      - id: suno
+        title: Suno
+        desc: AI 音乐创作，写词作曲成歌
+        pinyin: suno
+        pinyinFirst: suno
+        url: https://suno.com

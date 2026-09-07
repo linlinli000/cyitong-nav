@@ -97,15 +97,18 @@ subs:
         url: "https://m.q.qq.com/a/p/1110690941?s=%2Fpages%2Ftabbar%2Findex%3Fstore_id%3D32"
         qr: true
         qrNote: 请使用QQ扫码，将自动打开A4云铺小程序
-  - id: contact
-    name: 通讯
-    links:
       - id: qywx
         title: 校企业微信
         desc: 企业微信使用与入校绑定说明
         pinyin: xiaoqiyeweixin
         pinyinFirst: xqywx
         url: https://metc.cmc.edu.cn/info/1019/2280.htm
+      - id: shiguang
+        title: 拾光课程表
+        desc: 大学课表开源应用，免费无广，成医专属教务系统适配
+        pinyin: shiguangkebiao
+        pinyinFirst: sgkcb
+        url: https://sgschedule.jursin.top/
   - id: degree
     name: 学籍/升学
     links:
