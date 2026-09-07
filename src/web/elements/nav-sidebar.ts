@@ -15,6 +15,11 @@ class NavSidebar extends HTMLElement {
   private flyoutTrigger: HTMLElement | null = null;
   private closeGate = new CloseGate(150, () => this.closeFlyout(false));
   private suppressFocusOpen = false;
+  private mqLg: MediaQueryList | null = null;
+
+  private onMqLgChange = (e: MediaQueryListEvent): void => {
+    if (e.matches && this.drawerOpen()) this.closeDrawer();
+  };
 
   private onDocClick = (e: MouseEvent): void => {
     if ((e.target as Element).closest('[data-sidebar-toggle]')) {
@@ -59,6 +64,7 @@ class NavSidebar extends HTMLElement {
 
   disconnectedCallback(): void {
     this.observer?.disconnect();
+    this.mqLg?.removeEventListener('change', this.onMqLgChange);
     document.removeEventListener('click', this.onDocClick);
     document.removeEventListener('keydown', this.onDocKeydown);
     document.removeEventListener('scroll', this.onDocScroll, true);
@@ -68,6 +74,15 @@ class NavSidebar extends HTMLElement {
   }
 
   // ── 折叠/展开 ──
+
+  private drawerOpen(): boolean {
+    return !!this.backdrop && !this.backdrop.classList.contains('hidden');
+  }
+
+  private setGroupOpen(group: HTMLElement, open: boolean): void {
+    group.classList.toggle('open', open);
+    group.querySelector<HTMLElement>('.sidebar-cat-toggle')?.setAttribute('aria-expanded', String(open));
+  }
 
   private initCollapse(): void {
     this.addEventListener('click', (e) => {
@@ -83,11 +98,11 @@ class NavSidebar extends HTMLElement {
           this.jumpToCategory(group);
           return;
         }
-        group.classList.toggle('open');
+        this.setGroupOpen(group, !group.classList.contains('open'));
         if (!hitChevron) this.jumpToCategory(group);
         return;
       }
-      group.classList.toggle('open');
+      this.setGroupOpen(group, !group.classList.contains('open'));
     });
   }
 
@@ -117,7 +132,7 @@ class NavSidebar extends HTMLElement {
 
     const group = this.querySelector<HTMLElement>(`.sidebar-group[data-cat="${id}"]`);
     if (group) {
-      group.classList.add('open');
+      this.setGroupOpen(group, true);
       group.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
   }
@@ -314,6 +329,8 @@ class NavSidebar extends HTMLElement {
   private initDrawer(): void {
     document.addEventListener('click', this.onDocClick);
     document.addEventListener('keydown', this.onDocKeydown);
+    this.mqLg = window.matchMedia(`(min-width: ${BREAKPOINT_LG}px)`);
+    this.mqLg.addEventListener('change', this.onMqLgChange);
 
     this.backdrop?.addEventListener('click', () => this.closeDrawer());
 

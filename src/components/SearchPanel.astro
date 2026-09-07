@@ -1,6 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { ENGINES, PLACEHOLDERS, SCOPE_TABS, type SearchScope } from '../data/search-engines';
+import { ENGINES, SCOPE_TABS, placeholderFor, type SearchScope } from '../data/search-engines';
 
 interface Props {
   total: number;
@@ -12,9 +12,6 @@ const DEFAULT_SCOPE: SearchScope = 'search';
 const DEFAULT_ENGINE = 0;
 const EXTERNAL_SCOPES = ['search', 'community', 'literature'] as const;
 
-function placeholderFor(scope: SearchScope, engineIdx: number): string {
-  return scope === 'site' ? PLACEHOLDERS.site : `在 ${ENGINES[scope][engineIdx].name} 中搜索…`;
-}
 function isSite(scope: SearchScope): boolean {
   return scope === 'site';
 }

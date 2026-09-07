@@ -51,6 +51,10 @@ export const PLACEHOLDERS: Record<SearchScope, string> = {
   literature: '检索文献…',
 };
 
+export function placeholderFor(scope: SearchScope, engineIdx: number): string {
+  return scope === 'site' ? PLACEHOLDERS.site : `在 ${ENGINES[scope][engineIdx].name} 中搜索…`;
+}
+
 export function engineUrl(engine: Engine, q: string): string {
   return engine.url.replace('{q}', encodeURIComponent(q));
 }

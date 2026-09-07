@@ -1,6 +1,7 @@
 /** <nav-search>：站内/引擎搜索、历史、键盘导航。 */
-import { ENGINES, PLACEHOLDERS, SCOPE_TABS, engineUrl, type SearchScope } from '../../data/search-engines';
+import { ENGINES, SCOPE_TABS, engineUrl, placeholderFor, type SearchScope } from '../../data/search-engines';
 import { queryTokens, searchSites, type SiteRecord } from '../search-utils';
+import { NAV_OPEN_CARD_EVENT, toCardData, toCardDataHtml } from '../card-attrs';
 import { escapeHtml as escapeAttr } from '../html-escape';
 import { iconEl } from '../icons';
 import { storageGetJson, storageSetJson } from '../storage';
@@ -12,10 +13,6 @@ const historyKey = (scope: SearchScope): string => `nav:history:${scope}`;
 function loadScope(): SearchScope {
   const s = storageGetJson<string>(SCOPE_KEY, 'search');
   return SCOPE_TABS.some((t) => t.id === s) ? (s as SearchScope) : 'search';
-}
-
-function placeholder(scope: SearchScope, engineIdx: number): string {
-  return scope === 'site' ? PLACEHOLDERS.site : `在 ${ENGINES[scope][engineIdx].name} 中搜索…`;
 }
 
 /** 命中词高亮 */
@@ -76,14 +73,6 @@ class NavSearch extends HTMLElement {
     document.removeEventListener('click', this.handleDocClick);
   }
 
-  private dialogAttrs(r: SiteRecord): string {
-    const qr = r.qr
-      ? ` data-qr="${escapeAttr(r.url)}"${r.qrNote ? ` data-qr-note="${escapeAttr(r.qrNote)}"` : ''}`
-      : '';
-    const mirrors = r.mirrors?.length ? ` data-mirrors="${escapeAttr(JSON.stringify(r.mirrors))}"` : '';
-    return `${qr}${mirrors}`;
-  }
-
   private readIndex(): SiteRecord[] {
     try {
       const el = document.getElementById('site-index');
@@ -129,7 +118,7 @@ class NavSearch extends HTMLElement {
       ).forEach((b) => b.classList.toggle('active', Number(b.dataset.engine) === this.engineIdx));
     }
 
-    if (this.input) this.input.placeholder = placeholder(this.scope, this.engineIdx);
+    if (this.input) this.input.placeholder = placeholderFor(this.scope, this.engineIdx);
   }
 
   // ── 事件（委托到宿主元素） ──
@@ -261,7 +250,7 @@ class NavSearch extends HTMLElement {
     d.innerHTML = this.results
       .map(
         (r, i) => `
-        <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener noreferrer"${this.dialogAttrs(r)} data-title="${escapeAttr(r.title)}" data-icon="${escapeAttr(r.icon)}"
+        <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener noreferrer"${toCardDataHtml(toCardData(r))}
           title="${escapeAttr(`${r.title} · ${r.catName}/${r.subName}（首字母 ${r.pinyinFirst}）`)}"
           class="flex items-center gap-3 px-3 py-2 transition-colors ${
             i === this.cursor ? 'bg-surface/80' : 'hover:bg-surface/60'
@@ -345,23 +334,14 @@ class NavSearch extends HTMLElement {
   }
 
   private openResult(r: SiteRecord): void {
-    if (r.mirrors?.length || r.qr) {
-      const a = document.createElement('a');
-      a.href = r.url;
-      a.dataset.title = r.title;
-      a.dataset.icon = r.icon;
-      if (r.qr) {
-        a.dataset.qr = r.url;
-        a.dataset.qrNote = r.qrNote ?? '';
-      }
-      if (r.mirrors?.length) a.dataset.mirrors = JSON.stringify(r.mirrors);
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    } else {
+    const data = toCardData(r);
+    if (!data.qr && !data.mirrors) {
       window.open(r.url, '_blank', 'noopener');
+      return;
     }
+    const open = new CustomEvent(NAV_OPEN_CARD_EVENT, { detail: data, bubbles: true, cancelable: true });
+    this.dispatchEvent(open);
+    if (!open.defaultPrevented) window.open(r.url, '_blank', 'noopener');
   }
 
   private replayHistory(q: string): void {

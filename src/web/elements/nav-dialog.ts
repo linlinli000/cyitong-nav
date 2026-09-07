@@ -2,6 +2,7 @@
 import { escapeHtml } from '../html-escape';
 import type { Mirror } from '../../content.config';
 import { iconEl } from '../icons';
+import { NAV_OPEN_CARD_EVENT, toCardDataFromDataset, type CardData } from '../card-attrs';
 
 class NavDialog extends HTMLElement {
   private dlg: HTMLDialogElement | null = null;
@@ -10,21 +11,26 @@ class NavDialog extends HTMLElement {
     const a = (e.target as Element).closest<HTMLAnchorElement>('a[data-mirrors], a[data-qr]');
     if (!a) return;
     e.preventDefault();
-    const title = a.dataset.title ?? '链接';
+    this.openFromData(toCardDataFromDataset(a.dataset));
+  };
 
-    if (a.dataset.mirrors) {
+  private onOpenCard = (e: Event): void => {
+    e.preventDefault();
+    this.openFromData((e as CustomEvent<CardData>).detail);
+  };
+
+  private openFromData(d: CardData): void {
+    if (d.mirrors) {
       try {
-        const mirrors = JSON.parse(a.dataset.mirrors) as Mirror[];
+        const mirrors = JSON.parse(d.mirrors) as Mirror[];
         if (mirrors.length) {
-          this.openMirrors(title, a.dataset.icon ?? '', mirrors);
+          this.openMirrors(d.title, d.icon, mirrors);
           return;
         }
       } catch {}
     }
-    if (a.dataset.qr) {
-      void this.openQr(title, a.dataset.icon ?? '', a.dataset.qr, a.dataset.qrNote);
-    }
-  };
+    if (d.qr) void this.openQr(d.title, d.icon, d.qr, d.qrNote);
+  }
 
   connectedCallback(): void {
     this.innerHTML = `
@@ -50,10 +56,12 @@ class NavDialog extends HTMLElement {
     );
 
     document.addEventListener('click', this.onDocClick);
+    document.addEventListener(NAV_OPEN_CARD_EVENT, this.onOpenCard);
   }
 
   disconnectedCallback(): void {
     document.removeEventListener('click', this.onDocClick);
+    document.removeEventListener(NAV_OPEN_CARD_EVENT, this.onOpenCard);
   }
 
   private setHeader(title: string, icon: string): void {

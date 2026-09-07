@@ -100,7 +100,9 @@ src/
 ├── styles/global.css     # 颜色令牌与全局状态
 └── web/                  # 客户端运行时（原生 TS）
     ├── elements/         # 自注册元素 <nav-*>，副作用导入
-    └── *.ts              # 纯工具 / 文档增强（storage、icons…）
+    ├── card-attrs.ts     # 扫码/镜像 data 属性契约（SSR LinkCard 与 nav-search 共用）
+    ├── breakpoints.ts    # 视口断点常量（与 Tailwind lg / global.css 同步）
+    └── *.ts              # 纯工具 / 文档增强（storage、html-escape…）
 ```
 
 ## 技术栈与部署

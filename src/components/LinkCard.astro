@@ -1,5 +1,6 @@
 ---
 import type { Mirror } from '../content.config';
+import { toCardData } from '../web/card-attrs';
 
 interface Props {
   categoryId: string;
@@ -16,8 +17,14 @@ interface Props {
 }
 
 const { categoryId, sub, link } = Astro.props;
-const hasQr = !!link.qr;
-const hasMirrors = !!link.mirrors?.length;
+const card = toCardData({
+  title: link.title,
+  url: link.url,
+  icon: `/icons/${categoryId}/${link.id}.webp`,
+  qr: link.qr,
+  qrNote: link.qrNote,
+  mirrors: link.mirrors,
+});
 const fallback = link.title.trim().charAt(0) || '·';
 ---
 
@@ -26,12 +33,12 @@ const fallback = link.title.trim().charAt(0) || '·';
   target="_blank"
   rel="noopener noreferrer"
   data-sub={sub}
-  data-title={link.title}
+  data-title={card.title}
   data-desc={link.desc ? link.desc : undefined}
-  data-icon={`/icons/${categoryId}/${link.id}.webp`}
-  data-qr={hasQr ? link.url : undefined}
-  data-qr-note={hasQr ? link.qrNote : undefined}
-  data-mirrors={hasMirrors ? JSON.stringify(link.mirrors) : undefined}
+  data-icon={card.icon}
+  data-qr={card.qr}
+  data-qr-note={card.qrNote}
+  data-mirrors={card.mirrors}
   class="link-tile group relative flex items-center gap-3 rounded-2xl border border-line bg-card p-3 dark:border-line/60"
 >
   <img
@@ -50,8 +57,8 @@ const fallback = link.title.trim().charAt(0) || '·';
       <span class="truncate text-sm font-semibold text-ink transition-colors group-hover:text-brand">
         {link.title}
       </span>
-      {hasMirrors && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">镜像</span>}
-      {hasQr && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">扫码</span>}
+      {card.mirrors && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">镜像</span>}
+      {card.qr && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">扫码</span>}
     </span>
     {link.desc && <span class="mt-0.5 block truncate text-xs text-muted">{link.desc}</span>}
   </span>
