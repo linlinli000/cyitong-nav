@@ -1,5 +1,4 @@
 /** <nav-dialog>：文档级拦截 a[data-mirrors]/a[data-qr] 点击 → 二维码/镜像弹窗 */
-import QRCode from 'qrcode';
 import { escapeHtml } from '../html-escape';
 import type { Mirror } from '../../content.config';
 import { iconEl } from '../icons';
@@ -99,6 +98,7 @@ class NavDialog extends HTMLElement {
       body.appendChild(p);
     }
     try {
+      const { default: QRCode } = await import('qrcode');
       img.src = await QRCode.toDataURL(url, { width: 256, margin: 1, errorCorrectionLevel: 'M' });
     } catch {
       body.innerHTML = '<p class="py-8 text-center text-sm text-muted">二维码生成失败</p>';

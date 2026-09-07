@@ -1,13 +1,22 @@
-/** <nav-search>：站内/引擎搜索、历史、键盘导航 */
+/** <nav-search>：站内/引擎搜索、历史、键盘导航。 */
 import { ENGINES, PLACEHOLDERS, SCOPE_TABS, engineUrl, type SearchScope } from '../../data/search-engines';
 import { queryTokens, searchSites, type SiteRecord } from '../search-utils';
 import { escapeHtml as escapeAttr } from '../html-escape';
 import { iconEl } from '../icons';
 import { storageGetJson, storageSetJson } from '../storage';
 
-const HISTORY_KEY = 'nav:history';
 const SCOPE_KEY = 'nav:scope';
 const MAX_HISTORY = 10;
+const historyKey = (scope: SearchScope): string => `nav:history:${scope}`;
+
+function loadScope(): SearchScope {
+  const s = storageGetJson<string>(SCOPE_KEY, 'search');
+  return SCOPE_TABS.some((t) => t.id === s) ? (s as SearchScope) : 'search';
+}
+
+function placeholder(scope: SearchScope, engineIdx: number): string {
+  return scope === 'site' ? PLACEHOLDERS.site : `在 ${ENGINES[scope][engineIdx].name} 中搜索…`;
+}
 
 /** 命中词高亮 */
 function markHit(text: string, tokens: string[]): string {
@@ -28,7 +37,7 @@ class NavSearch extends HTMLElement {
   private records: SiteRecord[] = [];
   private results: SiteRecord[] = [];
   private tokens: string[] = [];
-  private history: string[] = storageGetJson<string[]>(HISTORY_KEY, []);
+  private history: string[] = [];
   private cursor = -1;
 
   private input: HTMLInputElement | null = null;
@@ -49,8 +58,11 @@ class NavSearch extends HTMLElement {
 
   connectedCallback(): void {
     this.records = this.readIndex();
-    this.engineIdx = this.loadEngineIdx();
-    this.render();
+    this.engineIdx = this.loadEngineIdx(this.scope);
+    this.history = this.loadHistory(this.scope);
+    this.cacheRefs();
+    this.applyScopeState();
+
     this.addEventListener('input', this.onInput);
     this.addEventListener('focusin', this.onFocusIn);
     this.addEventListener('click', this.onClick);
@@ -82,75 +94,42 @@ class NavSearch extends HTMLElement {
     }
   }
 
-  private loadEngineIdx(): number {
-    const idx = storageGetJson<number>(`nav:engine:${this.scope}`, 0);
-    const len = ENGINES[this.scope]?.length ?? 0;
+  private loadEngineIdx(scope: SearchScope): number {
+    const idx = storageGetJson<number>(`nav:engine:${scope}`, 0);
+    const len = ENGINES[scope]?.length ?? 0;
     return typeof idx === 'number' && idx >= 0 && idx < len ? idx : 0;
   }
 
-  private render(): void {
-    const { scope } = this;
-    const placeholder =
-      scope === 'site' ? PLACEHOLDERS.site : `在 ${ENGINES[scope][this.engineIdx].name} 中搜索…`;
-    this.innerHTML = `
-      <div class="mb-2 flex justify-center sm:mb-3">
-        <div class="inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-line bg-card p-1 shadow-[var(--shadow-field)] sm:gap-1.5 dark:border-line/60">
-          ${SCOPE_TABS.map(
-            (tab) => `
-            <button type="button" data-scope="${tab.id}"
-              class="inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-[13px] font-medium transition-all sm:px-5 sm:py-2 sm:text-sm ${
-                tab.id === scope
-                  ? 'bg-brand-solid font-semibold text-on-solid shadow-sm'
-                  : 'text-muted hover:bg-ink/5 hover:text-ink dark:hover:bg-white/10'
-              }">
-              ${tab.label}
-            </button>`,
-          ).join('')}
-        </div>
-      </div>
+  private loadHistory(scope: SearchScope): string[] {
+    return storageGetJson<string[]>(historyKey(scope), []);
+  }
 
-      <div class="relative mx-auto w-full max-w-[50rem]">
-        <div
-          class="flex items-center gap-1.5 rounded-2xl border border-line bg-field py-1.5 pl-3.5 pr-1 shadow-[var(--shadow-field)] transition-all sm:gap-2 sm:pl-5 sm:pr-1.5">
-          <input type="text" autocomplete="off" spellcheck="false" value="${escapeAttr(this.query)}"
-            placeholder="${placeholder}"
-            aria-label="搜索"
-            class="min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none placeholder:text-muted sm:text-base" />
-          <button type="button" data-role="submit" aria-label="搜索"
-            class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand-solid text-on-solid transition-colors hover:brightness-110 active:scale-95 sm:h-10 sm:w-10">
-            ${iconEl('search', 'h-4 w-4 sm:h-5 sm:w-5')}
-          </button>
-        </div>
+  private cacheRefs(): void {
+    this.input = this.querySelector<HTMLInputElement>('[data-role="input"]');
+    this.dropdown = this.querySelector<HTMLElement>('[data-role="dropdown"]');
+  }
 
-        <div data-role="dropdown"
-          class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 hidden max-h-96 overflow-y-auto rounded-xl border border-line bg-field shadow-[var(--shadow-dropdown)]"></div>
-      </div>
+  /** 按当前 scope/engineIdx 同步 SSR 静态标记 */
+  private applyScopeState(): void {
+    this.querySelectorAll<HTMLButtonElement>('[data-scope]').forEach((b) => {
+      const on = b.dataset.scope === this.scope;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
 
-      ${scope === 'site'
-        ? `<div class="mt-2 flex min-h-[2.75rem] items-center justify-center sm:mt-3">
-            <span class="inline-flex items-center gap-1 rounded-full border border-line bg-card px-3.5 py-1 text-[13px] text-muted shadow-[var(--shadow-field)] sm:px-4 dark:border-line/60">本网站已收录<span class="font-semibold text-brand dark:text-on-solid">${this.records.length}</span>个常用链接</span>
-          </div>`
-        : `<div data-role="engine-bar" class="mt-2 flex min-h-[2.75rem] items-center overflow-x-auto scrollbar-hide sm:mt-3">
-              <div class="mx-auto flex shrink-0 items-center gap-1 rounded-full border border-line bg-card p-1 shadow-[var(--shadow-field)] dark:border-line/60">
-              ${ENGINES[scope]
-                .map(
-                  (e, i) => `
-                  <button type="button" data-engine="${i}"
-                    class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[13px] transition-all sm:px-3 ${
-                      i === this.engineIdx
-                        ? 'bg-brand-solid font-semibold text-on-solid shadow-sm'
-                        : 'text-muted hover:bg-ink/5 hover:text-ink dark:hover:bg-white/10'
-                    }">
-                    ${iconEl(e.icon, 'h-3.5 w-3.5')}
-                    ${e.name}
-                  </button>`,
-                )
-                .join('')}
-              </div>
-          </div>`}
-    `;
-    this.input = this.querySelector('input');
-    this.dropdown = this.querySelector('[data-role="dropdown"]');
+    const footer = this.querySelector<HTMLElement>('[data-role="site-footer"]');
+    this.querySelectorAll<HTMLElement>('[data-role="engine-bar"]').forEach((bar) => {
+      bar.hidden = bar.dataset.engineScope !== this.scope;
+    });
+    if (footer) footer.hidden = this.scope !== 'site';
+
+    if (this.scope !== 'site') {
+      this.querySelectorAll<HTMLButtonElement>(
+        `[data-role="engine-bar"][data-engine-scope="${this.scope}"] [data-engine]`,
+      ).forEach((b) => b.classList.toggle('active', Number(b.dataset.engine) === this.engineIdx));
+    }
+
+    if (this.input) this.input.placeholder = placeholder(this.scope, this.engineIdx);
   }
 
   // ── 事件（委托到宿主元素） ──
@@ -177,7 +156,7 @@ class NavSearch extends HTMLElement {
       return;
     }
     const engBtn = t.closest<HTMLButtonElement>('[data-engine]');
-    if (engBtn) {
+    if (engBtn && engBtn.dataset.engineScope === this.scope) {
       this.setEngine(Number(engBtn.dataset.engine));
       return;
     }
@@ -192,7 +171,7 @@ class NavSearch extends HTMLElement {
     }
     if (t.closest('[data-clear-history]')) {
       this.history = [];
-      storageSetJson(HISTORY_KEY, []);
+      storageSetJson(historyKey(this.scope), []);
       this.showHistory();
       return;
     }
@@ -226,34 +205,33 @@ class NavSearch extends HTMLElement {
     }
   };
 
-  // ── 状态切换 ──
+  // ── 状态切换（只改标记，不重建面板 DOM） ──
 
   private switchScope(scope: SearchScope): void {
     if (scope === this.scope) return;
     this.scope = scope;
     storageSetJson(SCOPE_KEY, scope);
-    this.engineIdx = this.loadEngineIdx();
+    this.engineIdx = this.loadEngineIdx(scope);
+    this.history = this.loadHistory(scope);
     this.query = '';
     this.cursor = -1;
+    if (this.input) this.input.value = '';
     this.hideDropdown();
-    this.render();
+    this.applyScopeState();
     this.input?.focus();
   }
 
   private setEngine(i: number): void {
-    const bar = this.querySelector<HTMLElement>('[data-role="engine-bar"]');
-    const pos = bar?.scrollLeft ?? 0;
     this.engineIdx = i;
     storageSetJson(`nav:engine:${this.scope}`, i);
-    this.render();
-    const next = this.querySelector<HTMLElement>('[data-role="engine-bar"]');
-    if (next) next.scrollLeft = pos;
+    this.applyScopeState();
     this.input?.focus();
   }
 
   // ── 下拉面板 ──
 
   private updateDropdown(): void {
+    if (!this.dropdown) return;
     if (!this.query.trim()) {
       this.showHistory();
       return;
@@ -265,7 +243,7 @@ class NavSearch extends HTMLElement {
       this.showDropdown();
     } else {
       const engine = ENGINES[this.scope][this.engineIdx];
-      this.dropdown!.innerHTML = `
+      this.dropdown.innerHTML = `
         <div class="flex items-center gap-3 px-4 py-3 text-sm text-muted">
           ${iconEl('search', 'h-4 w-4')}
           <span>按回车在 <span class="font-medium text-brand">${engine.name}</span> 中搜索「<span class="text-ink">${escapeAttr(this.query)}</span>」</span>
@@ -307,7 +285,8 @@ class NavSearch extends HTMLElement {
   }
 
   private showHistory(): void {
-    const d = this.dropdown!;
+    const d = this.dropdown;
+    if (!d) return;
     if (this.history.length === 0) {
       this.hideDropdown();
       return;
@@ -394,13 +373,8 @@ class NavSearch extends HTMLElement {
 
   private saveHistory(q: string): void {
     this.history = [q, ...this.history.filter((h) => h !== q)].slice(0, MAX_HISTORY);
-    storageSetJson(HISTORY_KEY, this.history);
+    storageSetJson(historyKey(this.scope), this.history);
   }
-}
-
-function loadScope(): SearchScope {
-  const s = storageGetJson<string>(SCOPE_KEY, 'search');
-  return SCOPE_TABS.some((t) => t.id === s) ? (s as SearchScope) : 'search';
 }
 
 customElements.define('nav-search', NavSearch);

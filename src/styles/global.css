@@ -114,6 +114,43 @@ nav-cat-tabs {
   border-radius: 2px;
 }
 
+/* 搜索 scope 胶囊 / 引擎 chips 激活态 */
+.scope-pill,
+.engine-chip {
+  color: var(--color-muted);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.scope-pill {
+  font-weight: 500;
+}
+.scope-pill:hover,
+.engine-chip:hover {
+  color: var(--color-ink);
+  background: color-mix(in srgb, var(--color-ink) 5%, transparent);
+}
+.scope-pill.active,
+.engine-chip.active {
+  color: var(--color-on-solid);
+  background: var(--color-brand-solid);
+  box-shadow: var(--shadow-tab);
+  font-weight: 600;
+}
+
+/* 明暗切换按扭与系统跟随同步 */
+nav-theme-toggle [data-icon='sun'] {
+  display: none;
+}
+.dark nav-theme-toggle [data-icon='moon'] {
+  display: none;
+}
+.dark nav-theme-toggle [data-icon='sun'] {
+  display: block;
+}
+
 /* 链接卡片 hover 提升 */
 .link-tile {
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;

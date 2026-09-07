@@ -1,32 +1,23 @@
-/** <nav-theme-toggle>：切换 .dark 并持久化 theme */
-import { iconEl } from '../icons';
+/** <nav-theme-toggle>：切换 .dark 并持久化； */
 import { storageSet } from '../storage';
 
 class NavThemeToggle extends HTMLElement {
+  private btn: HTMLButtonElement | null = null;
+
+  private onClick = (): void => {
+    const dark = !document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', dark);
+    storageSet('theme', dark ? 'dark' : 'light');
+  };
+
   connectedCallback(): void {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.setAttribute('aria-label', '切换暗色模式');
-    btn.className =
-      'grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink';
-    btn.innerHTML = `${iconEl('sun', 'h-6 w-6 hidden', ' data-icon="sun"')}${iconEl('moon', 'h-6 w-6', ' data-icon="moon"')}`;
-
-    btn.addEventListener('click', () => {
-      const dark = !document.documentElement.classList.contains('dark');
-      document.documentElement.classList.toggle('dark', dark);
-      storageSet('theme', dark ? 'dark' : 'light');
-      syncIcons(dark);
-    });
-
-    this.appendChild(btn);
-    syncIcons(document.documentElement.classList.contains('dark'));
+    this.btn = this.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+    this.btn?.addEventListener('click', this.onClick);
   }
-}
 
-function syncIcons(dark: boolean): void {
-  document
-    .querySelectorAll('nav-theme-toggle [data-icon]')
-    .forEach((el) => el.classList.toggle('hidden', el.getAttribute('data-icon') === (dark ? 'moon' : 'sun')));
+  disconnectedCallback(): void {
+    this.btn?.removeEventListener('click', this.onClick);
+  }
 }
 
 customElements.define('nav-theme-toggle', NavThemeToggle);

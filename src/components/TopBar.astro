@@ -154,7 +154,21 @@ const TOOLS = [
         </div>
       ))}
 
-      <nav-theme-toggle />
+      <nav-theme-toggle>
+        <button
+          type="button"
+          data-theme-toggle
+          aria-label="切换暗色模式"
+          class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink"
+        >
+          <span data-icon="moon" aria-hidden="true">
+            <Icon name="lucide:moon" class="h-6 w-6" />
+          </span>
+          <span data-icon="sun" aria-hidden="true">
+            <Icon name="lucide:sun" class="h-6 w-6" />
+          </span>
+        </button>
+      </nav-theme-toggle>
       <a
         href="https://github.com/linlinli000/cyitong-nav"
         target="_blank"

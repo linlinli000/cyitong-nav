@@ -42,7 +42,7 @@ const totalLinks = searchIndex.length;
     <TopBar />
 
     <main class="px-3 py-6 sm:px-4">
-      <SearchPanel />
+      <SearchPanel total={totalLinks} />
 
       <div class="mt-6 sm:mt-10">
         <SiteGrid categories={categories} />
