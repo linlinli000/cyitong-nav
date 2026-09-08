@@ -37,6 +37,7 @@ class NavSearch extends HTMLElement {
   private tokens: string[] = [];
   private history: string[] = [];
   private cursor = -1;
+  private rowEls: HTMLAnchorElement[] = [];
 
   private input: HTMLInputElement | null = null;
   private dropdown: HTMLElement | null = null;
@@ -246,17 +247,16 @@ class NavSearch extends HTMLElement {
     const d = this.dropdown!;
     if (this.results.length === 0) {
       d.innerHTML = `<div class="px-4 py-10 text-center text-sm text-muted">未找到相关链接，试试换个关键词</div>`;
+      this.rowEls = [];
       return;
     }
     d.innerHTML = this.results
       .map(
-        (r, i) => `
+        (r) => `
         <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener noreferrer"${toCardDataHtml(toCardData(r))}
           title="${escapeAttr(`${r.title} · ${r.catName}/${r.subName}（首字母 ${r.pinyinFirst}）`)}"
-          class="flex items-center gap-3 px-3 py-2 transition-colors ${
-            i === this.cursor ? 'bg-surface/80' : 'hover:bg-surface/60'
-          }">
-          <img src="${escapeAttr(r.icon)}" alt="" loading="lazy" class="h-8 w-8 shrink-0 rounded-lg object-cover"
+          class="flex items-center gap-3 px-3 py-2 transition-colors hover:bg-surface/60">
+          <img src="${escapeAttr(r.icon)}" alt="" class="h-8 w-8 shrink-0 rounded-lg object-cover"
             data-letter="${escapeAttr(firstLetter(r.title))}">
           <span class="min-w-0 flex-1">
             <span class="flex min-w-0 items-center gap-1.5">
@@ -272,6 +272,12 @@ class NavSearch extends HTMLElement {
         </a>`,
       )
       .join('');
+    this.rowEls = [...d.querySelectorAll<HTMLAnchorElement>('a[data-title]')];
+    this.applyCursor();
+  }
+
+  private applyCursor(): void {
+    this.rowEls.forEach((a, i) => a.classList.toggle('search-row-active', i === this.cursor));
   }
 
   private showHistory(): void {
@@ -315,8 +321,8 @@ class NavSearch extends HTMLElement {
     const n = this.results.length;
     if (n === 0) return;
     this.cursor = (this.cursor + dir + n) % n;
-    this.renderResults();
-    this.dropdown?.querySelectorAll('a')[this.cursor]?.scrollIntoView({ block: 'nearest' });
+    this.applyCursor();
+    this.rowEls[this.cursor]?.scrollIntoView({ block: 'nearest' });
   }
 
   private doSearch(): void {
