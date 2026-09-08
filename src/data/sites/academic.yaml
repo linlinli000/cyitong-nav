@@ -162,7 +162,7 @@ subs:
         pinyinFirst: pmc
         url: https://www.ncbi.nlm.nih.gov/pmc/
   - id: frontier
-    name: 前沿速览
+    name: 顶级期刊
     links:
       - id: nature
         title: Nature

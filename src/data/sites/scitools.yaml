@@ -18,6 +18,18 @@ subs:
         pinyin: jcr
         pinyinFirst: jcr
         url: https://jcr.clarivate.com
+      - id: beidahexin
+        title: 北大核心
+        desc: 北京大学《中文核心期刊要目总览》，官方核刊目录查询
+        pinyin: beidahexin
+        pinyinFirst: bdhx
+        url: http://hxqk.lib.pku.edu.cn/
+      - id: cssci
+        title: CSSCI
+        desc: 南京大学中文社会科学引文索引，查社科核刊与引文
+        pinyin: cssci
+        pinyinFirst: cssci
+        url: https://cssrac.nju.edu.cn/cpzx/zwshkxywsy/index.html
       - id: letpub
         title: LetPub 期刊查询
         desc: 期刊信息、投稿经验与选刊参考
@@ -130,17 +142,17 @@ subs:
         pinyinFirst: xwwcc
         url: https://chsi.wanfangtech.net/
   - id: stats
-    name: 统计与绘图
+    name: 科研绘图
     links:
       - id: graphpad
         title: GraphPad Prism
-        desc: 科研统计分析与专业图表
+        desc: 生物医学统计分析的标准软件，擅长绘制科研图表
         pinyin: graphpad
         pinyinFirst: graphpad
         url: https://www.graphpad.com/
       - id: spss
         title: SPSS
-        desc: 经典统计软件，问卷与医学统计
+        desc: 适用于临床流调、公共卫生数据的多变量分析
         pinyin: spss
         pinyinFirst: spss
         url: https://www.ibm.com/cn-zh/products/spss-statistics
@@ -156,9 +168,6 @@ subs:
         pinyin: excalidraw
         pinyinFirst: excalidraw
         url: https://excalidraw.com/
-  - id: image
-    name: 科研图片与素材
-    links:
       - id: biorender
         title: BioRender
         desc: 生物医学示意图标准素材库
