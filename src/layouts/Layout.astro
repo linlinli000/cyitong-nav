@@ -10,14 +10,19 @@ const iconSymbols = buildIconSprite([...RUNTIME_ICON_NAMES, ...engineGlyphs]);
 interface Props {
   title?: string;
   description?: string;
+  /** robots 指令；含 noindex（如 404）时省略 canonical / og / JSON-LD，避免错误页冒充首页 */
+  robots?: string;
   searchIndexJson?: string;
 }
 
 const {
   title = '成医通 | 导航服务',
   description = '成医学生维护的第三方导航：一站式汇集校内系统、医学文献、AI 工具与在线学习等校园常用网站，为师生提供直达入口。',
+  robots = 'index, follow',
   searchIndexJson = '',
 } = Astro.props;
+
+const isNoindex = robots.includes('noindex');
 
 const webSiteSchema = {
   '@context': 'https://schema.org',
@@ -45,18 +50,22 @@ const webSiteSchema = {
       name="keywords"
       content="成都医学院,成医,成医通,导航,校内系统,医学文献,文献检索,AI工具,实用工具"
     />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://nav.cyitong.top/" />
+    <meta name="robots" content={robots} />
+    {!isNoindex && <link rel="canonical" href="https://nav.cyitong.top/" />}
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="成医通 | 导航服务" />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="zh_CN" />
-    <meta property="og:url" content="https://nav.cyitong.top" />
-    <meta property="og:site_name" content="成医通" />
+    {!isNoindex && (
+      <>
+        <!-- Open Graph -->
+        <meta property="og:title" content="成医通 | 导航服务" />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="zh_CN" />
+        <meta property="og:url" content="https://nav.cyitong.top" />
+        <meta property="og:site_name" content="成医通" />
 
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(webSiteSchema)}></script>
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(webSiteSchema)}></script>
+      </>
+    )}
 
     <script is:inline>
       (function () {

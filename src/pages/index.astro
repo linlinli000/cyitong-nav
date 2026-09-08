@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import type { SiteRecord } from '../web/search-utils';
 import Layout from '../layouts/Layout.astro';
 import Sidebar from '../components/Sidebar.astro';
 import TopBar from '../components/TopBar.astro';
@@ -10,7 +11,7 @@ import BackToTop from '../components/BackToTop.astro';
 
 const categories = (await getCollection('sites')).sort((a, b) => a.data.order - b.data.order);
 
-const searchIndex = categories.flatMap((c) =>
+const searchIndex: SiteRecord[] = categories.flatMap((c) =>
   c.data.subs.flatMap((s) =>
     s.links.map((l) => ({
       id: l.id,
@@ -55,6 +56,8 @@ const totalLinks = searchIndex.length;
 </Layout>
 
 <script>
+  import { registerLetterFallback } from '../web/img-fallback';
   import '../web/elements/nav-sidebar';
   import '../web/link-tip';
+  registerLetterFallback();
 </script>

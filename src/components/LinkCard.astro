@@ -1,6 +1,7 @@
 ---
 import type { Mirror } from '../content.config';
-import { toCardData } from '../web/card-attrs';
+import { toCardData, toDataAttrs } from '../web/card-attrs';
+import { firstLetter } from '../web/img-fallback';
 
 interface Props {
   categoryId: string;
@@ -25,7 +26,8 @@ const card = toCardData({
   qrNote: link.qrNote,
   mirrors: link.mirrors,
 });
-const fallback = link.title.trim().charAt(0) || '·';
+const cardAttrs = toDataAttrs(card);
+const fallback = firstLetter(link.title);
 ---
 
 <a
@@ -33,12 +35,8 @@ const fallback = link.title.trim().charAt(0) || '·';
   target="_blank"
   rel="noopener noreferrer"
   data-sub={sub}
-  data-title={card.title}
   data-desc={link.desc ? link.desc : undefined}
-  data-icon={card.icon}
-  data-qr={card.qr}
-  data-qr-note={card.qrNote}
-  data-mirrors={card.mirrors}
+  {...cardAttrs}
   class="link-tile group relative flex items-center gap-3 rounded-2xl border border-line bg-card p-3 dark:border-line/60"
 >
   <img
@@ -50,7 +48,6 @@ const fallback = link.title.trim().charAt(0) || '·';
     decoding="async"
     data-letter={fallback}
     class="link-tile-icon h-10 w-10 shrink-0 rounded-xl border border-line object-cover"
-    onerror="var s=document.createElement('span');s.className='link-tile-icon grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-brand/10 text-lg font-bold text-brand';s.textContent=this.dataset.letter;this.replaceWith(s)"
   />
   <span class="min-w-0 flex-1">
     <span class="flex min-w-0 items-center gap-1">

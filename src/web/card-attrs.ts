@@ -39,13 +39,20 @@ export function toCardData(src: CardSource): CardData {
   };
 }
 
-export function toCardDataHtml(data: CardData): string {
-  let html = '';
+/** 属性名 → 值（值 undefined 即不带属性）。SSR 用 {...} 展开，字符串拼 DOM 用 toCardDataHtml */
+export function toDataAttrs(data: CardData): Record<string, string> {
+  const out: Record<string, string> = {};
   (Object.keys(HTML_ATTR) as (keyof CardData)[]).forEach((k) => {
     const v = data[k];
-    if (v !== undefined) html += ` ${HTML_ATTR[k]}="${escapeHtml(v)}"`;
+    if (v !== undefined) out[HTML_ATTR[k]] = v;
   });
-  return html;
+  return out;
+}
+
+export function toCardDataHtml(data: CardData): string {
+  return Object.entries(toDataAttrs(data))
+    .map(([k, v]) => ` ${k}="${escapeHtml(v)}"`)
+    .join('');
 }
 
 export function toCardDataFromDataset(ds: DOMStringMap): CardData {

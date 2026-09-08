@@ -4,6 +4,7 @@ import { queryTokens, searchSites, type SiteRecord } from '../search-utils';
 import { NAV_OPEN_CARD_EVENT, toCardData, toCardDataHtml } from '../card-attrs';
 import { escapeHtml as escapeAttr } from '../html-escape';
 import { iconEl } from '../icons';
+import { firstLetter } from '../img-fallback';
 import { storageGetJson, storageSetJson } from '../storage';
 
 const SCOPE_KEY = 'nav:scope';
@@ -256,7 +257,7 @@ class NavSearch extends HTMLElement {
             i === this.cursor ? 'bg-surface/80' : 'hover:bg-surface/60'
           }">
           <img src="${escapeAttr(r.icon)}" alt="" loading="lazy" class="h-8 w-8 shrink-0 rounded-lg object-cover"
-            onerror="this.style.display='none'">
+            data-letter="${escapeAttr(firstLetter(r.title))}">
           <span class="min-w-0 flex-1">
             <span class="flex min-w-0 items-center gap-1.5">
               <span class="min-w-0 truncate text-sm font-semibold text-ink">${markHit(r.title, this.tokens)}</span>

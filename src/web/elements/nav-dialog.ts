@@ -34,7 +34,7 @@ class NavDialog extends HTMLElement {
 
   connectedCallback(): void {
     this.innerHTML = `
-      <dialog class="m-auto w-[min(90vw,22rem)] rounded-2xl border border-line bg-card p-5 text-ink shadow-2xl backdrop:bg-black/50">
+      <dialog class="m-auto w-[min(90vw,22rem)] rounded-2xl border border-line bg-card p-5 text-ink shadow-[var(--shadow-menu)] backdrop:bg-black/50">
         <div class="flex items-center justify-between gap-4">
           <div class="flex min-w-0 items-center gap-2">
             <img data-role="icon" alt="" class="hidden h-6 w-6 shrink-0 rounded-md object-contain">

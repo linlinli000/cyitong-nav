@@ -170,6 +170,19 @@ nav-theme-toggle [data-icon='sun'] {
   transform: scale(1.06);
 }
 
+/* 图标加载失败的首字色块：img-fallback.ts 委托替换，尺寸类沿用原 <img> */
+.icon-fallback {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-brand) 10%, transparent);
+  color: var(--color-brand);
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+}
+
 /* 卡片悬浮简介浮层 tip*/
 .link-tip-pop {
   position: fixed;

@@ -79,6 +79,7 @@ class NavSidebar extends HTMLElement {
     return !!this.backdrop && !this.backdrop.classList.contains('hidden');
   }
 
+  // 展开/收起只走这里：.open 与 aria-expanded 一起切
   private setGroupOpen(group: HTMLElement, open: boolean): void {
     group.classList.toggle('open', open);
     group.querySelector<HTMLElement>('.sidebar-cat-toggle')?.setAttribute('aria-expanded', String(open));
