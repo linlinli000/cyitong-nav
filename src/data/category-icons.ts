@@ -4,7 +4,7 @@ export const CATEGORY_ICON_NAMES: Record<string, string> = {
   book: 'book-open-solid',
   'academic-cap': 'academic-cap-solid',
   'document-text': 'document-text-solid',
-  newspaper: 'newspaper-solid',
+  beaker: 'beaker-solid',
   sparkles: 'sparkles-solid',
   wrench: 'wrench-screwdriver-solid',
 };

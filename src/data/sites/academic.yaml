@@ -1,0 +1,208 @@
+order: 4
+id: academic
+name: 学术文献
+icon: document-text
+subs:
+  - id: search
+    name: 综合学术搜索
+    links:
+      - id: scholar
+        title: 谷歌学术
+        desc: 英文文献检索与引文/被引追踪
+        pinyin: googlescholar
+        pinyinFirst: googlescholar
+        url: https://scholar.google.com
+      - id: wos
+        title: Web of Science
+        desc: SCI/SSCI 引文索引与期刊评价
+        pinyin: webofscience
+        pinyinFirst: webofscience
+        url: https://www.webofscience.com
+      - id: scopus
+        title: Scopus
+        desc: 爱思唯尔摘要引文库，期刊与文献检索
+        pinyin: scopus
+        pinyinFirst: scopus
+        url: https://www.scopus.com
+      - id: baiduxueshu
+        title: 百度学术
+        desc: 中英文学术文献聚合检索与引用
+        pinyin: baiduxueshu
+        pinyinFirst: bdxs
+        url: https://xueshu.baidu.com/
+      - id: pubscholar
+        title: PubScholar
+        desc: 中科院公益学术平台，跨库检索
+        pinyin: pubscholar
+        pinyinFirst: pubscholar
+        url: https://pubscholar.cn
+      - id: duxiu
+        title: 读秀学术搜索
+        desc: 图书深度检索与原文文献传递
+        pinyin: duxiuxueshusousuo
+        pinyinFirst: dxxsss
+        url: https://www.duxiu.com
+  - id: cn
+    name: 中文文献库
+    links:
+      - id: cnki
+        title: 知网
+        desc: 中文期刊与硕博论文检索下载
+        pinyin: zhiwang
+        pinyinFirst: zw
+        url: https://www.cnki.net
+      - id: cqvip
+        title: 维普期刊
+        desc: 中文期刊文献检索与全文下载
+        pinyin: weipuqikan
+        pinyinFirst: wpqk
+        url: https://www.cqvip.com
+      - id: wanfang
+        title: 万方数据
+        desc: 中文学位论文与会议文献检索
+        pinyin: wanfangshuju
+        pinyinFirst: wfsj
+        url: https://www.wanfangdata.com.cn
+  - id: en
+    name: 英文文献库
+    links:
+      - id: sciencedirect
+        title: ScienceDirect
+        desc: 爱思唯尔英文期刊全文库
+        pinyin: sciencedirect
+        pinyinFirst: sciencedirect
+        url: https://www.sciencedirect.com/
+      - id: wiley
+        title: Wiley Online Library
+        desc: 多学科学术期刊与电子书平台
+        pinyin: wiley
+        pinyinFirst: wiley
+        url: https://onlinelibrary.wiley.com/
+      - id: springer
+        title: SpringerLink
+        desc: 施普林格期刊与图书全文平台
+        pinyin: springer
+        pinyinFirst: springer
+        url: https://link.springer.com/
+      - id: oup
+        title: Oxford Academic
+        desc: 牛津大学出版社学术期刊平台
+        pinyin: oxfordacademic
+        pinyinFirst: oxacademic
+        url: https://academic.oup.com/
+  - id: med
+    name: 医学专业库
+    links:
+      - id: pubmed
+        title: PubMed
+        desc: 全球生物医学文献免费题录检索
+        pinyin: pubmed
+        pinyinFirst: pubmed
+        url: https://pubmed.ncbi.nlm.nih.gov
+      - id: sinomed
+        title: 中国生物医学文献
+        desc: 国内生物医学文献题录免费检索
+        pinyin: zhongguoshengwuyixuewenxian
+        pinyinFirst: zgswyxwx
+        url: https://www.sinomed.ac.cn
+      - id: embase
+        title: Embase
+        desc: 生物医学与药学文献、会议摘要
+        pinyin: embase
+        pinyinFirst: embase
+        url: https://www.embase.com
+      - id: cochrane
+        title: Cochrane Library
+        desc: 循证医学系统评价证据库
+        pinyin: cochranelibrary
+        pinyinFirst: cochranelibrary
+        url: https://www.cochranelibrary.com
+      - id: yiigle
+        title: 中华医学期刊
+        desc: 中华医学会系列期刊全文阅读
+        pinyin: zhonghuayixueqikan
+        pinyinFirst: zhyxqk
+        url: https://www.yiigle.com/index/
+      - id: clinicaltrials
+        title: ClinicalTrials.gov
+        desc: 全球临床试验注册与结果检索
+        pinyin: clinicaltrialsgov
+        pinyinFirst: clinicaltrials
+        url: https://clinicaltrials.gov/
+      - id: chictr
+        title: 中国临床试验注册中心
+        desc: 国内临床试验注册与方案查询
+        pinyin: zhongguolinchuangshiyanzhucezhongxin
+        pinyinFirst: zglnsyzczx
+        url: https://www.chictr.org.cn/
+  - id: oa
+    name: 全文与开放获取
+    links:
+      - id: scihub
+        title: Sci-Hub
+        desc: 凭 DOI/标题免费获取论文 PDF
+        pinyin: scihub
+        pinyinFirst: scihub
+        url: https://www.sci-hub.shop/
+        mirrors:
+          - { label: 主站, url: https://sci-hub.ru/ }
+          - { label: 主站, url: https://sci-hub.st/ }
+          - { label: 主站, url: https://sci-hub.su/ }
+          - { label: 镜像站（推荐）, url: https://sci-hub.shop/ }
+      - id: doaj
+        title: DOAJ
+        desc: 开放获取期刊目录，筛可下载期刊
+        pinyin: doaj
+        pinyinFirst: doaj
+        url: https://doaj.org/
+      - id: pmc
+        title: PubMed Central
+        desc: 生物医学免费全文库，含预印本
+        pinyin: pubmedcentral
+        pinyinFirst: pmc
+        url: https://www.ncbi.nlm.nih.gov/pmc/
+  - id: frontier
+    name: 前沿速览
+    links:
+      - id: nature
+        title: Nature
+        desc: 国际科研顶刊，看前沿进展
+        pinyin: nature
+        pinyinFirst: nature
+        url: https://www.nature.com/
+      - id: cell
+        title: Cell
+        desc: 生命科学顶刊，高影响力研究
+        pinyin: cell
+        pinyinFirst: cell
+        url: https://www.cell.com/
+      - id: science
+        title: Science
+        desc: 国际科研周刊，前沿科研新闻
+        pinyin: science
+        pinyinFirst: science
+        url: https://www.science.org/
+      - id: lancet
+        title: The Lancet
+        desc: 国际顶级医学期刊，临床前沿与综述
+        pinyin: thelancet
+        pinyinFirst: tlancet
+        url: https://www.thelancet.com/
+      - id: nejm
+        title: NEJM
+        desc: 新英格兰医学杂志，临床研究权威期刊
+        pinyin: newenglandjournalofmedicine
+        pinyinFirst: nejm
+        url: https://www.nejm.org/
+      - id: jama
+        title: JAMA
+        desc: 美国医学会杂志，循证医学研究
+        pinyin: jama
+        pinyinFirst: jama
+        url: https://jamanetwork.com/
+      - id: bmj
+        title: BMJ
+        desc: 英国医学杂志，临床研究与医学证据
+        pinyin: bmj
+        pinyinFirst: bmj
+        url: https://www.bmj.com/

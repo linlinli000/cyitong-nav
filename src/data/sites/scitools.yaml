@@ -1,0 +1,173 @@
+order: 5
+id: scitools
+name: 科研工具链
+icon: beaker
+subs:
+  - id: publish
+    name: 选刊与投稿
+    links:
+      - id: fenqubiao
+        title: 中科院期刊分区表
+        desc: 查期刊分区与影响因子，投稿选刊参考
+        pinyin: zhongkeyuanqikanfenqubiao
+        pinyinFirst: zkyqkfqb
+        url: https://www.fenqubiao.com
+      - id: jcr
+        title: JCR
+        desc: Web of Science 期刊影响因子与分区
+        pinyin: jcr
+        pinyinFirst: jcr
+        url: https://jcr.clarivate.com
+      - id: letpub
+        title: LetPub 期刊查询
+        desc: 期刊信息、投稿经验与选刊参考
+        pinyin: letpub
+        pinyinFirst: letpub
+        url: https://www.letpub.com.cn/
+  - id: manage
+    name: 文献管理
+    links:
+      - id: zotero
+        title: Zotero
+        desc: 开源文献管理，浏览器一键抓取
+        pinyin: zotero
+        pinyinFirst: zotero
+        url: https://www.zotero.org/
+      - id: endnote
+        title: EndNote
+        desc: 老牌文献管理软件，写作时插引文
+        pinyin: endnote
+        pinyinFirst: endnote
+        url: https://endnote.com/
+      - id: mendeley
+        title: Mendeley
+        desc: Elsevier 免费文献管理与协作
+        pinyin: mendeley
+        pinyinFirst: mendeley
+        url: https://www.mendeley.com/
+      - id: noteexpress
+        title: NoteExpress
+        desc: 参考文献管理，机构版在线使用
+        pinyin: noteexpress
+        pinyinFirst: noteexpress
+        url: https://jc.inoteexpress.com/dynamo/index.html
+      - id: xlsci
+        title: 小绿鲸
+        desc: 医学文献阅读、翻译与云同步管理
+        pinyin: xiaolvjing
+        pinyinFirst: xlj
+        url: https://www.xljsci.com/
+      - id: cnkiyanxue
+        title: 知网研学
+        desc: 知网阅读管理写作一体化平台
+        pinyin: zhiwangyanxue
+        pinyinFirst: zwyx
+        url: https://x.cnki.net/
+  - id: translate
+    name: 学术翻译
+    links:
+      - id: deepl
+        title: DeepL
+        desc: 高质量学术翻译，保留排版对照
+        pinyin: deepl
+        pinyinFirst: deepl
+        url: https://www.deepl.com/translator
+      - id: immersive
+        title: 沉浸式翻译
+        desc: 划词/整页双语对照阅读的浏览器扩展
+        pinyin: chenjinshifanyi
+        pinyinFirst: cjsfy
+        url: https://immersivetranslate.com/
+      - id: grammarly
+        title: Grammarly
+        desc: 英文写作纠错与润色建议
+        pinyin: grammarly
+        pinyinFirst: grammarly
+        url: https://www.grammarly.com/
+      - id: quillbot
+        title: QuillBot
+        desc: 英文改写润色与翻译工具
+        pinyin: quillbot
+        pinyinFirst: quillbot
+        url: https://quillbot.com/
+  - id: checkdup
+    name: 论文查重
+    links:
+      - id: ithenticate
+        title: iThenticate
+        desc: 国际期刊投稿前官方查重
+        pinyin: ithenticate
+        pinyinFirst: ithenticate
+        url: https://www.ithenticate.com/
+      - id: paperpass
+        title: PaperPass
+        desc: 中文论文查重与智能降重
+        pinyin: paperpass
+        pinyinFirst: paperpass
+        url: https://www.paperpass.com/
+      - id: cnkicheck
+        title: 知网查重
+        desc: 知网官方个人查重与降重服务
+        pinyin: zhiwanggerenchachong
+        pinyinFirst: zwgrcc
+        url: https://cx.cnki.net/
+      - id: vpcs
+        title: 维普论文检测
+        desc: 维普官方查重，支持本科硕博与职称论文检测
+        pinyin: weipulunwenjiance
+        pinyinFirst: wplwjc
+        url: https://vpcs.fanyu.com/
+      - id: wanfangjc
+        title: 万方检测
+        desc: 万方数据官方论文查重与相似性检测
+        pinyin: wanfangjiance
+        pinyinFirst: wfjc
+        url: https://check.wanfangdata.com.cn/
+      - id: chsiwanfang
+        title: 学信网查重
+        desc: 学信网账号登录，应届毕业生免费检测一次
+        pinyin: xuexinwangchachong
+        pinyinFirst: xwwcc
+        url: https://chsi.wanfangtech.net/
+  - id: stats
+    name: 统计与绘图
+    links:
+      - id: graphpad
+        title: GraphPad Prism
+        desc: 科研统计分析与专业图表
+        pinyin: graphpad
+        pinyinFirst: graphpad
+        url: https://www.graphpad.com/
+      - id: spss
+        title: SPSS
+        desc: 经典统计软件，问卷与医学统计
+        pinyin: spss
+        pinyinFirst: spss
+        url: https://www.ibm.com/cn-zh/products/spss-statistics
+      - id: origin
+        title: Origin
+        desc: 科研数据绘图与曲线分析
+        pinyin: origin
+        pinyinFirst: origin
+        url: https://www.originlab.com/
+      - id: excalidraw
+        title: Excalidraw
+        desc: 手绘风白板，画机制图与流程图
+        pinyin: excalidraw
+        pinyinFirst: excalidraw
+        url: https://excalidraw.com/
+  - id: image
+    name: 科研图片与素材
+    links:
+      - id: biorender
+        title: BioRender
+        desc: 生物医学示意图标准素材库
+        pinyin: biorender
+        pinyinFirst: biorender
+        url: https://www.biorender.com/
+      - id: coolors
+        title: Coolors 配色
+        desc: 科研图表配色方案快速生成
+        pinyin: coolors
+        pinyinFirst: coolors
+        url: https://coolors.co/

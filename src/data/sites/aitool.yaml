@@ -108,12 +108,6 @@ subs:
         pinyin: gamma
         pinyinFirst: gamma
         url: https://gamma.app/zh-cn
-      - id: grammarly
-        title: Grammarly
-        desc: 英文写作纠错与润色建议
-        pinyin: grammarly
-        pinyinFirst: grammarly
-        url: https://www.grammarly.com/
       - id: ima
         title: 腾讯ima
         desc: 微信生态个人知识库，搜读写一体

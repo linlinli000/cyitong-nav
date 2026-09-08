@@ -3,7 +3,7 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import { existsSync } from 'node:fs';
 
-const CATEGORY_IDS = ['campus', 'study', 'exam', 'cnlit', 'enlit', 'aitool', 'tools'] as const;
+const CATEGORY_IDS = ['campus', 'study', 'exam', 'academic', 'scitools', 'aitool', 'tools'] as const;
 
 const mirrorSchema = z.object({
   label: z.string().min(1),
