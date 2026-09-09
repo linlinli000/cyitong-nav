@@ -89,7 +89,7 @@ subs:
         url: https://copilot.microsoft.com
       - id: grok
         title: Grok
-        desc: 强调实时信息与自由表达
+        desc: AI 问答助手，主打实时信息
         pinyin: grok
         pinyinFirst: grok
         url: https://grok.com

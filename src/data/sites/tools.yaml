@@ -23,7 +23,7 @@ subs:
         desc: 300+ 格式文件在线互转
         pinyin: convertio
         pinyinFirst: convertio
-        url: https://convertio.co/zh/video-converter/
+        url: https://convertio.co/zh/
       - id: baimiao
         title: 白描
         desc: 截图/纸质/表格转文字，图片转 Excel
@@ -86,13 +86,13 @@ subs:
     links:
       - id: ghxi
         title: 果核剥壳
-        desc: Windows 绿色便携软件资源站
+        desc: 下载 Windows 绿色便携软件
         pinyin: guohebaoke
         pinyinFirst: ghbk
         url: https://www.ghxi.com/
       - id: msdn
         title: MSDN
-        desc: 微软原版镜像与系统软件资源站
+        desc: 下载微软原版系统镜像与软件
         pinyin: msdn
         pinyinFirst: msdn
         url: https://next.itellyou.cn/

@@ -20,13 +20,13 @@ subs:
         url: https://jcr.clarivate.com
       - id: beidahexin
         title: 北大核心
-        desc: 北京大学《中文核心期刊要目总览》，官方核刊目录查询
+        desc: 查北大《中文核心期刊要目总览》官方目录
         pinyin: beidahexin
         pinyinFirst: bdhx
         url: http://hxqk.lib.pku.edu.cn/
       - id: cssci
         title: CSSCI
-        desc: 南京大学中文社会科学引文索引，查社科核刊与引文
+        desc: 南大中文社科引文索引，查核心期刊与引文
         pinyin: cssci
         pinyinFirst: cssci
         url: https://cssrac.nju.edu.cn/cpzx/zwshkxywsy/index.html
@@ -71,7 +71,7 @@ subs:
         url: https://www.xljsci.com/
       - id: cnkiyanxue
         title: 知网研学
-        desc: 知网阅读管理写作一体化平台
+        desc: 文献阅读批注、笔记与论文写作平台
         pinyin: zhiwangyanxue
         pinyinFirst: zwyx
         url: https://x.cnki.net/
@@ -125,7 +125,7 @@ subs:
         url: https://cx.cnki.net/
       - id: vpcs
         title: 维普论文检测
-        desc: 维普官方查重，支持本科硕博与职称论文检测
+        desc: 维普官方查重，支持本科/硕博/职称论文
         pinyin: weipulunwenjiance
         pinyinFirst: wplwjc
         url: https://vpcs.fanyu.com/
@@ -146,7 +146,7 @@ subs:
     links:
       - id: graphpad
         title: GraphPad Prism
-        desc: 生物医学统计分析的标准软件，擅长绘制科研图表
+        desc: 生物医学统计分析与科研绘图软件
         pinyin: graphpad
         pinyinFirst: graphpad
         url: https://www.graphpad.com/

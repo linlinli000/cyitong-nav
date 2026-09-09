@@ -99,12 +99,6 @@ subs:
         pinyin: pubmed
         pinyinFirst: pubmed
         url: https://pubmed.ncbi.nlm.nih.gov
-      - id: sinomed
-        title: 中国生物医学文献
-        desc: 国内生物医学文献题录免费检索
-        pinyin: zhongguoshengwuyixuewenxian
-        pinyinFirst: zgswyxwx
-        url: https://www.sinomed.ac.cn
       - id: embase
         title: Embase
         desc: 生物医学与药学文献、会议摘要
@@ -117,18 +111,24 @@ subs:
         pinyin: cochranelibrary
         pinyinFirst: cochranelibrary
         url: https://www.cochranelibrary.com
-      - id: yiigle
-        title: 中华医学期刊
-        desc: 中华医学会系列期刊全文阅读
-        pinyin: zhonghuayixueqikan
-        pinyinFirst: zhyxqk
-        url: https://www.yiigle.com/index/
       - id: clinicaltrials
         title: ClinicalTrials.gov
         desc: 全球临床试验注册与结果检索
         pinyin: clinicaltrialsgov
         pinyinFirst: clinicaltrials
         url: https://clinicaltrials.gov/
+      - id: sinomed
+        title: 中国生物医学文献
+        desc: 国内生物医学文献题录免费检索
+        pinyin: zhongguoshengwuyixuewenxian
+        pinyinFirst: zgswyxwx
+        url: https://www.sinomed.ac.cn
+      - id: yiigle
+        title: 中华医学期刊
+        desc: 中华医学会系列期刊全文阅读
+        pinyin: zhonghuayixueqikan
+        pinyinFirst: zhyxqk
+        url: https://www.yiigle.com/index/
       - id: chictr
         title: 中国临床试验注册中心
         desc: 国内临床试验注册与方案查询
@@ -172,7 +172,7 @@ subs:
         url: https://www.nature.com/
       - id: cell
         title: Cell
-        desc: 生命科学顶刊，高影响力研究
+        desc: 生命科学期刊，细胞与分子机制前沿研究
         pinyin: cell
         pinyinFirst: cell
         url: https://www.cell.com/
@@ -184,25 +184,25 @@ subs:
         url: https://www.science.org/
       - id: lancet
         title: The Lancet
-        desc: 国际顶级医学期刊，临床前沿与综述
+        desc: 柳叶刀，临床、全球健康与公共卫生研究
         pinyin: thelancet
         pinyinFirst: tlancet
         url: https://www.thelancet.com/
       - id: nejm
         title: NEJM
-        desc: 新英格兰医学杂志，临床研究权威期刊
+        desc: 新英格兰医学杂志，临床试验与诊疗前沿
         pinyin: newenglandjournalofmedicine
         pinyinFirst: nejm
         url: https://www.nejm.org/
       - id: jama
         title: JAMA
-        desc: 美国医学会杂志，循证医学研究
+        desc: 美国医学会杂志，临床、公卫与卫生政策
         pinyin: jama
         pinyinFirst: jama
         url: https://jamanetwork.com/
       - id: bmj
         title: BMJ
-        desc: 英国医学杂志，临床研究与医学证据
+        desc: 英国医学杂志，循证医学与临床综述
         pinyin: bmj
         pinyinFirst: bmj
         url: https://www.bmj.com/

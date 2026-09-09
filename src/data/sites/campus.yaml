@@ -105,7 +105,7 @@ subs:
         url: https://metc.cmc.edu.cn/info/1019/2280.htm
       - id: shiguang
         title: 拾光课程表
-        desc: 大学课表开源应用，免费无广，成医专属教务系统适配
+        desc: 免费课表 App，适配成医教务系统
         pinyin: shiguangkebiao
         pinyinFirst: sgkcb
         url: https://sgschedule.jursin.top/
