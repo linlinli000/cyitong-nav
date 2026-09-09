@@ -83,7 +83,7 @@ subs:
         desc: 高质量学术翻译，保留排版对照
         pinyin: deepl
         pinyinFirst: deepl
-        url: https://www.deepl.com/translator
+        url: https://www.deepl.com/zh/translator
       - id: immersive
         title: 沉浸式翻译
         desc: 划词/整页双语对照阅读的浏览器扩展
