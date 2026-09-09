@@ -103,6 +103,12 @@ subs:
         pinyin: xiaoqiyeweixin
         pinyinFirst: xqywx
         url: https://metc.cmc.edu.cn/info/1019/2280.htm
+      - id: hhy
+        title: 成医后花园
+        desc: 校内社区，期末试卷、复习资料与校历资源
+        pinyin: houhuayuan
+        pinyinFirst: hhy
+        url: http://www.52cmc.com/
       - id: shiguang
         title: 拾光课程表
         desc: 免费课表 App，适配成医教务系统
