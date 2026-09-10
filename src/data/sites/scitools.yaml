@@ -1,6 +1,6 @@
 order: 5
 id: scitools
-name: 科研工具链
+name: 科研服务
 icon: beaker
 subs:
   - id: publish
@@ -180,3 +180,45 @@ subs:
         pinyin: coolors
         pinyinFirst: coolors
         url: https://coolors.co/
+  - id: funding
+    name: 基金项目
+    links:
+      - id: nsfc
+        title: 国家自然科学基金委
+        desc: 基金指南、政策与申报通告
+        pinyin: guojiazirankexuejijinwei
+        pinyinFirst: gjzrkxjjw
+        url: https://www.nsfc.gov.cn/
+      - id: nsfcdata
+        title: 国自然项目查询
+        desc: 免登录查已资助项目与结题报告
+        pinyin: guozirankexuejijinxiangmuchaxun
+        pinyinFirst: gzrkxjjxmcx
+        url: https://kd.nsfc.cn/
+      - id: nopss
+        title: 国家社科基金
+        desc: 社科基金申报与立项管理
+        pinyin: guojiashekejijin
+        pinyinFirst: gjskjj
+        url: https://www.nopss.gov.cn/
+      - id: nopssdata
+        title: 社科基金项目库
+        desc: 查已立项社科基金项目与成果
+        pinyin: shekejijinxiangmuku
+        pinyinFirst: skjjxmk
+        url: https://fz.people.com.cn/skygb/sk/index.php/index
+  - id: standard
+    name: 标准与专利
+    links:
+      - id: openstd
+        title: 国家标准全文公开系统
+        desc: 免费查阅国家/行业标准全文
+        pinyin: guojiabiaozhunquanwen
+        pinyinFirst: gjbzqw
+        url: https://openstd.samr.gov.cn/bzgk
+      - id: pss
+        title: 国知局专利检索
+        desc: 中国专利检索与全文查阅
+        pinyin: guozhijuzhuanlijiansuo
+        pinyinFirst: gjzljs
+        url: https://pss-system.cponline.cnipa.gov.cn/

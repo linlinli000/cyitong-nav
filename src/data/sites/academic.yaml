@@ -149,6 +149,12 @@ subs:
           - { label: 主站, url: https://sci-hub.st/ }
           - { label: 主站, url: https://sci-hub.su/ }
           - { label: 镜像站（推荐）, url: https://sci-hub.shop/ }
+      - id: scidown
+        title: Scidown
+        desc: 文献检索求助互助平台，DOI 直达下载
+        pinyin: scidown
+        pinyinFirst: scidown
+        url: https://www.scidown.cn/
       - id: doaj
         title: DOAJ
         desc: 开放获取期刊目录，筛可下载期刊
@@ -157,10 +163,31 @@ subs:
         url: https://doaj.org/
       - id: pmc
         title: PubMed Central
-        desc: 生物医学免费全文库，含预印本
+        desc: 生物医学免费全文库，NIH 官方开放获取
         pinyin: pubmedcentral
         pinyinFirst: pmc
         url: https://www.ncbi.nlm.nih.gov/pmc/
+  - id: preprint
+    name: 预印本
+    links:
+      - id: medrxiv
+        title: medRxiv
+        desc: 医学临床预印本，抢先看未发表研究
+        pinyin: medrxiv
+        pinyinFirst: medrxiv
+        url: https://www.medrxiv.org/
+      - id: biorxiv
+        title: bioRxiv
+        desc: 生物学预印本，基础医学与生命科学
+        pinyin: biorxiv
+        pinyinFirst: biorxiv
+        url: https://www.biorxiv.org/
+      - id: arxiv
+        title: arXiv
+        desc: 数理与计算机预印本库，含生信统计
+        pinyin: arxiv
+        pinyinFirst: arxiv
+        url: https://arxiv.org/
   - id: frontier
     name: 顶级期刊
     links:

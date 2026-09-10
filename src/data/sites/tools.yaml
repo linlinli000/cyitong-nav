@@ -81,6 +81,12 @@ subs:
         pinyin: latexlive
         pinyinFirst: latexlive
         url: https://www.latexlive.com/
+      - id: overleaf
+        title: Overleaf
+        desc: 在线 LaTeX 协作写作，含期刊模板
+        pinyin: overleaf
+        pinyinFirst: overleaf
+        url: https://www.overleaf.com/
   - id: software
     name: 软件下载
     links:

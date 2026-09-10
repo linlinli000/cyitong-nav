@@ -16,7 +16,7 @@
 |---|---|---|---|---|
 | `campus` | 成医生活 | | `exam` | 考试比赛 |
 | `study` | 线上学习 | | `academic` | 学术文献 |
-| `scitools` | 科研工具链 | | `aitool` | AI 工具 |
+| `scitools` | 科研服务 | | `aitool` | AI 工具 |
 | `tools` | 实用工具 | | | |
 
 链接加进最贴切的二级分类 `subs[].links[]` 即可（必要时也可新增一个二级分类）。
