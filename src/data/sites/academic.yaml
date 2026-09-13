@@ -143,12 +143,12 @@ subs:
         desc: 凭 DOI/标题免费获取论文 PDF
         pinyin: scihub
         pinyinFirst: scihub
-        url: https://www.sci-hub.shop/
-        mirrors:
+        url:
           - { label: 主站, url: https://sci-hub.ru/ }
           - { label: 主站, url: https://sci-hub.st/ }
           - { label: 主站, url: https://sci-hub.su/ }
-          - { label: 镜像站（推荐）, url: https://sci-hub.shop/ }
+          - { label: 镜像导航, url: https://sci-hub.shop/ }
+        badge: 镜像
       - id: scidown
         title: Scidown
         desc: 文献检索求助互助平台，DOI 直达下载

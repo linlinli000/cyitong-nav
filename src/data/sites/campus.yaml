@@ -66,6 +66,7 @@ subs:
         pinyin: jihuacaiwuchu
         pinyinFirst: jhcwc
         url: "alipays://platformapi/startapp?appId=20000042&publicBizType=LIFE_APP&publicId=2018052860256183"
+        badge: 扫码
         qr: true
         qrNote: 请使用支付宝扫码，将自动打开财务处服务号
   - id: life
@@ -101,6 +102,7 @@ subs:
         pinyin: xiaodayindian
         pinyinFirst: xdyd
         url: "https://m.q.qq.com/a/p/1110690941?s=%2Fpages%2Ftabbar%2Findex%3Fstore_id%3D32"
+        badge: 扫码
         qr: true
         qrNote: 请使用QQ扫码，将自动打开A4云铺小程序
       - id: qywx

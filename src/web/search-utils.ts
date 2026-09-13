@@ -1,6 +1,6 @@
 /** 站内搜索：归一化分词 + 多字段加权 + 首字母宽容匹配 + 语义 tiebreak + bigram-Dice 模糊回退 */
 
-import type { Mirror } from '../content.config';
+import type { Entry } from '../content.config';
 
 export interface SiteRecord {
   id: string;
@@ -12,9 +12,10 @@ export interface SiteRecord {
   catId: string;
   catName: string;
   subName: string;
+  badge?: string;
   qr?: boolean;
   qrNote?: string;
-  mirrors?: Mirror[];
+  entries?: Entry[];
   icon: string;
 }
 

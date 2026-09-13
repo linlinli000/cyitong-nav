@@ -261,8 +261,7 @@ class NavSearch extends HTMLElement {
           <span class="min-w-0 flex-1">
             <span class="flex min-w-0 items-center gap-1.5">
               <span class="min-w-0 truncate text-sm font-semibold text-ink">${markHit(r.title, this.tokens)}</span>
-              ${r.mirrors?.length ? '<span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">镜像</span>' : ''}
-              ${r.qr ? '<span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">扫码</span>' : ''}
+              ${r.badge ? `<span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">${escapeAttr(r.badge)}</span>` : ''}
             </span>
             ${r.desc ? `<span class="mt-0.5 block truncate text-xs text-muted">${markHit(r.desc, this.tokens)}</span>` : ''}
           </span>
@@ -342,7 +341,7 @@ class NavSearch extends HTMLElement {
 
   private openResult(r: SiteRecord): void {
     const data = toCardData(r);
-    if (!data.qr && !data.mirrors) {
+    if (!data.qr && !data.entries) {
       window.open(r.url, '_blank', 'noopener');
       return;
     }

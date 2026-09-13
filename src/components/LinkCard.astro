@@ -1,5 +1,5 @@
 ---
-import type { Mirror } from '../content.config';
+import type { Entry } from '../content.config';
 import { toCardData, toDataAttrs } from '../web/card-attrs';
 import { firstLetter } from '../web/img-fallback';
 
@@ -11,9 +11,10 @@ interface Props {
     title: string;
     desc?: string;
     url: string;
+    badge?: string;
     qr?: boolean;
     qrNote?: string;
-    mirrors?: Mirror[];
+    entries?: Entry[];
   };
 }
 
@@ -24,7 +25,7 @@ const card = toCardData({
   icon: `/icons/${categoryId}/${link.id}.webp`,
   qr: link.qr,
   qrNote: link.qrNote,
-  mirrors: link.mirrors,
+  entries: link.entries,
 });
 const cardAttrs = toDataAttrs(card);
 const fallback = firstLetter(link.title);
@@ -54,8 +55,7 @@ const fallback = firstLetter(link.title);
       <span class="truncate text-sm font-semibold text-ink transition-colors group-hover:text-brand">
         {link.title}
       </span>
-      {card.mirrors && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">镜像</span>}
-      {card.qr && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">扫码</span>}
+      {link.badge && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">{link.badge}</span>}
     </span>
     {link.desc && <span class="mt-0.5 block truncate text-xs text-muted">{link.desc}</span>}
   </span>

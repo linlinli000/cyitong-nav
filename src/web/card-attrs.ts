@@ -1,4 +1,4 @@
-import type { Mirror } from '../content.config';
+import type { Entry } from '../content.config';
 import { escapeHtml } from './html-escape';
 
 export interface CardData {
@@ -6,7 +6,7 @@ export interface CardData {
   icon: string;
   qr?: string;
   qrNote?: string;
-  mirrors?: string;
+  entries?: string;
 }
 
 export const NAV_OPEN_CARD_EVENT = 'nav-open-card';
@@ -17,7 +17,7 @@ export interface CardSource {
   icon: string;
   qr?: boolean;
   qrNote?: string;
-  mirrors?: Mirror[];
+  entries?: Entry[];
 }
 
 const HTML_ATTR: Record<keyof CardData, string> = {
@@ -25,7 +25,7 @@ const HTML_ATTR: Record<keyof CardData, string> = {
   icon: 'data-icon',
   qr: 'data-qr',
   qrNote: 'data-qr-note',
-  mirrors: 'data-mirrors',
+  entries: 'data-entries',
 };
 
 export function toCardData(src: CardSource): CardData {
@@ -35,7 +35,7 @@ export function toCardData(src: CardSource): CardData {
     icon: src.icon,
     qr: hasQr ? src.url : undefined,
     qrNote: hasQr ? src.qrNote : undefined,
-    mirrors: src.mirrors?.length ? JSON.stringify(src.mirrors) : undefined,
+    entries: src.entries?.length ? JSON.stringify(src.entries) : undefined,
   };
 }
 
@@ -61,6 +61,6 @@ export function toCardDataFromDataset(ds: DOMStringMap): CardData {
     icon: ds.icon ?? '',
     qr: ds.qr || undefined,
     qrNote: ds.qrNote || undefined,
-    mirrors: ds.mirrors || undefined,
+    entries: ds.entries || undefined,
   };
 }

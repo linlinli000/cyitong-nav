@@ -1,6 +1,6 @@
-/** <nav-dialog>：文档级拦截 a[data-mirrors]/a[data-qr] 点击 → 二维码/镜像弹窗 */
+/** <nav-dialog>：文档级拦截 a[data-entries]/a[data-qr] 点击 → 入口/二维码弹窗 */
 import { escapeHtml } from '../html-escape';
-import type { Mirror } from '../../content.config';
+import type { Entry } from '../../content.config';
 import { iconEl } from '../icons';
 import { NAV_OPEN_CARD_EVENT, toCardDataFromDataset, type CardData } from '../card-attrs';
 
@@ -8,7 +8,7 @@ class NavDialog extends HTMLElement {
   private dlg: HTMLDialogElement | null = null;
 
   private onDocClick = (e: MouseEvent): void => {
-    const a = (e.target as Element).closest<HTMLAnchorElement>('a[data-mirrors], a[data-qr]');
+    const a = (e.target as Element).closest<HTMLAnchorElement>('a[data-entries], a[data-qr]');
     if (!a) return;
     e.preventDefault();
     this.openFromData(toCardDataFromDataset(a.dataset));
@@ -20,11 +20,11 @@ class NavDialog extends HTMLElement {
   };
 
   private openFromData(d: CardData): void {
-    if (d.mirrors) {
+    if (d.entries) {
       try {
-        const mirrors = JSON.parse(d.mirrors) as Mirror[];
-        if (mirrors.length) {
-          this.openMirrors(d.title, d.icon, mirrors);
+        const entries = JSON.parse(d.entries) as Entry[];
+        if (entries.length) {
+          this.openEntries(d.title, d.icon, entries);
           return;
         }
       } catch {}
@@ -114,19 +114,19 @@ class NavDialog extends HTMLElement {
     if (!this.dlg!.open) this.dlg!.showModal();
   }
 
-  private openMirrors(title: string, icon: string, mirrors: Mirror[]): void {
+  private openEntries(title: string, icon: string, entries: Entry[]): void {
     this.setHeader(title, icon);
     this.dlg!.querySelector('[data-role="body"]')!.innerHTML = `
       <ul class="space-y-2">
-        ${mirrors
+        ${entries
           .map(
-            (m) => `
+            (entry) => `
           <li>
-            <a href="${escapeHtml(m.url)}" target="_blank" rel="noopener noreferrer"
+            <a href="${escapeHtml(entry.url)}" target="_blank" rel="noopener noreferrer"
               class="flex items-center justify-between gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-ink transition-colors hover:border-brand">
-              <span class="min-w-0" title="${escapeHtml(m.url)}">
-                <span class="block truncate text-sm font-medium">${escapeHtml(m.label)}</span>
-                <span class="block truncate text-xs text-muted">${escapeHtml(m.url)}</span>
+              <span class="min-w-0" title="${escapeHtml(entry.url)}">
+                <span class="block truncate text-sm font-medium">${escapeHtml(entry.label)}</span>
+                <span class="block truncate text-xs text-muted">${escapeHtml(entry.url)}</span>
               </span>
               <span class="shrink-0 text-brand">↗</span>
             </a>

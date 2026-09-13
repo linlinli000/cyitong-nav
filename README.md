@@ -33,40 +33,46 @@ public/icons/campus/alipay.webp
 
 ### 3. 写数据条目
 
-在对应 yaml 的 `links[]` 追加一条，**必填**字段要齐，**可选**按需：
+在对应 yaml 的 `links[]` 追加一条：
 
 ```yaml
 subs:
   - id: finance            # 二级分类 id（新增时自取小写英文）
     name: 财务
     links:
-      - id: alipay             # 必填：小写字母/数字，与图标文件名一致
-        title: 计划财务处       # 必填：卡片显示名
-        pinyin: jihuacaiwuchu  # 必填：全拼
-        pinyinFirst: jhcwc     # 必填：首字母
-        url: "alipays://…"     # 必填：带协议头的绝对地址；含 # & ? 需加引号
-        desc: 校园缴费支付宝服务号  # 可选：一行简介（≤40 字）
-        qr: true               # 可选：点击弹二维码
-        qrNote: 请使用支付宝扫码   # qr 提示语
-        mirrors:               # 可选：镜像站列表（点击优先弹镜像）
-          - label: 镜像一
-            url: https://…
+      - id: alipay              # 必填，小写字母/数字，与图标文件名一致
+        title: 计划财务处         # 必填，卡片显示名
+        desc: 校园缴费支付宝服务号  # 可选，一行简介（≤40 字），卡片、悬浮提示、搜索都用
+        pinyin: jihuacaiwuchu   # 必填，全拼，供搜索
+        pinyinFirst: jhcwc      # 必填，首字母，供搜索
+        url: "alipays://…"      # 必填，带协议头的绝对地址；含 # & ? 要加引号
+        badge: 扫码              # 可选，卡片徽章文案；不写就没有徽章
+        qr: true                # 可选，点击弹二维码（只在单入口时有效）
+        qrNote: 请使用支付宝扫码   # qr 的提示语
 ```
 
-> `pinyin` / `pinyinFirst` 供站内搜索命中（全拼与首字母都能搜到）；`desc` 会出现在卡片、悬浮提示和搜索结果里。
+**多入口**：`url` 也能写成列表，点击时弹窗选入口。列表**至少两条**、**每条都要写 `label`**（写什么弹窗就显示什么），列表第一条是默认入口——卡片点开的就是它。多入口时点击只会弹这个列表，`qr` 不生效。
+
+```yaml
+        url:
+          - { label: 主站, url: https://sci-hub.ru/ }
+          - { label: 主站, url: https://sci-hub.st/ }
+          - { label: 镜像导航, url: https://sci-hub.shop/ }
+```
+
+
 
 ### 4. 校验
 
-在仓库根目录跑：
-
-```bash
-npm run build
-```
-
-构建期自动拦截以下问题，出错会报文件与原因：
+在仓库根目录跑 `npm run build`，构建期会拦下这些问题，并指出是哪个文件、哪条链接：
 
 - 图标文件缺失，或 `id` 与图标文件名不一致；
+- 同一分类下 `id` 重复（两条链接会共用同一个图标）；
+- 漏写 `pinyin` / `pinyinFirst`（这条链接会搜不到）；
 - `url` 没有协议头（须为 `https://`、`alipays://` 这类绝对地址）；
+- 入口列表少于两条，或某条漏写 `label`；
+- `qr` 跟多入口 `url` 同时写，或写了 `qrNote` 却没写 `qr: true`（这两种写法不会生效）；
+- 写了 schema 里没有的字段（拼错，或沿用了旧写法）；
 - 新增一级分类缺 `order` 排序号。
 
 构建通过后，在 GitHub 提 Pull Request（页面侧栏有「添加链接」直达入口）。
@@ -100,7 +106,7 @@ src/
 ├── styles/global.css     # 颜色令牌与全局状态
 └── web/                  # 客户端运行时（原生 TS）
     ├── elements/         # 自注册元素 <nav-*>，副作用导入
-    ├── card-attrs.ts     # 扫码/镜像 data 属性契约（SSR LinkCard 与 nav-search 共用）
+    ├── card-attrs.ts     # 扫码/入口 data 属性契约（SSR LinkCard 与 nav-search 共用）
     ├── breakpoints.ts    # 视口断点常量（与 Tailwind lg / global.css 同步）
     └── *.ts              # 纯工具 / 文档增强（storage、html-escape…）
 ```

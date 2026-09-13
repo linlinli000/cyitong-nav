@@ -71,21 +71,37 @@ subs:
         desc: 聚合多书库的电子书检索与下载
         pinyin: annadedangan
         pinyinFirst: andda
-        url: https://zh.annas-archive.gl/
-        mirrors:
-          - { label: 镜像站, url: https://zh.annas-archive.gl/ }
+        url:
+          - { label: 主站, url: https://zh.annas-archive.gl/ }
           - { label: 镜像站, url: https://zh.annas-archive.pk/ }
           - { label: 镜像站, url: https://zh.annas-archive.gd/ }
+        badge: 镜像
       - id: zlib
         title: Z Library
         desc: 大型电子书库，免费下载电子书
         pinyin: zlibrary
         pinyinFirst: zlibrary
-        url: https://zh.z-library.sk/
-        mirrors:
-          - { label: 主站, url: https://zh.z-lib.sk/ }
+        url:
+          - { label: 镜像站, url: https://zh.z-lib.sk/ }
           - { label: 镜像站, url: https://zh.z-library.sk/ }
           - { label: 镜像站, url: https://zh.z-lib.fm/ }
+        badge: 镜像
+      - id: libgen
+        title: Library Genesis
+        desc: 学术教材电子书库，镜像站轮换
+        pinyin: librarygenesis
+        pinyinFirst: librarygenesis
+        url:
+          - { label: 镜像站, url: https://libgen.bz/ }
+          - { label: 镜像站, url: https://libgen.gl/ }
+          - { label: 镜像站, url: https://libgen.li/ }
+        badge: 镜像
+      - id: slum
+        title: 书库状态监测
+        desc: 实时查看各电子书库与镜像的可用状态
+        pinyin: shukuzhuangtaijiance
+        pinyinFirst: skztjc
+        url: https://open-slum.org/
   - id: medinfo
     name: 医学讯息
     links:
