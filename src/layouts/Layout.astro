@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { RUNTIME_ICON_NAMES } from '../web/icons';
 import { buildIconSprite } from '../lib/icon-sprite';
 import { ENGINES } from '../data/search-engines';
+import type { SiteRecord } from '../web/search-utils';
 
 const engineGlyphs = [...new Set(Object.values(ENGINES).flat().map((e) => e.icon))];
 const iconSymbols = buildIconSprite([...RUNTIME_ICON_NAMES, ...engineGlyphs]);
@@ -12,24 +13,31 @@ interface Props {
   description?: string;
   /** robots 指令；含 noindex（如 404）时省略 canonical / og / JSON-LD，避免错误页冒充首页 */
   robots?: string;
-  searchIndexJson?: string;
+  searchIndex?: SiteRecord[];
 }
 
 const {
   title = '成医通 | 导航服务',
   description = '成医学生维护的第三方导航：一站式汇集校内系统、医学文献、AI 工具与在线学习等校园常用网站，为师生提供直达入口。',
   robots = 'index, follow',
-  searchIndexJson = '',
+  searchIndex = [],
 } = Astro.props;
 
+function jsonForScript(value: unknown): string {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
+}
+
 const isNoindex = robots.includes('noindex');
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const siteRoot = new URL('/', Astro.site);
 
 const webSiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: '成医通',
   alternateName: '成医导航',
-  url: 'https://nav.cyitong.top/',
+  url: siteRoot.href,
   description,
   inLanguage: 'zh-CN',
 };
@@ -51,7 +59,7 @@ const webSiteSchema = {
       content="成都医学院,成医,成医通,导航,校内系统,医学文献,文献检索,AI工具,实用工具"
     />
     <meta name="robots" content={robots} />
-    {!isNoindex && <link rel="canonical" href="https://nav.cyitong.top/" />}
+    {!isNoindex && <link rel="canonical" href={canonical.href} />}
 
     {!isNoindex && (
       <>
@@ -60,10 +68,10 @@ const webSiteSchema = {
         <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="zh_CN" />
-        <meta property="og:url" content="https://nav.cyitong.top" />
+        <meta property="og:url" content={canonical.href} />
         <meta property="og:site_name" content="成医通" />
 
-        <script is:inline type="application/ld+json" set:html={JSON.stringify(webSiteSchema)}></script>
+        <script is:inline type="application/ld+json" set:html={jsonForScript(webSiteSchema)}></script>
       </>
     )}
 
@@ -94,8 +102,8 @@ const webSiteSchema = {
     <nav-dialog />
     <slot />
 
-    {searchIndexJson && (
-      <script is:inline type="application/json" id="site-index" set:html={searchIndexJson} />
+    {searchIndex.length > 0 && (
+      <script is:inline type="application/json" id="site-index" set:html={jsonForScript(searchIndex)} />
     )}
 
     <script>

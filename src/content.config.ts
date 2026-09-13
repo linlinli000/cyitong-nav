@@ -33,7 +33,7 @@ const linkBaseSchema = z.object({
 }).strict();
 
 /** url 收窄成字符串 */
-type Link = Omit<z.infer<typeof linkBaseSchema>, 'url'> & {
+export type Link = Omit<z.infer<typeof linkBaseSchema>, 'url'> & {
   url: string;
   entries?: Entry[];
 };

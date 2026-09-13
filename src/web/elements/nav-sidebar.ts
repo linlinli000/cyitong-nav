@@ -2,6 +2,7 @@
 import { CloseGate } from '../close-gate';
 import { storageSet } from '../storage';
 import { BREAKPOINT_LG } from '../breakpoints';
+import type { NavCatTabs } from './nav-cat-tabs';
 
 const RAIL_KEY = 'nav:rail';
 
@@ -32,6 +33,14 @@ class NavSidebar extends HTMLElement {
       e.preventDefault();
       this.openDrawer();
     }
+  };
+
+  private onSubLinkClick = (e: MouseEvent): void => {
+    const link = (e.target as Element).closest<HTMLAnchorElement>('a.sub-link[data-sub-id]');
+    if (!link) return;
+    e.preventDefault();
+    this.closeDrawer();
+    this.focusCategory(link.dataset.cat, link.dataset.subId ?? '');
   };
 
   private onDocKeydown = (e: KeyboardEvent): void => {
@@ -161,12 +170,15 @@ class NavSidebar extends HTMLElement {
 
   private jumpToCategory(group: HTMLElement): void {
     this.closeFlyout(false);
-    const cat = group.dataset.cat;
+    this.focusCategory(group.dataset.cat, '');
+  }
+
+  /** 滚到分类块并切 tab；侧栏分类项（filter 空）与子分类链接共用 */
+  private focusCategory(cat: string | undefined, filter: string): void {
     if (!cat) return;
     const section = document.querySelector<HTMLElement>(`[data-cat-block="${cat}"]`);
     if (!section) return;
-    const tabs = section.querySelector('nav-cat-tabs') as { activate: (filter: string) => void } | null;
-    tabs?.activate('');
+    section.querySelector<NavCatTabs>('nav-cat-tabs')?.activate(filter);
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -335,9 +347,7 @@ class NavSidebar extends HTMLElement {
 
     this.backdrop?.addEventListener('click', () => this.closeDrawer());
 
-    this.addEventListener('click', (e) => {
-      if ((e.target as Element).closest('.sub-link')) this.closeDrawer();
-    });
+    this.addEventListener('click', this.onSubLinkClick);
   }
 
   private openDrawer(): void {

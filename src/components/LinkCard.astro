@@ -1,21 +1,12 @@
 ---
-import type { Entry } from '../content.config';
+import type { Link } from '../content.config';
 import { toCardData, toDataAttrs } from '../web/card-attrs';
 import { firstLetter } from '../web/img-fallback';
 
 interface Props {
   categoryId: string;
   sub: string;
-  link: {
-    id: string;
-    title: string;
-    desc?: string;
-    url: string;
-    badge?: string;
-    qr?: boolean;
-    qrNote?: string;
-    entries?: Entry[];
-  };
+  link: Link;
 }
 
 const { categoryId, sub, link } = Astro.props;

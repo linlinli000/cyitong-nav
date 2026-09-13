@@ -1,12 +1,10 @@
-/** <nav-cat-tabs>：子分类 tab 过滤 + 卡片折叠 + 侧栏子链接联动，仅增强 CategoryBlock 静态标记 */
+/** <nav-cat-tabs>：子分类 tab 过滤 + 卡片折叠，仅增强 CategoryBlock 静态标记 */
 import { BREAKPOINT_LG } from '../breakpoints';
-
-let delegated = false;
 
 const ROWS_DESKTOP = 3;
 const ROWS_MOBILE = 5;
 
-class NavCatTabs extends HTMLElement {
+export class NavCatTabs extends HTMLElement {
   private filter = '';
   private expanded = false;
   private maxCards = Infinity;
@@ -26,7 +24,6 @@ class NavCatTabs extends HTMLElement {
     this.addEventListener('click', this.onTabClick);
     this.moreBtn = this.block().querySelector<HTMLButtonElement>('.cat-more');
     this.moreBtn?.addEventListener('click', this.onMoreClick);
-    this.ensureDelegated();
     this.onResize();
     window.addEventListener('resize', this.onResize);
   }
@@ -85,27 +82,6 @@ class NavCatTabs extends HTMLElement {
         if (label) label.textContent = this.expanded ? '收起' : '查看更多';
       }
     }
-  }
-
-  private ensureDelegated(): void {
-    if (delegated) return;
-    delegated = true;
-
-    document.addEventListener('click', (e) => {
-      const link = (e.target as Element).closest<HTMLAnchorElement>('a.sub-link[data-sub-id]');
-      if (!link) return;
-      e.preventDefault();
-
-      const cat = link.dataset.cat;
-      const sub = link.dataset.subId;
-      if (!cat || !sub) return;
-
-      const section = document.querySelector<HTMLElement>(`[data-cat-block="${cat}"]`);
-      if (!section) return;
-
-      section.querySelector<NavCatTabs>('nav-cat-tabs')?.activate(sub);
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
   }
 }
 
