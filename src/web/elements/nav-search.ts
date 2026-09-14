@@ -256,7 +256,7 @@ class NavSearch extends HTMLElement {
         <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener noreferrer"${toCardDataHtml(toCardData(r))}
           title="${escapeAttr(`${r.title} · ${r.catName}/${r.subName}（首字母 ${r.pinyinFirst}）`)}"
           class="flex items-center gap-3 px-3 py-2 transition-colors hover:bg-surface/60">
-          <img src="${escapeAttr(r.icon)}" alt="" class="h-8 w-8 shrink-0 rounded-lg object-cover"
+          <img src="${escapeAttr(r.icon)}" alt="${escapeAttr(r.title)}" class="h-8 w-8 shrink-0 rounded-lg object-cover"
             data-letter="${escapeAttr(firstLetter(r.title))}">
           <span class="min-w-0 flex-1">
             <span class="flex min-w-0 items-center gap-1.5">

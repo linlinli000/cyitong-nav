@@ -68,6 +68,7 @@ class NavDialog extends HTMLElement {
     const t = this.dlg!.querySelector('[data-role="title"]')!;
     t.textContent = title;
     const img = this.dlg!.querySelector<HTMLImageElement>('[data-role="icon"]')!;
+    img.alt = title;
     if (icon) {
       img.src = icon;
       img.classList.remove('hidden');
