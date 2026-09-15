@@ -70,7 +70,7 @@ export class NavCatTabs extends HTMLElement {
     cards.forEach((card, i) => {
       const match = this.filter === '' || (card.dataset.sub ?? '') === this.filter;
       const show = this.filter !== '' ? match : this.expanded || i < this.maxCards;
-      card.style.display = show ? '' : 'none';
+      card.hidden = !show;
     });
 
     if (this.moreBtn) {

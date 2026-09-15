@@ -33,7 +33,7 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
               data-scope={tab.id}
               aria-pressed={tab.id === DEFAULT_SCOPE}
               class:list={[
-                'scope-pill inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-[13px] transition-all sm:px-5 sm:py-2 sm:text-sm',
+                'scope-pill inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-dense transition-all sm:px-5 sm:py-2 sm:text-sm',
                 tab.id === DEFAULT_SCOPE && 'active',
               ]}
             >
@@ -56,13 +56,13 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
           value=""
           placeholder={defaultPlaceholder}
           aria-label="搜索"
-          class="min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none placeholder:text-muted sm:text-base"
+          class="min-w-0 flex-1 bg-transparent text-body text-ink outline-none placeholder:text-muted sm:text-base"
         />
         <button
           type="button"
           data-role="submit"
           aria-label="搜索"
-          class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand-solid text-on-solid transition-colors hover:brightness-110 active:scale-95 sm:h-10 sm:w-10"
+          class="btn-brand grid h-9 w-9 shrink-0 place-items-center rounded-xl sm:h-10 sm:w-10"
         >
           <Icon name="lucide:search" class="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
         </button>
@@ -70,7 +70,8 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
 
       <div
         data-role="dropdown"
-        class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 hidden max-h-96 overflow-y-auto rounded-xl border border-line bg-field shadow-[var(--shadow-dropdown)]"
+        hidden
+        class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 max-h-96 overflow-y-auto rounded-xl border border-line bg-field shadow-[var(--shadow-dropdown)]"
       ></div>
     </div>
 
@@ -80,12 +81,12 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
       class="mt-2 flex min-h-[2.75rem] items-center justify-center sm:mt-3"
       hidden={!isSite(DEFAULT_SCOPE)}
     >
-      <span class="inline-flex items-center gap-1 rounded-full border border-line bg-card px-3.5 py-1 text-[13px] text-muted shadow-[var(--shadow-field)] sm:px-4 dark:border-line/60"
-        >本网站已收录<span class="font-semibold text-brand dark:text-on-solid">{total}</span>个常用链接</span
+      <span class="inline-flex items-center gap-1 rounded-full border border-line bg-card px-3.5 py-1 text-dense text-muted shadow-[var(--shadow-field)] sm:px-4 dark:border-line/60"
+        >本网站已收录<span class="font-semibold text-brand">{total}</span>个常用链接</span
       >
     </div>
 
-    <!-- 各外部 scope 引擎 chips 条-->
+    <!-- 各外部 scope 引擎 chips 条 -->
     {
       EXTERNAL_SCOPES.map((sc) => {
         const active = sc === DEFAULT_SCOPE;
@@ -106,7 +107,7 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
                     data-engine={i}
                     data-engine-scope={sc}
                     class:list={[
-                      'engine-chip inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[13px] transition-all sm:px-3',
+                      'engine-chip inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-dense transition-all sm:px-3',
                       active && i === DEFAULT_ENGINE && 'active',
                     ]}
                   >

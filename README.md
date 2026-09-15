@@ -4,6 +4,8 @@
 
 线上地址：<https://nav.cyitong.top>
 
+站内另有两个内容页：<https://nav.cyitong.top/about/>（功能说明、收录范围与标准、维护与隐私、免责声明）、<https://nav.cyitong.top/contribute/>（投稿方式与投稿前自查）。
+
 ## 添加一个链接
 
 数据是三层结构：**一级分类 → 二级分类 → 链接**，存在 `src/data/sites/*.yaml`。加一条链接按下面步骤操作。
@@ -19,7 +21,7 @@
 | `scitools` | 科研服务 | | `aitool` | AI 工具 |
 | `tools` | 实用工具 | | | |
 
-链接加进最贴切的二级分类 `subs[].links[]` 即可（必要时也可新增一个二级分类）。
+链接加进最贴切的二级分类 `subs[].links[]` 即可（必要时也可新增一个二级分类）。收录准入标准见 <https://nav.cyitong.top/about/#rules>：成医师生会反复使用，不限校内。
 
 ### 2. 放图标
 
@@ -60,8 +62,6 @@ subs:
           - { label: 镜像导航, url: https://sci-hub.shop/ }
 ```
 
-
-
 ### 4. 校验
 
 在仓库根目录跑 `npm run build`，构建期会拦下这些问题，并指出是哪个文件、哪条链接：
@@ -75,7 +75,7 @@ subs:
 - 写了 schema 里没有的字段（拼错，或沿用了旧写法）；
 - 新增一级分类缺 `order` 排序号。
 
-构建通过后，在 GitHub 提 Pull Request（页面侧栏有「添加链接」直达入口）。
+构建通过后，在 GitHub 提 Pull Request。站内 <https://nav.cyitong.top/contribute/> 是面向投稿者的简版说明（含不会写代码的邮件 / Issue 投稿方式）。
 
 ## 本地运行
 
@@ -89,26 +89,33 @@ npm run build     # 类型检查 + 构建（改数据/代码后必跑）
 
 ```
 public/
-├── icons/            # 链接图标 {一级分类}/{链接id}.webp
-└── logo.svg          # 站点图标
+├── icons/
+│   ├── {一级分类}/       # 链接图标 {链接id}.webp
+│   └── topbar/           # 顶栏快捷下拉的站点图标
+└── logo.svg              # 站点图标
 
 src/
 ├── content.config.ts     # 数据 schema 与构建期校验
 ├── data/
 │   ├── sites/*.yaml      # 唯一数据源
 │   ├── category-icons.ts # 分类 icon 语义键 → iconify 包名
-│   └── search-engines.ts # 搜索引擎与品牌字形
+│   ├── search-engines.ts # 搜索引擎与品牌字形
+│   └── topbar-tools.ts   # 顶栏快捷下拉（翻译 / 网盘 / 邮箱）的数据
 ├── lib/
-│   └── icon-sprite.ts    # 运行期图标 → <symbol>（服务端）
-├── layouts/Layout.astro  # 页面壳：防闪烁主题 / 图标 sprite / 搜索索引
-├── pages/                # index / 404
+│   ├── icon-sprite.ts    # 运行期图标 → <symbol>（服务端）
+│   └── site-data.ts      # 分类 / 搜索索引 / 链接总数的唯一读取口
+├── layouts/
+│   ├── Layout.astro      # HTML 文档壳：防闪烁主题 / 图标 sprite / 搜索索引
+│   └── SiteLayout.astro  # 页面 chrome：侧栏 + 顶栏 + 页脚
+├── pages/                # index / about / contribute / 404
 ├── components/           # 纯 .astro 模板组件
 ├── styles/global.css     # 颜色令牌与全局状态
 └── web/                  # 客户端运行时（原生 TS）
     ├── elements/         # 自注册元素 <nav-*>，副作用导入
     ├── card-attrs.ts     # 扫码/入口 data 属性契约（SSR LinkCard 与 nav-search 共用）
+    ├── sidebar-flyout.ts # 收起态侧栏的浮出面板（子分类 / 底部链接共用）
     ├── breakpoints.ts    # 视口断点常量（与 Tailwind lg / global.css 同步）
-    └── *.ts              # 纯工具 / 文档增强（storage、html-escape…）
+    └── *.ts              # 纯工具 / 文档增强（storage、html-escape、icon-path…）
 ```
 
 ## 技术栈与部署

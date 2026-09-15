@@ -1,3 +1,4 @@
+/** 扫码/入口 data 契约：SSR 产属性、客户端读属性，卡片/搜索索引/弹窗共用 */
 import type { Entry } from '../content.config';
 import { escapeHtml } from './html-escape';
 
@@ -39,7 +40,7 @@ export function toCardData(src: CardSource): CardData {
   };
 }
 
-/** 属性名 → 值（值 undefined 即不带属性）。SSR 用 {...} 展开，字符串拼 DOM 用 toCardDataHtml */
+/** 值 undefined 即不带属性；SSR 用 {...} 展开，拼 DOM 用 toCardDataHtml */
 export function toDataAttrs(data: CardData): Record<string, string> {
   const out: Record<string, string> = {};
   (Object.keys(HTML_ATTR) as (keyof CardData)[]).forEach((k) => {

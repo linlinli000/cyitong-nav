@@ -1,4 +1,4 @@
-/** <nav-theme-toggle>：切换 .dark 并持久化； */
+/** <nav-theme-toggle>：切换 .dark 并持久化 */
 import { storageSet } from '../storage';
 
 class NavThemeToggle extends HTMLElement {

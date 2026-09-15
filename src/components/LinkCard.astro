@@ -1,7 +1,8 @@
 ---
 import type { Link } from '../content.config';
 import { toCardData, toDataAttrs } from '../web/card-attrs';
-import { firstLetter } from '../web/img-fallback';
+import { iconPath } from '../web/icon-path';
+import { firstLetter } from '../web/first-letter';
 
 interface Props {
   categoryId: string;
@@ -13,7 +14,7 @@ const { categoryId, sub, link } = Astro.props;
 const card = toCardData({
   title: link.title,
   url: link.url,
-  icon: `/icons/${categoryId}/${link.id}.webp`,
+  icon: iconPath(categoryId, link.id),
   qr: link.qr,
   qrNote: link.qrNote,
   entries: link.entries,
@@ -32,7 +33,7 @@ const fallback = firstLetter(link.title);
   class="link-tile group relative flex items-center gap-3 rounded-2xl border border-line bg-card p-3 dark:border-line/60"
 >
   <img
-    src={`/icons/${categoryId}/${link.id}.webp`}
+    src={iconPath(categoryId, link.id)}
     alt={link.title}
     width="40"
     height="40"
@@ -46,7 +47,7 @@ const fallback = firstLetter(link.title);
       <span class="truncate text-sm font-semibold text-ink transition-colors group-hover:text-brand">
         {link.title}
       </span>
-      {link.badge && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">{link.badge}</span>}
+      {link.badge && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-chip font-medium leading-none text-brand">{link.badge}</span>}
     </span>
     {link.desc && <span class="mt-0.5 block truncate text-xs text-muted">{link.desc}</span>}
   </span>

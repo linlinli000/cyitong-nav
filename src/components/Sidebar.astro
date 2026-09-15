@@ -5,9 +5,14 @@ import { categoryIcon } from '../data/category-icons';
 
 interface Props {
   categories: CollectionEntry<'sites'>[];
+  isHome: boolean;
 }
 
-const { categories } = Astro.props;
+const { categories, isHome } = Astro.props;
+
+const brandHref = isHome ? '#top' : '/';
+// 内容页无分类区块，锚点须带回首页路径
+const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
 ---
 
 <aside
@@ -20,15 +25,15 @@ const { categories } = Astro.props;
         if (localStorage.getItem('nav:rail') === 'collapsed') {
           document.getElementById('sidebar').classList.add('is-collapsed');
         }
-      } catch (e) {}
+      } catch {}
     })();
   </script>
   <div class="sidebar-header flex h-14 items-center px-4">
-    <a href="#top" class="sidebar-brand flex min-w-0 flex-1 items-center gap-2.5">
+    <a href={brandHref} class="sidebar-brand flex min-w-0 flex-1 items-center gap-2.5">
       <img src="/logo.svg" alt="成医通" width="36" height="36" class="h-9 w-9 shrink-0" />
       <span class="sidebar-brand-text">
         <span class="block text-lg font-bold leading-tight text-ink">成医通</span>
-        <span class="block text-[11px] text-muted">nav.cyitong.top</span>
+        <span class="block text-chip text-muted">nav.cyitong.top</span>
       </span>
     </a>
   </div>
@@ -50,7 +55,7 @@ const { categories } = Astro.props;
                   <Icon name={categoryIcon(cat.data.icon)} class="h-5 w-5" />
                 </span>
                 <span class="sidebar-cat-meta">
-                  <span class="sidebar-cat-name truncate text-[15px]">{cat.data.name}</span>
+                  <span class="sidebar-cat-name truncate text-body">{cat.data.name}</span>
                   <span class="sidebar-cat-count shrink-0 text-xs text-muted">{linkCount}</span>
                   <Icon
                     name="lucide:chevron-right"
@@ -63,10 +68,10 @@ const { categories } = Astro.props;
                   {
                     cat.data.subs.map((sub) => (
                       <a
-                        href={`#${cat.data.id}`}
+                        href={catAnchor(cat.data.id)}
                         data-sub-id={sub.id}
                         data-cat={cat.data.id}
-                        class="sub-link block rounded-lg px-3 py-1.5 text-[13px] text-muted transition-colors hover:bg-surface hover:text-ink"
+                        class="sub-link block rounded-lg px-3 py-1.5 text-dense text-muted transition-colors hover:bg-surface hover:text-ink"
                       >
                         {sub.name}
                       </a>
@@ -84,38 +89,25 @@ const { categories } = Astro.props;
   <div class="sidebar-footer px-2 py-4">
     <div class="space-y-1">
       <a
-        href="https://github.com/linlinli000/cyitong-nav/issues"
-        target="_blank"
-        rel="noopener noreferrer"
+        href="/about/"
+        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
+      >
+        <span class="sidebar-footer-icon shrink-0 text-brand">
+          <Icon name="heroicons:information-circle-solid" class="h-5 w-5" aria-hidden="true" />
+        </span>
+        <span class="sidebar-footer-label min-w-0 flex-1 truncate text-body">关于本站</span>
+      </a>
+      <a
+        href="/contribute/"
         class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
       >
         <span class="sidebar-footer-icon shrink-0 text-brand">
           <Icon name="heroicons:chat-bubble-left-right-solid" class="h-5 w-5" aria-hidden="true" />
         </span>
-        <span class="sidebar-footer-label min-w-0 flex-1 truncate text-[15px]">反馈问题</span>
-      </a>
-      <a
-        href="mailto:s1077529874@163.com"
-        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
-      >
-        <span class="sidebar-footer-icon shrink-0 text-brand">
-          <Icon name="heroicons:envelope-solid" class="h-5 w-5" aria-hidden="true" />
-        </span>
-        <span class="sidebar-footer-label min-w-0 flex-1 truncate text-[15px]">投稿邮箱</span>
-      </a>
-      <a
-        href="https://github.com/linlinli000/cyitong-nav/pulls"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
-      >
-        <span class="sidebar-footer-icon shrink-0 text-brand">
-          <Icon name="heroicons:plus-circle-solid" class="h-5 w-5" aria-hidden="true" />
-        </span>
-        <span class="sidebar-footer-label min-w-0 flex-1 truncate text-[15px]">添加链接</span>
+        <span class="sidebar-footer-label min-w-0 flex-1 truncate text-body">投稿与反馈</span>
       </a>
     </div>
   </div>
 </aside>
 
-<div data-sidebar-backdrop class="fixed inset-0 z-30 hidden bg-black/50 lg:hidden"></div>
+<div data-sidebar-backdrop hidden class="fixed inset-0 z-30 bg-black/50 lg:hidden"></div>

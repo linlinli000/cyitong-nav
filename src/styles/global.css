@@ -4,6 +4,9 @@
 
 @theme {
   --font-sans: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
+  --text-chip: 10px;
+  --text-dense: 13px;
+  --text-body: 15px;
   --color-surface: #f5f5f5;
   --color-card: #ffffff;
   --color-field: #ffffff;
@@ -14,7 +17,8 @@
   --color-brand-dark: #1a5fa8;
   --color-brand-solid: #378add;
   --color-on-solid: #ffffff;
-  --color-on-accent: #13161c;
+  --color-tooltip: #111111;
+  --color-on-tooltip: #ffffff;
 }
 
 :root {
@@ -147,7 +151,7 @@ nav-cat-tabs {
   font-weight: 600;
 }
 
-/* 明暗切换按扭与系统跟随同步 */
+/* 明暗切换按钮与系统跟随同步 */
 nav-theme-toggle [data-icon='sun'] {
   display: none;
 }
@@ -190,15 +194,15 @@ nav-theme-toggle [data-icon='sun'] {
   user-select: none;
 }
 
-/* 卡片悬浮简介浮层 tip*/
+/* 卡片悬浮简介浮层 tip */
 .link-tip-pop {
   position: fixed;
   z-index: 90;
   max-width: 16rem;
   padding: 0.3rem 0.6rem;
   border-radius: 0.5rem;
-  background: #111;
-  color: #fff;
+  background: var(--color-tooltip);
+  color: var(--color-on-tooltip);
   font-size: 12px;
   line-height: 1.55;
   pointer-events: none;
@@ -219,7 +223,7 @@ nav-theme-toggle [data-icon='sun'] {
   width: 8px;
   height: 8px;
   margin-left: -4px;
-  background: #111;
+  background: var(--color-tooltip);
   transform: rotate(45deg);
 }
 .link-tip-pop[data-side='bottom']::after {
@@ -320,7 +324,7 @@ nav-theme-toggle [data-icon='sun'] {
   #sidebar.is-collapsed .sidebar-sub {
     display: none;
   }
-  /* 折叠态侧栏底部*/
+  /* 折叠态侧栏底部 */
   #sidebar.is-collapsed .sidebar-footer-label {
     opacity: 0;
     pointer-events: none;
@@ -365,7 +369,7 @@ nav-theme-toggle [data-icon='sun'] {
 }
 .sidebar-flyout-title {
   padding: 0.15rem 0.6rem 0.4rem;
-  font-size: 13px;
+  font-size: var(--text-dense);
   font-weight: 600;
   color: color-mix(in srgb, var(--color-ink) 65%, var(--color-muted));
 }
@@ -381,7 +385,7 @@ nav-theme-toggle [data-icon='sun'] {
   padding: 0.5rem 0.8rem;
 }
 .sidebar-tip-text {
-  font-size: 13px;
+  font-size: var(--text-dense);
   font-weight: 600;
   white-space: nowrap;
   color: color-mix(in srgb, var(--color-ink) 65%, var(--color-muted));
@@ -394,7 +398,7 @@ nav-theme-toggle [data-icon='sun'] {
   color: var(--color-muted);
   border-radius: 0.5rem;
   padding: 0.3rem 0.8rem;
-  font-size: 13px;
+  font-size: var(--text-dense);
   line-height: 1.5;
   font-weight: 500;
   white-space: nowrap;
@@ -430,7 +434,7 @@ nav-theme-toggle [data-icon='sun'] {
   border-radius: 9999px;
   background: var(--color-surface);
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: var(--text-dense);
   line-height: 1.5;
   cursor: pointer;
   transition:
@@ -449,4 +453,406 @@ nav-theme-toggle [data-icon='sun'] {
 }
 .cat-more.expanded .cat-more-chevron {
   transform: rotate(180deg);
+}
+
+/* 品牌实底按钮 */
+.btn-brand {
+  background: var(--color-brand-solid);
+  color: var(--color-on-solid);
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+.btn-brand:hover {
+  filter: brightness(1.1);
+}
+.btn-brand:active {
+  transform: scale(0.95);
+}
+
+/* 次级描边按钮（与 .btn-brand 配对） */
+.btn-outline {
+  border: 1px solid var(--color-line);
+  background: var(--color-card);
+  color: var(--color-ink);
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+.btn-outline:hover {
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
+.btn-outline:active {
+  transform: scale(0.95);
+}
+
+@layer components {
+  /* 内容页长文排版 */
+  .doc-page {
+    font-size: var(--text-body);
+    line-height: 1.8;
+    color: var(--color-ink);
+  }
+  .doc-page h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  /* 竖条走 border-left：标题换行时高度自动跟随 */
+  .doc-page h2 {
+    margin: 2.5rem 0 0.75rem;
+    padding-left: 0.7rem;
+    border-left: 3px solid var(--color-brand);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  /* 政策类分节：去竖条、转灰降号，不与主节抢眼 */
+  .doc-page h2.doc-minor {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 2.25rem 0 0.5rem;
+    padding-left: 0;
+    border-left: none;
+    color: var(--color-muted);
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+  }
+  .doc-page h3 {
+    margin: 1.25rem 0 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .doc-page p,
+  .doc-page ul,
+  .doc-page ol {
+    margin: 0.75rem 0;
+  }
+  .doc-page ul,
+  .doc-page ol {
+    padding-left: 1.35rem;
+  }
+  .doc-page ul {
+    list-style: disc;
+  }
+  .doc-page ol {
+    list-style: decimal;
+  }
+  .doc-page li {
+    margin: 0.35rem 0;
+  }
+  .doc-page li::marker {
+    color: var(--color-muted);
+  }
+  .doc-page a {
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .doc-page a:hover {
+    color: var(--color-brand-dark);
+  }
+  .doc-page .doc-lead {
+    color: var(--color-muted);
+  }
+  .doc-page code {
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.85em;
+  }
+  /* 底色取页面底色：--color-field 明亮模式与卡片同白，会糊成一片 */
+  .doc-page pre {
+    margin: 0.75rem 0;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+    overflow-x: auto;
+  }
+  .doc-page pre code {
+    padding: 0;
+    background: none;
+    font-size: var(--text-dense);
+    line-height: 1.7;
+  }
+  .doc-page details {
+    margin-top: 2rem;
+  }
+  .doc-page summary {
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .doc-page summary:hover {
+    color: var(--color-brand);
+  }
+  .doc-page details[open] > summary {
+    margin-bottom: 0.25rem;
+  }
+
+  /* 折叠说明块；summary 改 flex 顶掉默认三角，开合指示交给右侧 chevron */
+  .doc-page .doc-disclosure {
+    margin-top: 1.5rem;
+    padding: 0 1.15rem;
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    background: var(--color-card);
+  }
+  .doc-page .doc-disclosure > summary {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 0;
+  }
+  .doc-page .doc-disclosure[open] > summary {
+    border-bottom: 1px solid var(--color-line);
+  }
+  .doc-page .doc-disclosure-chevron {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+  }
+  .doc-page .doc-disclosure[open] .doc-disclosure-chevron {
+    transform: rotate(180deg);
+  }
+  .doc-page .doc-disclosure > :last-child:not(summary) {
+    margin-bottom: 0.85rem;
+  }
+
+  /* 内容页头部：全页唯一的结构性横线 */
+  .doc-hero {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .doc-hero .doc-lead {
+    margin-top: 0.5rem;
+  }
+
+  /* 分类芯片（→ 首页对应锚点） */
+  .doc-page .doc-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-card);
+    color: var(--color-ink);
+    font-size: var(--text-dense);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .doc-page .doc-chip:hover {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
+  }
+  .doc-chip-count {
+    margin-left: auto;
+    color: var(--color-muted);
+    font-size: var(--text-chip);
+  }
+
+  /* 内容卡片 */
+  .doc-card {
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    background: var(--color-card);
+  }
+  .doc-card > :first-child {
+    margin-top: 0;
+  }
+  .doc-card > :last-child {
+    margin-bottom: 0;
+  }
+  .doc-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .doc-page .doc-card-head h3 {
+    margin: 0;
+    font-size: 1rem;
+  }
+  .doc-icon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--color-brand) 10%, transparent);
+    color: var(--color-brand);
+  }
+  /* 圆点贴住文字，省掉 ul 缩进（横排三卡时正文宽度吃紧） */
+  .doc-page ul.doc-points {
+    margin: 0.7rem 0 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  .doc-page ul.doc-points > li {
+    display: flex;
+    gap: 0.45rem;
+    margin: 0.35rem 0;
+    color: var(--color-muted);
+    font-size: var(--text-dense);
+    line-height: 1.65;
+  }
+  .doc-page ul.doc-points > li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 0.25rem;
+    height: 0.25rem;
+    margin-top: 0.55rem;
+    border-radius: 999px;
+    background: var(--color-brand);
+  }
+
+  /* 数据概览 */
+  .doc-page .doc-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+    gap: 0.75rem;
+    margin: 1.25rem 0;
+  }
+  /* DOM 保持 dt → dd 语义顺序，视觉上数字在上 */
+  .doc-page .doc-stats > div {
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--color-line);
+    border-radius: 0.85rem;
+    background: var(--color-card);
+  }
+  .doc-page .doc-stats dd {
+    color: var(--color-brand);
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .doc-page .doc-stats dt {
+    color: var(--color-muted);
+    font-size: var(--text-dense);
+    line-height: 1.4;
+  }
+
+  /* 政策条目：底走「下沉」，比 .doc-card 低一级 */
+  .doc-page .doc-facts {
+    margin: 1rem 0;
+    padding: 0 1.15rem;
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--color-ink) 3%, transparent);
+  }
+  .doc-page .doc-facts > div {
+    padding: 0.85rem 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .doc-page .doc-facts > div:first-child {
+    border-top: none;
+  }
+  .doc-page .doc-facts dt {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.3rem;
+    font-size: var(--text-dense);
+    font-weight: 600;
+  }
+  .doc-page .doc-facts dd {
+    margin: 0;
+    color: var(--color-muted);
+  }
+
+  /* 入口行列表（联系方式） */
+  .doc-rows {
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    background: var(--color-card);
+  }
+  .doc-page .doc-row {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 1rem;
+    color: var(--color-ink);
+    font-size: var(--text-dense);
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .doc-page .doc-row + .doc-row {
+    border-top: 1px solid var(--color-line);
+  }
+  .doc-page .doc-row:hover {
+    background: var(--color-surface);
+  }
+  .doc-row-label {
+    color: var(--color-muted);
+  }
+  .doc-row-value {
+    margin-left: auto;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .doc-page .doc-row:hover .doc-row-value {
+    color: var(--color-brand);
+  }
+
+  /* 勾选式清单 */
+  .doc-page ul.doc-list {
+    padding-left: 0;
+    list-style: none;
+  }
+  .doc-page ul.doc-list > li {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.45rem 0;
+  }
+
+  /* 步骤清单：条目动辄两三行，裸数字 marker 太轻 */
+  .doc-page ol.doc-steps {
+    padding-left: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+  /* 序号绝对定位：li 成 flex 会把「正文 + <pre>」拆成并排项 */
+  .doc-page ol.doc-steps > li {
+    position: relative;
+    padding-left: 1.9rem;
+    counter-increment: step;
+  }
+  .doc-page ol.doc-steps > li::before {
+    content: counter(step);
+    position: absolute;
+    top: 0.25rem;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-brand) 12%, transparent);
+    color: var(--color-brand);
+    font-size: var(--text-chip);
+    font-weight: 600;
+  }
+
+  /* FAQ 连排：改细线分隔，纵向留白交给 details，卡片只留横向内边距 */
+  .doc-page .doc-card.doc-faq {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+  }
+  .doc-faq details {
+    margin-top: 0;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .doc-faq details:first-child {
+    border-top: none;
+  }
 }

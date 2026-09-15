@@ -64,7 +64,7 @@ const webSiteSchema = {
     {!isNoindex && (
       <>
         <!-- Open Graph -->
-        <meta property="og:title" content="成医通 | 导航服务" />
+        <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="zh_CN" />
@@ -78,7 +78,7 @@ const webSiteSchema = {
     <script is:inline>
       (function () {
         var stored = null;
-        try { stored = localStorage.getItem('theme'); } catch (e) {}
+        try { stored = localStorage.getItem('theme'); } catch {}
         var dark =
           stored === 'dark' ||
           (stored === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -88,7 +88,7 @@ const webSiteSchema = {
             if (localStorage.getItem('theme') === null) {
               document.documentElement.classList.toggle('dark', e.matches);
             }
-          } catch (ex) {}
+          } catch {}
         });
       })();
     </script>

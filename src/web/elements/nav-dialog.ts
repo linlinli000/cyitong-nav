@@ -37,7 +37,7 @@ class NavDialog extends HTMLElement {
       <dialog class="m-auto w-[min(90vw,22rem)] rounded-2xl border border-line bg-card p-5 text-ink shadow-[var(--shadow-menu)] backdrop:bg-black/50">
         <div class="flex items-center justify-between gap-4">
           <div class="flex min-w-0 items-center gap-2">
-            <img data-role="icon" alt="" class="hidden h-6 w-6 shrink-0 rounded-md object-contain">
+            <img data-role="icon" alt="" hidden class="h-6 w-6 shrink-0 rounded-md object-contain">
             <h3 data-role="title" class="truncate text-base font-semibold"></h3>
           </div>
           <button type="button" data-role="close" class="shrink-0 text-muted transition-colors hover:text-ink" aria-label="关闭">
@@ -71,10 +71,10 @@ class NavDialog extends HTMLElement {
     img.alt = title;
     if (icon) {
       img.src = icon;
-      img.classList.remove('hidden');
+      img.hidden = false;
     } else {
       img.removeAttribute('src');
-      img.classList.add('hidden');
+      img.hidden = true;
     }
   }
 

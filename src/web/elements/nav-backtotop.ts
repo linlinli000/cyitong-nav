@@ -1,7 +1,6 @@
-/** <nav-backtotop>：滚动超过阈值显示，点击平滑回顶； */
+/** <nav-backtotop>：滚动超过阈值显示，点击平滑回顶 */
 class NavBackToTop extends HTMLElement {
   private btn: HTMLElement | null = null;
-  private cleanup: (() => void) | null = null;
 
   private onScroll = (): void => {
     const show = window.scrollY > 480;
@@ -20,12 +19,11 @@ class NavBackToTop extends HTMLElement {
     this.btn.addEventListener('click', this.onClick);
     window.addEventListener('scroll', this.onScroll, { passive: true });
     this.onScroll();
-    this.cleanup = () => window.removeEventListener('scroll', this.onScroll);
   }
 
   disconnectedCallback(): void {
     this.btn?.removeEventListener('click', this.onClick);
-    this.cleanup?.();
+    window.removeEventListener('scroll', this.onScroll);
   }
 }
 

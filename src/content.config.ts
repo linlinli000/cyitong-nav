@@ -1,7 +1,9 @@
+/** sites 集合 schema 与构建期校验：图标存在性、分类内 id 重复、qr 与多入口互斥 */
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import { existsSync } from 'node:fs';
+import { iconPath } from './web/icon-path';
 
 const CATEGORY_IDS = ['campus', 'study', 'exam', 'academic', 'scitools', 'aitool', 'tools'] as const;
 
@@ -9,7 +11,7 @@ const absoluteUrl = z.string().refine((s) => /^[a-z][a-z0-9+.-]*:\/\//i.test(s),
   message: 'url 必须是带 scheme 的绝对地址（如 https:// 或 alipays://）',
 });
 
-/** 入口条目：每条都必须带 label（没有默认值） */
+/** 入口条目：label 必填，无默认值 */
 const entrySchema = z.object({
   label: z.string().min(1),
   url: absoluteUrl,
@@ -32,13 +34,12 @@ const linkBaseSchema = z.object({
   qrNote: z.string().optional(),
 }).strict();
 
-/** url 收窄成字符串 */
 export type Link = Omit<z.infer<typeof linkBaseSchema>, 'url'> & {
   url: string;
   entries?: Entry[];
 };
 
-/** 单条直接跳转，列表弹窗选入口 */
+/** 单条直接跳转，列表弹窗选入口；url 收窄成字符串 */
 const linkSchema = linkBaseSchema.transform((link): Link => {
   if (!Array.isArray(link.url)) return { ...link, url: link.url };
   const entries = link.url;
@@ -68,8 +69,8 @@ const sites = defineCollection({
         const issue = (message: string): void => {
           ctx.addIssue({ code: 'custom', message: `${message}${where}` });
         };
-        if (!existsSync(`public/icons/${data.id}/${link.id}.webp`)) {
-          issue(`图标缺失：public/icons/${data.id}/${link.id}.webp`);
+        if (!existsSync(`public${iconPath(data.id, link.id)}`)) {
+          issue(`图标缺失：public${iconPath(data.id, link.id)}`);
         }
         if (seen.has(link.id)) {
           issue(`同一分类下 id 重复："${link.id}" 会跟前面的链接共用同一个图标`);

@@ -1,80 +1,31 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { TOOLS } from '../data/topbar-tools';
+
+interface Props {
+  isHome: boolean;
+}
+
+const { isHome } = Astro.props;
+
+const brandHref = isHome ? '#top' : '/';
 
 const MENU_ICON = 'lucide:menu';
 const CARET_ICON = 'lucide:chevron-down';
-
-const TOOLS = [
-  {
-    id: 'translate',
-    label: '翻译',
-    icon: 'lucide:languages',
-    items: [
-      { name: '百度翻译', url: 'https://fanyi.baidu.com/', icon: '/icons/topbar/baidu.webp' },
-      {
-        name: '有道翻译',
-        url: 'https://fanyi.youdao.com/indexLLM.html#/',
-        icon: '/icons/topbar/youdao.webp',
-      },
-      { name: '搜狗翻译', url: 'https://fanyi.sogou.com/text', icon: '/icons/topbar/sogou.webp' },
-      { name: 'DeepL', url: 'https://www.deepl.com/zh/translator', icon: '/icons/topbar/deepl.webp' },
-      {
-        name: '讯飞翻译',
-        url: 'https://fanyi.xfyun.cn/console/trans/text',
-        icon: '/icons/topbar/iflytek.webp',
-      },
-    ],
-  },
-  {
-    id: 'drive',
-    label: '网盘',
-    icon: 'lucide:cloud-download',
-    items: [
-      { name: '百度网盘', url: 'https://pan.baidu.com', icon: '/icons/topbar/baidupan.webp' },
-      {
-        name: '阿里云盘',
-        url: 'https://www.alipan.com',
-        icon: '/icons/topbar/alipan.webp',
-      },
-      {
-        name: '夸克网盘',
-        url: 'https://pan.quark.cn',
-        icon: '/icons/topbar/quark.webp',
-      },
-      { name: '蓝奏云', url: 'https://www.lanzou.com', icon: '/icons/topbar/lanzou.webp' },
-      { name: '迅雷网盘', url: 'https://pan.xunlei.com', icon: '/icons/topbar/xunlei.webp' },
-    ],
-  },
-  {
-    id: 'mail',
-    label: '邮箱',
-    icon: 'lucide:mail',
-    items: [
-      {
-        name: 'QQ邮箱',
-        url: 'https://mail.qq.com',
-        icon: '/icons/topbar/qqmail.webp',
-      },
-      { name: '163邮箱', url: 'https://mail.163.com', icon: '/icons/topbar/mail163.webp' },
-      { name: 'Outlook', url: 'https://outlook.live.com', icon: '/icons/topbar/outlook.webp' },
-      { name: 'Gmail', url: 'https://mail.google.com', icon: '/icons/topbar/gmail.webp' },
-    ],
-  },
-] as const;
 ---
 
 <header class="sticky top-0 z-20 border-b border-line bg-card/80 backdrop-blur dark:border-line/60">
   <div class="relative flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5 lg:px-4">
     <!-- 移动居中品牌 -->
     <a
-      href="#top"
+      href={brandHref}
       aria-label="成医通"
       class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 whitespace-nowrap lg:hidden"
     >
       <img src="/logo.svg" alt="成医通" width="32" height="32" class="h-8 w-8 shrink-0" />
       <span class="leading-none">
-        <span class="block text-[16px] font-bold text-ink">成医通</span>
-        <span class="mt-1 hidden text-[10px] text-muted min-[360px]:block">nav.cyitong.top</span>
+        <span class="block text-base font-bold text-ink">成医通</span>
+        <span class="mt-1 hidden text-chip text-muted min-[360px]:block">nav.cyitong.top</span>
       </span>
     </a>
 

@@ -1,8 +1,4 @@
-/** 首字兜底 + 图标加载失败换成同尺寸色块 */
-export function firstLetter(title: string): string {
-  return title.trim().charAt(0) || '·';
-}
-
+/** 图标加载失败换成同尺寸首字色块（客户端专用，委托 document 的 error） */
 let registered = false;
 
 export function registerLetterFallback(): void {

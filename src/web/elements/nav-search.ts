@@ -1,15 +1,16 @@
-/** <nav-search>：站内/引擎搜索、历史、键盘导航。 */
+/** <nav-search>：站内/引擎搜索、历史、键盘导航 */
 import { ENGINES, SCOPE_TABS, engineUrl, placeholderFor, type SearchScope } from '../../data/search-engines';
 import { queryTokens, searchSites, type SiteRecord } from '../search-utils';
 import { NAV_OPEN_CARD_EVENT, toCardData, toCardDataHtml } from '../card-attrs';
-import { escapeHtml as escapeAttr } from '../html-escape';
+import { escapeHtml } from '../html-escape';
 import { iconEl } from '../icons';
-import { firstLetter } from '../img-fallback';
+import { firstLetter } from '../first-letter';
 import { storageGetJson, storageSetJson } from '../storage';
 
 const SCOPE_KEY = 'nav:scope';
 const MAX_HISTORY = 10;
 const historyKey = (scope: SearchScope): string => `nav:history:${scope}`;
+const engineKey = (scope: SearchScope): string => `nav:engine:${scope}`;
 
 function loadScope(): SearchScope {
   const s = storageGetJson<string>(SCOPE_KEY, 'search');
@@ -19,7 +20,7 @@ function loadScope(): SearchScope {
 /** 命中词高亮 */
 function markHit(text: string, tokens: string[]): string {
   if (!text) return '';
-  const esc = escapeAttr(text);
+  const esc = escapeHtml(text);
   if (tokens.length === 0) return esc;
   const re = new RegExp(
     tokens.filter(Boolean).map((tk) => tk.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'),
@@ -42,7 +43,7 @@ class NavSearch extends HTMLElement {
   private input: HTMLInputElement | null = null;
   private dropdown: HTMLElement | null = null;
 
-  private handleGlobalKey = (e: KeyboardEvent): void => {
+  private onDocKeydown = (e: KeyboardEvent): void => {
     const tag = (e.target as HTMLElement).tagName;
     if (e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA' && !e.metaKey && !e.ctrlKey && !e.altKey) {
       e.preventDefault();
@@ -50,7 +51,7 @@ class NavSearch extends HTMLElement {
     }
   };
 
-  private handleDocClick = (e: MouseEvent): void => {
+  private onDocClick = (e: MouseEvent): void => {
     if (this.contains(e.target as Node)) return;
     this.hideDropdown();
   };
@@ -66,13 +67,13 @@ class NavSearch extends HTMLElement {
     this.addEventListener('focusin', this.onFocusIn);
     this.addEventListener('click', this.onClick);
     this.addEventListener('keydown', this.onKeydown);
-    document.addEventListener('keydown', this.handleGlobalKey);
-    document.addEventListener('click', this.handleDocClick);
+    document.addEventListener('keydown', this.onDocKeydown);
+    document.addEventListener('click', this.onDocClick);
   }
 
   disconnectedCallback(): void {
-    document.removeEventListener('keydown', this.handleGlobalKey);
-    document.removeEventListener('click', this.handleDocClick);
+    document.removeEventListener('keydown', this.onDocKeydown);
+    document.removeEventListener('click', this.onDocClick);
   }
 
   private readIndex(): SiteRecord[] {
@@ -86,7 +87,7 @@ class NavSearch extends HTMLElement {
   }
 
   private loadEngineIdx(scope: SearchScope): number {
-    const idx = storageGetJson<number>(`nav:engine:${scope}`, 0);
+    const idx = storageGetJson<number>(engineKey(scope), 0);
     const len = ENGINES[scope]?.length ?? 0;
     return typeof idx === 'number' && idx >= 0 && idx < len ? idx : 0;
   }
@@ -100,7 +101,7 @@ class NavSearch extends HTMLElement {
     this.dropdown = this.querySelector<HTMLElement>('[data-role="dropdown"]');
   }
 
-  /** 按当前 scope/engineIdx 同步 SSR 静态标记 */
+  /** 按 scope/engineIdx 同步 SSR 静态标记 */
   private applyScopeState(): void {
     this.querySelectorAll<HTMLButtonElement>('[data-scope]').forEach((b) => {
       const on = b.dataset.scope === this.scope;
@@ -214,7 +215,7 @@ class NavSearch extends HTMLElement {
 
   private setEngine(i: number): void {
     this.engineIdx = i;
-    storageSetJson(`nav:engine:${this.scope}`, i);
+    storageSetJson(engineKey(this.scope), i);
     this.applyScopeState();
     this.input?.focus();
   }
@@ -237,7 +238,7 @@ class NavSearch extends HTMLElement {
       this.dropdown.innerHTML = `
         <div class="flex items-center gap-3 px-4 py-3 text-sm text-muted">
           ${iconEl('search', 'h-4 w-4')}
-          <span>按回车在 <span class="font-medium text-brand">${engine.name}</span> 中搜索「<span class="text-ink">${escapeAttr(this.query)}</span>」</span>
+          <span>按回车在 <span class="font-medium text-brand">${engine.name}</span> 中搜索「<span class="text-ink">${escapeHtml(this.query)}</span>」</span>
         </div>`;
       this.showDropdown();
     }
@@ -253,20 +254,20 @@ class NavSearch extends HTMLElement {
     d.innerHTML = this.results
       .map(
         (r) => `
-        <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener noreferrer"${toCardDataHtml(toCardData(r))}
-          title="${escapeAttr(`${r.title} · ${r.catName}/${r.subName}（首字母 ${r.pinyinFirst}）`)}"
+        <a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer"${toCardDataHtml(toCardData(r))}
+          title="${escapeHtml(`${r.title} · ${r.catName}/${r.subName}（首字母 ${r.pinyinFirst}）`)}"
           class="flex items-center gap-3 px-3 py-2 transition-colors hover:bg-surface/60">
-          <img src="${escapeAttr(r.icon)}" alt="${escapeAttr(r.title)}" class="h-8 w-8 shrink-0 rounded-lg object-cover"
-            data-letter="${escapeAttr(firstLetter(r.title))}">
+          <img src="${escapeHtml(r.icon)}" alt="${escapeHtml(r.title)}" class="h-8 w-8 shrink-0 rounded-lg object-cover"
+            data-letter="${escapeHtml(firstLetter(r.title))}">
           <span class="min-w-0 flex-1">
             <span class="flex min-w-0 items-center gap-1.5">
               <span class="min-w-0 truncate text-sm font-semibold text-ink">${markHit(r.title, this.tokens)}</span>
-              ${r.badge ? `<span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-[10px] font-medium leading-none text-brand">${escapeAttr(r.badge)}</span>` : ''}
+              ${r.badge ? `<span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-chip font-medium leading-none text-brand">${escapeHtml(r.badge)}</span>` : ''}
             </span>
             ${r.desc ? `<span class="mt-0.5 block truncate text-xs text-muted">${markHit(r.desc, this.tokens)}</span>` : ''}
           </span>
           <span class="flex shrink-0 items-center pl-2">
-            <span class="max-w-36 truncate rounded-full border border-line/80 bg-surface/70 px-1.5 py-px text-[10px] text-muted">${escapeAttr(r.catName)} · ${escapeAttr(r.subName)}</span>
+            <span class="max-w-36 truncate rounded-full border border-line/80 bg-surface/70 px-1.5 py-px text-chip text-muted">${escapeHtml(r.catName)} · ${escapeHtml(r.subName)}</span>
           </span>
         </a>`,
       )
@@ -294,10 +295,10 @@ class NavSearch extends HTMLElement {
       ${this.history
         .map(
           (h) => `
-          <button type="button" data-history="${escapeAttr(h)}"
+          <button type="button" data-history="${escapeHtml(h)}"
             class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-ink transition-colors hover:bg-surface/60">
             <span class="text-muted">${iconEl('history', 'h-3.5 w-3.5')}</span>
-            <span class="truncate">${escapeAttr(h)}</span>
+            <span class="truncate">${escapeHtml(h)}</span>
           </button>`,
         )
         .join('')}
@@ -306,11 +307,11 @@ class NavSearch extends HTMLElement {
   }
 
   private showDropdown(): void {
-    this.dropdown?.classList.remove('hidden');
+    if (this.dropdown) this.dropdown.hidden = false;
   }
 
   private hideDropdown(): void {
-    this.dropdown?.classList.add('hidden');
+    if (this.dropdown) this.dropdown.hidden = true;
   }
 
   // ── 键盘导航与搜索动作 ──

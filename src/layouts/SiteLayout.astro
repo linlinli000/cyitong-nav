@@ -1,0 +1,39 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { SiteRecord } from '../web/search-utils';
+import Layout from './Layout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import TopBar from '../components/TopBar.astro';
+import Footer from '../components/Footer.astro';
+import BackToTop from '../components/BackToTop.astro';
+
+interface Props {
+  categories: CollectionEntry<'sites'>[];
+  totalLinks: number;
+  isHome: boolean;
+  title?: string;
+  description?: string;
+  robots?: string;
+  /** 只有首页有搜索 UI；不传即不输出 #site-index */
+  searchIndex?: SiteRecord[];
+}
+
+const { categories, totalLinks, isHome, title, description, robots, searchIndex } = Astro.props;
+---
+
+<Layout title={title} description={description} robots={robots} searchIndex={searchIndex}>
+  <nav-sidebar>
+    <Sidebar categories={categories} isHome={isHome} />
+  </nav-sidebar>
+
+  <div class="site-content min-h-screen lg:pl-56">
+    <TopBar isHome={isHome} />
+    <slot />
+    <Footer totalLinks={totalLinks} />
+    <BackToTop />
+  </div>
+</Layout>
+
+<script>
+  import '../web/elements/nav-sidebar';
+</script>

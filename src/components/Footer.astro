@@ -11,14 +11,33 @@ const year = new Date().getFullYear();
 
 <footer class="mt-10 border-t border-line py-10">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <nav
+      aria-label="站内链接"
+      class="mb-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm"
+    >
+      <a
+        href="/about/"
+        class="inline-flex items-center gap-1.5 whitespace-nowrap text-muted transition-colors hover:text-ink"
+      >
+        <Icon name="heroicons:information-circle-solid" class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+        关于本站
+      </a>
+      <a
+        href="/contribute/"
+        class="inline-flex items-center gap-1.5 whitespace-nowrap text-muted transition-colors hover:text-ink"
+      >
+        <Icon name="heroicons:chat-bubble-left-right-solid" class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+        投稿与反馈
+      </a>
+    </nav>
     <div class="flex flex-col items-center gap-3 text-center text-sm text-muted">
-      <p>成医通已收录 <span class="font-semibold text-brand dark:text-on-solid">{totalLinks}</span> 个常用链接 · 成都医学院师生导航</p>
+      <p>成医通已收录 <span class="font-semibold text-brand">{totalLinks}</span> 个常用链接 · 成都医学院师生导航</p>
       <p
         class="inline-flex items-center gap-1.5 text-xs text-muted"
-        title="本导航由学生个人维护，与成都医学院官方无关"
+        title="本导航由学生维护，与成都医学院官方无关"
       >
         <Icon name="lucide:shield-check" class="h-3.5 w-3.5 shrink-0 text-brand" aria-hidden="true" />
-        第三方非官方站 · 学生个人维护
+        第三方非官方站 · 学生维护
       </p>
       <p class="text-xs text-muted/70">© {year} 成医通 · Made with ♥ for CMC</p>
     </div>

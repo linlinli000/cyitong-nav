@@ -1,5 +1,5 @@
-/** <nav-sidebar>：分类手风琴、滚动高亮、移动抽屉、桌面折叠图标条 + 收起态浮层 */
-import { CloseGate } from '../close-gate';
+/** <nav-sidebar>：分类手风琴、滚动高亮、移动抽屉、桌面折叠图标条（浮层见 sidebar-flyout） */
+import { SidebarFlyout } from '../sidebar-flyout';
 import { storageSet } from '../storage';
 import { BREAKPOINT_LG } from '../breakpoints';
 import type { NavCatTabs } from './nav-cat-tabs';
@@ -12,10 +12,7 @@ class NavSidebar extends HTMLElement {
   private observer: IntersectionObserver | null = null;
   private lastActive = '';
 
-  private flyout: HTMLDivElement | null = null;
-  private flyoutTrigger: HTMLElement | null = null;
-  private closeGate = new CloseGate(150, () => this.closeFlyout(false));
-  private suppressFocusOpen = false;
+  private flyout = new SidebarFlyout(this, () => this.isCollapsed());
   private mqLg: MediaQueryList | null = null;
 
   private onMqLgChange = (e: MediaQueryListEvent): void => {
@@ -38,6 +35,8 @@ class NavSidebar extends HTMLElement {
   private onSubLinkClick = (e: MouseEvent): void => {
     const link = (e.target as Element).closest<HTMLAnchorElement>('a.sub-link[data-sub-id]');
     if (!link) return;
+    // 内容页子链接指向首页锚点，交给浏览器导航
+    if (!link.getAttribute('href')?.startsWith('#')) return;
     e.preventDefault();
     this.closeDrawer();
     this.focusCategory(link.dataset.cat, link.dataset.subId ?? '');
@@ -45,20 +44,34 @@ class NavSidebar extends HTMLElement {
 
   private onDocKeydown = (e: KeyboardEvent): void => {
     if (e.key !== 'Escape') return;
-    if (this.flyout?.classList.contains('open')) {
-      this.closeFlyout(true);
+    if (this.flyout.isOpen()) {
+      this.flyout.close(true);
       return;
     }
     this.closeDrawer();
   };
 
-  private onDocScroll = (): void => this.closeFlyout(false);
+  private onToggleClick = (e: MouseEvent): void => {
+    const toggle = (e.target as Element).closest<HTMLElement>('.sidebar-cat-toggle');
+    if (!toggle) return;
+    const group = toggle.closest<HTMLElement>('.sidebar-group');
+    if (!group) return;
 
-  private onDocClickCapture = (e: MouseEvent): void => {
-    if (!this.flyout?.classList.contains('open')) return;
-    const t = e.target as Element;
-    if (!this.flyout.contains(t) && !t.closest('.sidebar-cat-toggle')) this.closeFlyout(false);
+    const hitChevron = !!(e.target as Element).closest('.sidebar-chevron');
+
+    if (window.innerWidth >= BREAKPOINT_LG) {
+      if (this.isCollapsed()) {
+        this.jumpToCategory(group);
+        return;
+      }
+      this.setGroupOpen(group, !group.classList.contains('open'));
+      if (!hitChevron) this.jumpToCategory(group);
+      return;
+    }
+    this.setGroupOpen(group, !group.classList.contains('open'));
   };
+
+  private onBackdropClick = (): void => this.closeDrawer();
 
   connectedCallback(): void {
     this.aside = this.querySelector('#sidebar');
@@ -76,44 +89,33 @@ class NavSidebar extends HTMLElement {
     this.mqLg?.removeEventListener('change', this.onMqLgChange);
     document.removeEventListener('click', this.onDocClick);
     document.removeEventListener('keydown', this.onDocKeydown);
-    document.removeEventListener('scroll', this.onDocScroll, true);
-    document.removeEventListener('click', this.onDocClickCapture, true);
-    this.flyout?.remove();
+    this.removeEventListener('click', this.onToggleClick);
+    this.removeEventListener('click', this.onSubLinkClick);
+    this.removeEventListener('pointerover', this.flyout.onPointerOver);
+    this.removeEventListener('pointerout', this.flyout.onPointerOut);
+    this.removeEventListener('focusin', this.flyout.onFocusIn);
+    this.removeEventListener('focusout', this.flyout.onFocusOut);
+    this.removeEventListener('keydown', this.flyout.onKeydown);
+    this.removeEventListener('click', this.flyout.onItemClick);
+    this.backdrop?.removeEventListener('click', this.onBackdropClick);
+    this.flyout.destroy();
     document.body.classList.remove('overflow-hidden');
   }
 
   // ── 折叠/展开 ──
 
   private drawerOpen(): boolean {
-    return !!this.backdrop && !this.backdrop.classList.contains('hidden');
+    return !!this.backdrop && !this.backdrop.hidden;
   }
 
-  // 展开/收起只走这里：.open 与 aria-expanded 一起切
+  // .open 与 aria-expanded 只在此处同切
   private setGroupOpen(group: HTMLElement, open: boolean): void {
     group.classList.toggle('open', open);
     group.querySelector<HTMLElement>('.sidebar-cat-toggle')?.setAttribute('aria-expanded', String(open));
   }
 
   private initCollapse(): void {
-    this.addEventListener('click', (e) => {
-      const toggle = (e.target as Element).closest<HTMLElement>('.sidebar-cat-toggle');
-      if (!toggle) return;
-      const group = toggle.closest<HTMLElement>('.sidebar-group');
-      if (!group) return;
-
-      const hitChevron = !!(e.target as Element).closest('.sidebar-chevron');
-
-      if (window.innerWidth >= BREAKPOINT_LG) {
-        if (this.isCollapsed()) {
-          this.jumpToCategory(group);
-          return;
-        }
-        this.setGroupOpen(group, !group.classList.contains('open'));
-        if (!hitChevron) this.jumpToCategory(group);
-        return;
-      }
-      this.setGroupOpen(group, !group.classList.contains('open'));
-    });
+    this.addEventListener('click', this.onToggleClick);
   }
 
   // ── 滚动监听 ──
@@ -147,7 +149,7 @@ class NavSidebar extends HTMLElement {
     }
   }
 
-  // ── 桌面端图标条（折叠/展开 + 收起态浮层） ──
+  // ── 桌面端图标条（折叠/展开） ──
 
   private isCollapsed(): boolean {
     return !!this.aside?.classList.contains('is-collapsed') && window.innerWidth >= BREAKPOINT_LG;
@@ -157,7 +159,7 @@ class NavSidebar extends HTMLElement {
     this.aside?.classList.toggle('is-collapsed');
     storageSet(RAIL_KEY, this.aside?.classList.contains('is-collapsed') ? 'collapsed' : 'expanded');
     this.syncToggleState();
-    this.closeFlyout(false);
+    this.flyout.close(false);
   }
 
   private syncToggleState(): void {
@@ -169,172 +171,33 @@ class NavSidebar extends HTMLElement {
   }
 
   private jumpToCategory(group: HTMLElement): void {
-    this.closeFlyout(false);
+    this.flyout.close(false);
     this.focusCategory(group.dataset.cat, '');
   }
 
-  /** 滚到分类块并切 tab；侧栏分类项（filter 空）与子分类链接共用 */
+  /** 滚到分类块并切 tab；侧栏分类项（filter 空）与子链接共用 */
   private focusCategory(cat: string | undefined, filter: string): void {
     if (!cat) return;
     const section = document.querySelector<HTMLElement>(`[data-cat-block="${cat}"]`);
-    if (!section) return;
+    if (!section) {
+      // 内容页无分类区块：回首页锚点；页内也没有则静默，避免误跳
+      if (!document.querySelector('[data-cat-block]')) window.location.href = `/#${cat}`;
+      return;
+    }
     section.querySelector<NavCatTabs>('nav-cat-tabs')?.activate(filter);
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // ── 收起态浮层 ──
+
   private initFlyout(): void {
-    this.flyout = document.createElement('div');
-    this.flyout.className = 'sidebar-flyout';
-    this.append(this.flyout);
-
-    this.querySelectorAll<HTMLElement>('.sidebar-group').forEach((group) => {
-      group.addEventListener('pointerenter', () => {
-        if (this.isCollapsed()) this.openFlyout(group, false);
-      });
-      group.addEventListener('pointerleave', (e) => this.onFlyoutLeave(e, group));
-
-      const btn = group.querySelector<HTMLButtonElement>('.sidebar-cat-toggle');
-      btn?.addEventListener('focus', () => {
-        if (this.isCollapsed() && !this.suppressFocusOpen) this.openFlyout(group, false);
-      });
-      btn?.addEventListener('focusout', (e) => {
-        const rel = e.relatedTarget as Node | null;
-        if (!rel || (!group.contains(rel) && !this.flyout?.contains(rel))) this.closeFlyout(false);
-      });
-      btn?.addEventListener('keydown', (e) => {
-        if (!this.isCollapsed()) return;
-        if (e.key === 'ArrowRight') {
-          e.preventDefault();
-          this.openFlyout(group, true);
-        } else if (e.key === 'ArrowLeft' && this.flyout?.classList.contains('open')) {
-          e.preventDefault();
-          this.closeFlyout(true);
-        }
-      });
-    });
-
-    this.querySelectorAll<HTMLElement>('.sidebar-footer-link').forEach((link) => {
-      link.addEventListener('pointerenter', () => {
-        if (this.isCollapsed()) this.openTip(link);
-      });
-      link.addEventListener('pointerleave', (e) => this.onFlyoutLeave(e, link));
-      link.addEventListener('click', () => this.closeFlyout(false));
-      link.addEventListener('focus', () => {
-        if (this.isCollapsed() && !this.suppressFocusOpen) this.openTip(link);
-      });
-      link.addEventListener('focusout', (e) => {
-        const rel = e.relatedTarget as Node | null;
-        if (!rel || (!link.contains(rel) && !this.flyout?.contains(rel))) this.closeFlyout(false);
-      });
-    });
-
-    this.flyout.addEventListener('pointerenter', () => this.closeGate.cancel());
-    this.flyout.addEventListener('pointerleave', () => this.closeGate.schedule());
-    this.flyout.addEventListener('click', (e) => {
-      if ((e.target as Element).closest('a.sub-link')) this.closeFlyout(false);
-    });
-    this.flyout.addEventListener('keydown', (e) => this.onFlyoutKeydown(e));
-    this.flyout.addEventListener('focusout', (e) => {
-      const rel = e.relatedTarget as Node | null;
-      if (!rel || !this.flyout?.contains(rel)) this.closeFlyout(false);
-    });
-
-    document.addEventListener('scroll', this.onDocScroll, true);
-    document.addEventListener('click', this.onDocClickCapture, true);
-  }
-
-  private onFlyoutLeave(e: PointerEvent, item: HTMLElement): void {
-    const rel = e.relatedTarget as Node | null;
-    if (rel && (item.contains(rel) || this.flyout?.contains(rel))) return;
-    this.closeGate.schedule();
-  }
-
-  private openFlyout(group: HTMLElement, moveFocus: boolean): void {
-    if (!this.isCollapsed() || !this.flyout) return;
-    this.closeGate.cancel();
-
-    const sub = group.querySelector<HTMLElement>('.sidebar-sub');
-    if (!sub) return;
-
-    const title = document.createElement('div');
-    title.className = 'sidebar-flyout-title';
-    title.textContent = group.querySelector('.sidebar-cat-name')?.textContent ?? '';
-
-    this.flyout.classList.remove('sidebar-tip');
-    this.flyout.replaceChildren(title, sub.cloneNode(true));
-    this.flyoutTrigger = group.querySelector<HTMLButtonElement>('.sidebar-cat-toggle');
-    this.layoutFlyout(group, false);
-
-    if (moveFocus) {
-      const first = this.flyout.querySelector<HTMLElement>('a.sub-link');
-      this.suppressFocusOpen = true;
-      first?.focus();
-      window.setTimeout(() => {
-        this.suppressFocusOpen = false;
-      }, 0);
-    }
-  }
-
-  private openTip(link: HTMLElement): void {
-    if (!this.isCollapsed() || !this.flyout) return;
-    this.closeGate.cancel();
-
-    const label = document.createElement('span');
-    label.className = 'sidebar-tip-text';
-    label.textContent = link.querySelector('.sidebar-footer-label')?.textContent?.trim() ?? '';
-    if (!label.textContent) return;
-
-    this.flyout.classList.add('sidebar-tip');
-    this.flyout.replaceChildren(label);
-    this.flyoutTrigger = link;
-    this.layoutFlyout(link, true);
-  }
-
-  private layoutFlyout(anchor: HTMLElement, centerVertical: boolean): void {
-    if (!this.flyout) return;
-    const r = anchor.getBoundingClientRect();
-    this.flyout.classList.add('open');
-    const fw = this.flyout.offsetWidth;
-    const fh = this.flyout.offsetHeight;
-    const maxTop = Math.max(8, window.innerHeight - fh - 8);
-    this.flyout.style.left = `${Math.max(8, Math.min(r.right + 8, window.innerWidth - fw - 8))}px`;
-    const top = centerVertical ? r.top + r.height / 2 - fh / 2 : r.top;
-    this.flyout.style.top = `${Math.min(maxTop, Math.max(8, top))}px`;
-  }
-
-  private closeFlyout(returnFocus: boolean): void {
-    this.closeGate.cancel();
-    if (!this.flyout?.classList.contains('open')) return;
-    this.flyout.classList.remove('open');
-    if (returnFocus) {
-      this.suppressFocusOpen = true;
-      this.flyoutTrigger?.focus();
-      window.setTimeout(() => {
-        this.suppressFocusOpen = false;
-      }, 0);
-    }
-  }
-
-  private onFlyoutKeydown(e: KeyboardEvent): void {
-    const links = Array.from(this.flyout?.querySelectorAll<HTMLAnchorElement>('a.sub-link') ?? []);
-    const isDown = e.key === 'ArrowDown';
-    const isUp = e.key === 'ArrowUp';
-    if (!isDown && !isUp && e.key !== 'Escape') return;
-
-    if (isDown || isUp) {
-      e.preventDefault();
-      if (!links.length) return;
-      const cur = document.activeElement as Element | null;
-      let idx = cur ? links.indexOf(cur as HTMLAnchorElement) : -1;
-      if (isDown) idx = idx < 0 ? 0 : (idx + 1) % links.length;
-      else idx = idx < 0 ? links.length - 1 : (idx - 1 + links.length) % links.length;
-      links[idx]?.focus();
-      return;
-    }
-
-    e.preventDefault();
-    e.stopPropagation();
-    this.closeFlyout(true);
+    this.flyout.mount();
+    this.addEventListener('pointerover', this.flyout.onPointerOver);
+    this.addEventListener('pointerout', this.flyout.onPointerOut);
+    this.addEventListener('focusin', this.flyout.onFocusIn);
+    this.addEventListener('focusout', this.flyout.onFocusOut);
+    this.addEventListener('keydown', this.flyout.onKeydown);
+    this.addEventListener('click', this.flyout.onItemClick);
   }
 
   // ── 移动端抽屉 ──
@@ -345,7 +208,7 @@ class NavSidebar extends HTMLElement {
     this.mqLg = window.matchMedia(`(min-width: ${BREAKPOINT_LG}px)`);
     this.mqLg.addEventListener('change', this.onMqLgChange);
 
-    this.backdrop?.addEventListener('click', () => this.closeDrawer());
+    this.backdrop?.addEventListener('click', this.onBackdropClick);
 
     this.addEventListener('click', this.onSubLinkClick);
   }
@@ -353,7 +216,7 @@ class NavSidebar extends HTMLElement {
   private openDrawer(): void {
     this.aside?.classList.remove('-translate-x-full');
     this.aside?.classList.add('translate-x-0');
-    this.backdrop?.classList.remove('hidden');
+    if (this.backdrop) this.backdrop.hidden = false;
     document.body.classList.add('overflow-hidden');
     this.setOpenerExpanded(true);
   }
@@ -361,7 +224,7 @@ class NavSidebar extends HTMLElement {
   private closeDrawer(): void {
     this.aside?.classList.remove('translate-x-0');
     this.aside?.classList.add('-translate-x-full');
-    this.backdrop?.classList.add('hidden');
+    if (this.backdrop) this.backdrop.hidden = true;
     document.body.classList.remove('overflow-hidden');
     this.setOpenerExpanded(false);
   }

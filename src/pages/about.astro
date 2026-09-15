@@ -1,0 +1,289 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+import { categoryIcon } from '../data/category-icons';
+import { getSiteData } from '../lib/site-data';
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const { categories, totalLinks } = await getSiteData();
+const totalSubs = categories.reduce((n, c) => n + c.data.subs.length, 0);
+const countLinks = (cat: CollectionEntry<'sites'>): number =>
+  cat.data.subs.reduce((n, s) => n + s.links.length, 0);
+
+interface Use {
+  icon: string;
+  title: string;
+  points: string[];
+}
+
+const USES: Use[] = [
+  {
+    icon: 'lucide:search',
+    title: '搜索',
+    points: [
+      '按 / 聚焦搜索框，支持全拼与首字母（xxw 即可命中「学信网」）。',
+      '范围分站内、搜索、社区、文献检索四类，文献检索可直接检索 PubMed、知网、万方。',
+      '所选范围与上次使用的引擎会保留至下次访问。',
+    ],
+  },
+  {
+    icon: 'lucide:git-branch',
+    title: '卡片标记',
+    points: [
+      '同一站点有多个地址时（如安娜的档案、Z-Library），点击卡片弹出入口列表。',
+      '「镜像」为备用地址，主站不可用时改用。',
+      '「扫码」弹出二维码，扫码即可在手机中打开。',
+    ],
+  },
+  {
+    icon: 'lucide:panel-left',
+    title: '侧栏与主题',
+    points: [
+      '分类可折叠，滚动时自动高亮当前分类。',
+      '桌面端可将侧栏收为图标栏，收起后悬停仍显示子分类；移动端为左上角抽屉。',
+      '主题默认跟随系统深浅色，也可手动切换。',
+    ],
+  },
+];
+
+interface Fact {
+  icon: string;
+  label: string;
+  text: string;
+}
+
+const PRIVACY_FACTS: Fact[] = [
+  {
+    icon: 'lucide:refresh-cw',
+    label: '更新节奏',
+    text: '更新与纠错由维护者利用课余时间进行，改动需重新构建后发布；提交的收录与纠错集中处理，处理时间取决于维护者的空闲，无法保证即时响应。',
+  },
+  {
+    icon: 'lucide:database',
+    label: '数据与托管',
+    text: '链接数据只有一份：仓库中每个分类对应一个 YAML 文件，构建时生成静态页面，无后端、无数据库、无账号。',
+  },
+  {
+    icon: 'lucide:lock',
+    label: '隐私',
+    text: '全站不接入第三方统计，页面访问不会被记录；主题、侧栏折叠状态、搜索范围与搜索历史仅存于浏览器本地。',
+  },
+];
+
+const DISCLAIMER_FACTS: Fact[] = [
+  {
+    icon: 'lucide:hand-coins',
+    label: '收录与利益',
+    text: '收录不收取任何费用，站内无广告位与推广位，收录与排序均不含利益关系。',
+  },
+  {
+    icon: 'lucide:external-link',
+    label: '第三方内容',
+    text: '所有链接均指向第三方站点，其内容与可用性由对方负责；收录不代表推荐。',
+  },
+  {
+    icon: 'lucide:key',
+    label: '账号安全',
+    text: '校方系统的账号与密码，只在学校自有域名（cmc.edu.cn）或校内网地址的页面填写；本站不收集、也无法读取任何账号信息。',
+  },
+  {
+    icon: 'lucide:flag',
+    label: '侵权处理',
+    text: '如有站点内容侵犯权益或不宜收录，请通过下方任一渠道告知站点名称与理由，核实后将移除该条目。',
+  },
+];
+
+interface Contact {
+  icon: string;
+  label: string;
+  value: string;
+  href: string;
+  external?: boolean;
+}
+
+const CONTACTS: Contact[] = [
+  { icon: 'lucide:file-plus', label: '投稿与纠错', value: '投稿与反馈', href: '/contribute/' },
+  {
+    icon: 'lucide:mail',
+    label: '邮箱',
+    value: 'linlinli_000@163.com',
+    href: 'mailto:linlinli_000@163.com',
+  },
+];
+
+interface Faq {
+  icon: string;
+  q: string;
+  a: string;
+  href?: string;
+  hrefText?: string;
+}
+
+const FAQS: Faq[] = [
+  {
+    icon: 'lucide:search',
+    q: '搜不到某个站点怎么办？',
+    a: '站内搜索匹配的是本站已收录条目的名称、分类与简介，不含站点内部的页面内容。若确认站内没有，欢迎投稿。',
+    href: '/contribute/',
+    hrefText: '投稿与反馈',
+  },
+  {
+    icon: 'lucide:link',
+    q: '链接打不开怎么办？',
+    a: '先分清三种情况。海外站点（ChatGPT、Google Scholar、Z-Library 等）需要国际网络出口，打不开与条目本身是否有效无关，换镜像也没用，因为镜像同样在海外；仅校内网可达的系统（一卡通、校园网认证）在校外通常打不开，连上校园网即可；此外才是站点临时维护或更换域名，带「镜像」徽章的条目可先改用备用地址。长期失效请反馈，核实后会更正或移除。',
+  },
+  {
+    icon: 'lucide:smartphone',
+    q: '有 App 或小程序吗？',
+    a: '没有。本站只有网页版，手机浏览器可直接使用，也可通过浏览器的「添加到主屏幕」建为桌面图标。',
+  },
+];
+---
+
+<SiteLayout
+  title="关于本站 - 成医通"
+  description="成医通（nav.cyitong.top）是成都医学院学生维护的第三方非官方导航站。本页说明站点功能、收录范围与标准、维护与隐私、免责声明与联系方式。"
+  isHome={false}
+  categories={categories}
+  totalLinks={totalLinks}
+>
+  <main class="px-3 py-6 sm:px-4">
+    <article class="doc-page mx-auto max-w-3xl">
+      <header class="doc-hero">
+        <h1>关于本站</h1>
+        <p class="doc-lead">
+          成医通收录成医师生常用的站点，按分类整理于一页，免去逐个收藏与翻找。本站由学生维护，属第三方非官方站点，与成都医学院无隶属关系。
+        </p>
+      </header>
+
+      <h2 id="features">功能说明</h2>
+      <div class="my-4 grid gap-3 sm:grid-cols-3">
+        {
+          USES.map((item) => (
+            <div class="doc-card">
+              <div class="doc-card-head">
+                <span class="doc-icon">
+                  <Icon name={item.icon} class="h-5 w-5" aria-hidden="true" />
+                </span>
+                <h3>{item.title}</h3>
+              </div>
+              <ul class="doc-points">
+                {item.points.map((point) => <li>{point}</li>)}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <h2 id="coverage">收录范围</h2>
+      <dl class="doc-stats">
+        <div><dt>一级分类</dt><dd>{categories.length}</dd></div>
+        <div><dt>二级分类</dt><dd>{totalSubs}</dd></div>
+        <div><dt>收录链接</dt><dd>{totalLinks}</dd></div>
+      </dl>
+      <p class="text-muted">分类如下，点击可前往首页对应位置。</p>
+      <div class="my-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {
+          categories.map((cat) => (
+            <a href={`/#${cat.data.id}`} class="doc-chip">
+              <Icon
+                name={categoryIcon(cat.data.icon)}
+                class="h-4 w-4 shrink-0 text-brand"
+                aria-hidden="true"
+              />
+              <span class="min-w-0 truncate">{cat.data.name}</span>
+              <span class="doc-chip-count">{countLinks(cat)} 条</span>
+            </a>
+          ))
+        }
+      </div>
+
+      <h2 id="rules">收录标准</h2>
+      <p>
+        准入线只有一条：成医师生会反复使用；收录不限校内，校外站点同此标准。投稿前需满足的条件见 <a
+          href="/contribute/">投稿与反馈</a
+        >。
+      </p>
+
+      <h2 id="notes" class="doc-minor">
+        <Icon name="lucide:shield-check" class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+        <span>维护与隐私</span>
+      </h2>
+      <dl class="doc-facts">
+        {
+          PRIVACY_FACTS.map((fact) => (
+            <div>
+              <dt>
+                <Icon name={fact.icon} class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+                <span>{fact.label}</span>
+              </dt>
+              <dd>{fact.text}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <h2 id="disclaimer" class="doc-minor">
+        <Icon name="lucide:scale" class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+        <span>免责声明</span>
+      </h2>
+      <dl class="doc-facts">
+        {
+          DISCLAIMER_FACTS.map((fact) => (
+            <div>
+              <dt>
+                <Icon name={fact.icon} class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+                <span>{fact.label}</span>
+              </dt>
+              <dd>{fact.text}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <h2 id="faq">常见问题</h2>
+      <div class="doc-card doc-faq my-4">
+        {
+          FAQS.map((item) => (
+            <details>
+              <summary>
+                <span class="inline-flex items-center gap-2">
+                  <Icon name={item.icon} class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+                  {item.q}
+                </span>
+              </summary>
+              <p class="text-muted">
+                {item.a}
+                {item.href && (
+                  <>
+                    {' '}
+                    <a href={item.href}>{item.hrefText}</a>
+                  </>
+                )}
+              </p>
+            </details>
+          ))
+        }
+      </div>
+
+      <h2 id="contact">联系方式</h2>
+      <p>投稿、链接纠错与侵权反馈均可通过以下渠道提交。</p>
+      <div class="doc-rows my-4">
+        {
+          CONTACTS.map((c) => (
+            <a
+              href={c.href}
+              class="doc-row"
+              target={c.external ? '_blank' : undefined}
+              rel={c.external ? 'noopener noreferrer' : undefined}
+            >
+              <Icon name={c.icon} class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+              <span class="doc-row-label">{c.label}</span>
+              <span class="doc-row-value">{c.value}</span>
+            </a>
+          ))
+        }
+      </div>
+    </article>
+  </main>
+</SiteLayout>

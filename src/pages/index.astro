@@ -1,56 +1,30 @@
 ---
-import { getCollection } from 'astro:content';
-import type { SiteRecord } from '../web/search-utils';
-import Layout from '../layouts/Layout.astro';
-import Sidebar from '../components/Sidebar.astro';
-import TopBar from '../components/TopBar.astro';
+import { getSiteData } from '../lib/site-data';
+import SiteLayout from '../layouts/SiteLayout.astro';
 import SearchPanel from '../components/SearchPanel.astro';
 import CategoryBlock from '../components/CategoryBlock.astro';
-import Footer from '../components/Footer.astro';
-import BackToTop from '../components/BackToTop.astro';
 
-const categories = (await getCollection('sites')).sort((a, b) => a.data.order - b.data.order);
-
-const searchIndex: SiteRecord[] = categories.flatMap((c) =>
-  c.data.subs.flatMap((s) =>
-    s.links.map((l) => ({
-      ...l,
-      desc: l.desc ?? '',
-      catId: c.data.id,
-      catName: c.data.name,
-      subName: s.name,
-      icon: `/icons/${c.data.id}/${l.id}.webp`,
-    })),
-  ),
-);
-const totalLinks = searchIndex.length;
+const { categories, searchIndex, totalLinks } = await getSiteData();
 ---
 
-<Layout searchIndex={searchIndex}>
-  <nav-sidebar>
-    <Sidebar categories={categories} />
-  </nav-sidebar>
+<SiteLayout
+  categories={categories}
+  totalLinks={totalLinks}
+  searchIndex={searchIndex}
+  isHome={true}
+>
+  <main class="px-3 py-6 sm:px-4">
+    <h1 class="sr-only">成医通：成都医学院师生第三方导航</h1>
+    <SearchPanel total={totalLinks} />
 
-  <div class="site-content min-h-screen lg:pl-56">
-    <TopBar />
-
-    <main class="px-3 py-6 sm:px-4">
-      <h1 class="sr-only">成医通：成都医学院师生第三方导航</h1>
-      <SearchPanel total={totalLinks} />
-
-      <div class="mt-6 space-y-6 sm:mt-10" data-nosnippet>
-        {categories.map((cat) => <CategoryBlock category={cat} />)}
-      </div>
-    </main>
-
-    <Footer totalLinks={totalLinks} />
-    <BackToTop />
-  </div>
-</Layout>
+    <div class="mt-6 space-y-6 sm:mt-10" data-nosnippet>
+      {categories.map((cat) => <CategoryBlock category={cat} />)}
+    </div>
+  </main>
+</SiteLayout>
 
 <script>
   import { registerLetterFallback } from '../web/img-fallback';
-  import '../web/elements/nav-sidebar';
   import '../web/link-tip';
   registerLetterFallback();
 </script>

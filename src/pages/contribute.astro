@@ -1,0 +1,160 @@
+---
+import { Icon } from 'astro-icon/components';
+import { getSiteData } from '../lib/site-data';
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const { categories, totalLinks } = await getSiteData();
+
+// 本页只列投稿前需满足的条件，准入原则见 /about#rules
+const RULES = [
+  '优先收录公网可直达的站点；仅校内网可达的系统（如一卡通、校园网认证）同样收录。',
+  '站点运行稳定，无恶意弹窗、强制下载等行为。',
+  '同一用途已有更通用的入口时不重复收录；官方备用地址除外，标注「镜像」徽章。',
+  '需登录或有明显使用门槛的，在条目简介中注明。',
+];
+
+const MAIL = 'linlinli_000@163.com';
+const ISSUE_URL = 'https://github.com/linlinli000/cyitong-nav/issues/new';
+const REPO_URL = 'https://github.com/linlinli000/cyitong-nav';
+
+// 与卡片展示的模板同源，改一处即可；点击时各行已填好
+const MAIL_FIELDS = [
+  '反馈类型：投稿 / 链接失效 / 不宜收录',
+  '网站名称：',
+  '网址：',
+  '建议分类（投稿填）：',
+  '用途或问题说明：',
+];
+const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&body=${encodeURIComponent(MAIL_FIELDS.join('\n'))}`;
+---
+
+<SiteLayout
+  title="投稿与反馈 - 成医通"
+  description="向成医通提交反馈的说明：纠正失效链接、反馈不宜收录的内容、补充新站点都可从本页提交，附发邮件与提 Issue 两种渠道、可复制的邮件模板，以及投稿前需满足的要求。"
+  isHome={false}
+  categories={categories}
+  totalLinks={totalLinks}
+>
+  <main class="px-3 py-6 sm:px-4">
+    <article class="doc-page mx-auto max-w-3xl">
+      <header class="doc-hero">
+        <h1>投稿与反馈</h1>
+        <p class="doc-lead">
+          成医通由学生志愿者共同维护。链接失效或已更换域名、某条不宜收录、想补充站点，都可以从本页提交。校内的教务、学工、财务等系统已基本收录齐全，投稿以校外的实用站点与工具为主。
+        </p>
+      </header>
+
+      <h2 id="submit">提交方式</h2>
+      <p>以下两种方式任选其一。</p>
+      <div class="my-4 grid gap-3">
+        <div class="doc-card">
+          <div class="doc-card-head">
+            <span class="doc-icon">
+              <Icon name="lucide:mail" class="h-5 w-5" aria-hidden="true" />
+            </span>
+            <h3>发送邮件（推荐）</h3>
+          </div>
+          <p class="mt-2 text-dense text-muted">
+            不需要注册任何账号，国内网络下即可发送。点按钮会自动带上下面的模板，按实际情况填写后发送即可。
+          </p>
+          <pre><code>{MAIL_FIELDS.join('\n')}</code></pre>
+          <p class="text-dense text-muted">
+            分类拿不准可留空，或参照<a href="/">首页</a>的分类；其余未定项由维护者补全。
+          </p>
+          <p class="mt-3">
+            <a
+              href={MAILTO}
+              class="btn-brand inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-medium no-underline"
+            >
+              <Icon name="lucide:send" class="h-4 w-4" aria-hidden="true" />
+              写邮件
+            </a>
+          </p>
+        </div>
+
+        <div class="doc-card">
+          <div class="doc-card-head">
+            <span class="doc-icon">
+              <Icon name="simple-icons:github" class="h-5 w-5" aria-hidden="true" />
+            </span>
+            <h3>提交 Issue</h3>
+          </div>
+          <p class="mt-2 text-dense text-muted">
+            有 GitHub 账号且能正常访问 GitHub 时更合适：可以直接附截图，进度也能在 Issue 里追踪。
+          </p>
+          <p class="mt-3">
+            <a
+              href={ISSUE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-brand inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-medium no-underline"
+            >
+              <Icon name="lucide:external-link" class="h-4 w-4" aria-hidden="true" />
+              新建 Issue
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <details class="doc-disclosure">
+        <summary>
+          <span class="doc-icon">
+            <Icon name="lucide:git-pull-request" class="h-5 w-5" aria-hidden="true" />
+          </span>
+          <span>进阶：直接改数据、提交 Pull Request</span>
+          <Icon
+            name="lucide:chevron-down"
+            class="doc-disclosure-chevron h-4 w-4 shrink-0 text-muted"
+            aria-hidden="true"
+          />
+        </summary>
+        <p>
+          全站数据与代码托管于 <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub</a
+          >，添加一条链接的流程如下；字段含义与多入口、徽章等完整写法以仓库 README 为准。
+        </p>
+        <ol class="doc-steps">
+          <li>
+            <strong>确定分类</strong>：数据为「一级分类 → 二级分类 → 链接」三层结构，存放于 <code
+              >src/data/sites/{'{分类id}'}.yaml</code
+            >。将记录加入最贴切的 <code>subs[].links[]</code>，必要时可新建二级分类。
+          </li>
+          <li>
+            <strong>放置图标</strong>：图标保存为 webp，存放于 <code
+              >public/icons/{'{分类id}'}/{'{链接id}'}.webp</code
+            >，如 <code>public/icons/campus/alipay.webp</code>；文件名须与记录的 <code>id</code> 一致，图片通常取自官网 favicon。
+          </li>
+          <li>
+            <strong>编写数据条目</strong>：链接要放进某个二级分类的 <code>links</code> 下（缩进层级见下）。
+            <pre><code>subs:
+  - id: xueji          # 二级分类 id
+    name: 学籍学历
+    links:
+      - id: chsi
+        title: 学信网
+        desc: 学籍学历与在线验证报告查询
+        pinyin: xuexinwang
+        pinyinFirst: xxw
+        url: "https://www.chsi.com.cn/"</code></pre>
+          </li>
+          <li>
+            <strong>校验并提交</strong>：执行 <code>npm run build</code>，构建期会拦截图标缺失、id 重复、pinyin 缺失、url 缺少协议头等问题，并指出对应链接；通过后提交 Pull Request。
+          </li>
+        </ol>
+      </details>
+
+      <h2 id="requirements">投稿前自查</h2>
+      <div class="doc-card my-4">
+        <ul class="doc-list">
+          {
+            RULES.map((rule) => (
+              <li>
+                <Icon name="lucide:check" class="mt-1.5 h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+                <span>{rule}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </article>
+  </main>
+</SiteLayout>
