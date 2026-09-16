@@ -55,7 +55,7 @@ const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&
             <h3>发送邮件（推荐）</h3>
           </div>
           <p class="mt-2 text-dense text-muted">
-            不需要注册任何账号，国内网络下即可发送。点按钮会自动带上下面的模板，按实际情况填写后发送即可。
+            不需要注册任何账号，点按钮会自动带上下面的模板，按实际情况填写后发送即可。
           </p>
           <pre><code>{MAIL_FIELDS.join('\n')}</code></pre>
           <p class="text-dense text-muted">
@@ -144,16 +144,9 @@ const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&
 
       <h2 id="requirements">投稿前自查</h2>
       <div class="doc-card my-4">
-        <ul class="doc-list">
-          {
-            RULES.map((rule) => (
-              <li>
-                <Icon name="lucide:check" class="mt-1.5 h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
-                <span>{rule}</span>
-              </li>
-            ))
-          }
-        </ul>
+        <ol class="doc-steps">
+          {RULES.map((rule) => <li>{rule}</li>)}
+        </ol>
       </div>
     </article>
   </main>

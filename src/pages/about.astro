@@ -111,26 +111,39 @@ const CONTACTS: Contact[] = [
   },
 ];
 
+type FaqPart = string | { text: string; href: string };
+
 interface Faq {
   icon: string;
   q: string;
-  a: string;
-  href?: string;
-  hrefText?: string;
+  a: string | FaqPart[];
+  points?: string[];
+  note?: string;
 }
+
+// 答复里的链接写在句子中间，故按片段顺序渲染
+const parts = (a: Faq['a']): FaqPart[] => (typeof a === 'string' ? [a] : a);
 
 const FAQS: Faq[] = [
   {
     icon: 'lucide:search',
     q: '搜不到某个站点怎么办？',
-    a: '站内搜索匹配的是本站已收录条目的名称、分类与简介，不含站点内部的页面内容。若确认站内没有，欢迎投稿。',
-    href: '/contribute/',
-    hrefText: '投稿与反馈',
+    a: [
+      '站内搜索匹配的是本站已收录条目的名称、分类与简介，不含站点内部的页面内容。若站内确实没有，可前往',
+      { text: '投稿与反馈', href: '/contribute/' },
+      '页面提交。',
+    ],
   },
   {
     icon: 'lucide:link',
     q: '链接打不开怎么办？',
-    a: '先分清三种情况。海外站点（ChatGPT、Google Scholar、Z-Library 等）需要国际网络出口，打不开与条目本身是否有效无关，换镜像也没用，因为镜像同样在海外；仅校内网可达的系统（一卡通、校园网认证）在校外通常打不开，连上校园网即可；此外才是站点临时维护或更换域名，带「镜像」徽章的条目可先改用备用地址。长期失效请反馈，核实后会更正或移除。',
+    a: '按下面三类依次排查，多数情况能自行判断。',
+    points: [
+      '海外站点（ChatGPT、Google Scholar、Z-Library 等）：需要国际网络出口，打不开与条目本身是否有效无关；换镜像也没用，镜像同样在海外。',
+      '仅校内网可达的系统（一卡通、校园网认证）：在校外通常打不开，连上校园网即可。',
+      '站点临时维护或更换域名：带「镜像」徽章的条目可先改用备用地址。',
+    ],
+    note: '长期失效请反馈，核实后会更正或移除。',
   },
   {
     icon: 'lucide:smartphone',
@@ -253,14 +266,20 @@ const FAQS: Faq[] = [
                 </span>
               </summary>
               <p class="text-muted">
-                {item.a}
-                {item.href && (
-                  <>
-                    {' '}
-                    <a href={item.href}>{item.hrefText}</a>
-                  </>
-                )}
+                {
+                  parts(item.a).map((part) =>
+                    typeof part === 'string' ? part : <a href={part.href}>{part.text}</a>
+                  )
+                }
               </p>
+              {item.points && (
+                <ol class="doc-steps text-muted">
+                  {item.points.map((point) => (
+                    <li>{point}</li>
+                  ))}
+                </ol>
+              )}
+              {item.note && <p class="text-muted">{item.note}</p>}
             </details>
           ))
         }

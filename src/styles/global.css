@@ -803,18 +803,7 @@ nav-theme-toggle [data-icon='sun'] {
     color: var(--color-brand);
   }
 
-  /* 勾选式清单 */
-  .doc-page ul.doc-list {
-    padding-left: 0;
-    list-style: none;
-  }
-  .doc-page ul.doc-list > li {
-    display: flex;
-    gap: 0.5rem;
-    margin: 0.45rem 0;
-  }
-
-  /* 步骤清单：条目动辄两三行，裸数字 marker 太轻 */
+  /* 编号清单 */
   .doc-page ol.doc-steps {
     padding-left: 0;
     list-style: none;
