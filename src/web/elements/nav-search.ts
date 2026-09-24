@@ -264,7 +264,7 @@ class NavSearch extends HTMLElement {
               <span class="min-w-0 truncate text-sm font-semibold text-ink">${markHit(r.title, this.tokens)}</span>
               ${r.badge ? `<span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-chip font-medium leading-none text-brand">${escapeHtml(r.badge)}</span>` : ''}
             </span>
-            ${r.desc ? `<span class="mt-0.5 block truncate text-xs text-muted">${markHit(r.desc, this.tokens)}</span>` : ''}
+            ${r.desc ? `<span class="mt-0.5 block truncate text-note text-muted">${markHit(r.desc, this.tokens)}</span>` : ''}
           </span>
           <span class="flex shrink-0 items-center pl-2">
             <span class="max-w-36 truncate rounded-full border border-line/80 bg-surface/70 px-1.5 py-px text-chip text-muted">${escapeHtml(r.catName)} · ${escapeHtml(r.subName)}</span>
@@ -288,7 +288,7 @@ class NavSearch extends HTMLElement {
       return;
     }
     d.innerHTML = `
-      <div class="flex items-center justify-between px-3 py-2 text-xs text-muted">
+      <div class="flex items-center justify-between px-3 py-2 text-note text-muted">
         <span>最近搜索</span>
         <button type="button" data-clear-history class="rounded px-1.5 py-0.5 transition-colors hover:text-ink">清空</button>
       </div>

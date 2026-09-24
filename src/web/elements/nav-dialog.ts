@@ -92,7 +92,7 @@ class NavDialog extends HTMLElement {
     go.innerHTML = `
       <span class="min-w-0">
         <span class="block truncate text-sm font-medium">移动端点击此处打开链接</span>
-        <span class="block truncate text-xs text-muted">${escapeHtml(url)}</span>
+        <span class="block truncate text-note text-muted">${escapeHtml(url)}</span>
       </span>
       <span class="shrink-0 text-brand">↗</span>`;
     body.appendChild(go);
@@ -127,7 +127,7 @@ class NavDialog extends HTMLElement {
               class="flex items-center justify-between gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-ink transition-colors hover:border-brand">
               <span class="min-w-0" title="${escapeHtml(entry.url)}">
                 <span class="block truncate text-sm font-medium">${escapeHtml(entry.label)}</span>
-                <span class="block truncate text-xs text-muted">${escapeHtml(entry.url)}</span>
+                <span class="block truncate text-note text-muted">${escapeHtml(entry.url)}</span>
               </span>
               <span class="shrink-0 text-brand">↗</span>
             </a>

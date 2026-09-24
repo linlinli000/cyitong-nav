@@ -9,7 +9,7 @@ const { totalLinks } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-10 border-t border-line py-10">
+<footer class="mt-10 py-10">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <nav
       aria-label="站内链接"
@@ -33,13 +33,13 @@ const year = new Date().getFullYear();
     <div class="flex flex-col items-center gap-3 text-center text-sm text-muted">
       <p>成医通已收录 <span class="font-semibold text-brand">{totalLinks}</span> 个常用链接 · 成都医学院师生导航</p>
       <p
-        class="inline-flex items-center gap-1.5 text-xs text-muted"
+        class="inline-flex items-center gap-1.5 text-note text-muted"
         title="本导航由学生维护，与成都医学院官方无关"
       >
         <Icon name="lucide:shield-check" class="h-3.5 w-3.5 shrink-0 text-brand" aria-hidden="true" />
         第三方非官方站 · 学生维护
       </p>
-      <p class="text-xs text-muted/70">© {year} 成医通 · Made with ♥ for CMC</p>
+      <p class="text-note text-muted/70">© {year} 成医通 · Made with ♥ for CMC</p>
     </div>
   </div>
 </footer>

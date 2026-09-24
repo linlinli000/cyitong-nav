@@ -17,7 +17,7 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
 
 <aside
   id="sidebar"
-  class="fixed inset-y-0 left-0 z-40 flex w-56 -translate-x-full flex-col border-r border-line bg-card transition-transform duration-200 dark:border-line/60 lg:translate-x-0"
+  class="fixed inset-y-0 left-0 z-40 flex w-56 -translate-x-full flex-col bg-card transition-transform duration-200 lg:translate-x-0"
 >
   <script is:inline>
     (function () {
@@ -47,7 +47,7 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
             <div class="sidebar-group" data-cat={cat.data.id}>
               <button
                 type="button"
-                class="sidebar-cat-toggle sidebar-cat-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
+                class="sidebar-cat-toggle sidebar-cat-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors"
                 aria-expanded="false"
                 title={cat.data.name}
               >
@@ -56,7 +56,7 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
                 </span>
                 <span class="sidebar-cat-meta">
                   <span class="sidebar-cat-name truncate text-body">{cat.data.name}</span>
-                  <span class="sidebar-cat-count shrink-0 text-xs text-muted">{linkCount}</span>
+                  <span class="sidebar-cat-count shrink-0 text-note text-muted">{linkCount}</span>
                   <Icon
                     name="lucide:chevron-right"
                     class="sidebar-chevron h-4 w-4 shrink-0 text-muted"
@@ -71,7 +71,7 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
                         href={catAnchor(cat.data.id)}
                         data-sub-id={sub.id}
                         data-cat={cat.data.id}
-                        class="sub-link block rounded-lg px-3 py-1.5 text-dense text-muted transition-colors hover:bg-surface hover:text-ink"
+                        class="sub-link block rounded-lg px-3 py-1.5 text-dense text-muted transition-colors"
                       >
                         {sub.name}
                       </a>
@@ -90,7 +90,7 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
     <div class="space-y-1">
       <a
         href="/about/"
-        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
+        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors"
       >
         <span class="sidebar-footer-icon shrink-0 text-brand">
           <Icon name="heroicons:information-circle-solid" class="h-5 w-5" aria-hidden="true" />
@@ -99,7 +99,7 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
       </a>
       <a
         href="/contribute/"
-        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
+        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors"
       >
         <span class="sidebar-footer-icon shrink-0 text-brand">
           <Icon name="heroicons:chat-bubble-left-right-solid" class="h-5 w-5" aria-hidden="true" />

@@ -16,7 +16,7 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
   id={category.data.id}
   data-spy
   data-cat-block={category.data.id}
-  class="scroll-mt-24 rounded-2xl border border-line bg-card px-3 py-3 dark:border-line/60 sm:px-4 sm:py-4"
+  class="scroll-mt-24 rounded-card bg-card px-3 py-3 sm:px-4 sm:py-4"
 >
   <div class="mb-4 flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
     <div class="flex shrink-0 items-center gap-2.5">
@@ -25,7 +25,7 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
       </span>
       <h2 class="text-lg font-bold text-ink">{category.data.name}</h2>
       <span
-        class="inline-flex shrink-0 items-center gap-1 rounded-full border border-line bg-surface px-2.5 py-0.5 text-xs text-muted"
+        class="inline-flex shrink-0 items-center gap-1 rounded-full bg-track px-2.5 py-0.5 text-note text-muted"
       >
         <span class="font-semibold text-brand">{total}</span>
         个链接
@@ -34,7 +34,7 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
 
     <nav-cat-tabs class="min-w-0 flex-1">
       <div class="scrollbar-hide -mx-1 overflow-x-auto px-1">
-        <div class="flex w-max items-center gap-0.5 rounded-xl border border-line bg-surface p-1">
+        <div class="flex w-max items-center gap-0.5 rounded-xl bg-track p-1">
           <button type="button" class="cat-tab active" data-filter="">
             全部
           </button>

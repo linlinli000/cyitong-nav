@@ -14,7 +14,7 @@ const MENU_ICON = 'lucide:menu';
 const CARET_ICON = 'lucide:chevron-down';
 ---
 
-<header class="sticky top-0 z-20 border-b border-line bg-card/80 backdrop-blur dark:border-line/60">
+<header class="sticky top-0 z-20 bg-bar backdrop-blur">
   <div class="relative flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5 lg:px-4">
     <!-- 移动居中品牌 -->
     <a
@@ -35,7 +35,8 @@ const CARET_ICON = 'lucide:chevron-down';
         data-mobile-nav-open
         aria-label="打开菜单"
         aria-expanded="false"
-        class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink lg:hidden"
+        data-ghost
+        class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors lg:hidden"
       >
         <Icon name={MENU_ICON} class="h-6 w-6" aria-hidden="true" />
       </button>
@@ -45,7 +46,8 @@ const CARET_ICON = 'lucide:chevron-down';
         data-sidebar-toggle
         aria-label="收起侧边栏"
         aria-expanded="true"
-        class="hidden h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink lg:grid"
+        data-ghost
+        class="hidden h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors lg:grid"
       >
         <Icon name={MENU_ICON} class="h-6 w-6" aria-hidden="true" />
       </button>
@@ -54,7 +56,8 @@ const CARET_ICON = 'lucide:chevron-down';
         href="https://wiki.cyitong.top"
         aria-label="wiki"
         title="wiki"
-        class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
+        data-ghost
+        class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted transition-colors"
       >
         <Icon name="lucide:book-open" class="h-5 w-5 shrink-0" aria-hidden="true" />
         <span class="hidden lg:inline">wiki</span>
@@ -71,7 +74,8 @@ const CARET_ICON = 'lucide:chevron-down';
             aria-haspopup="true"
             aria-expanded="false"
             title={tool.label}
-            class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-ink"
+            data-ghost
+            class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted transition-colors"
           >
             <Icon name={tool.icon} class="h-5 w-5 shrink-0" aria-hidden="true" />
             {tool.label}
@@ -79,7 +83,7 @@ const CARET_ICON = 'lucide:chevron-down';
           </button>
           <div
             data-menu-panel
-            class="absolute right-0 top-full z-50 mt-1.5 min-w-44 rounded-xl border border-line bg-card p-1.5 shadow-[var(--shadow-menu)]"
+            class="absolute right-0 top-full z-50 mt-1.5 min-w-44 rounded-xl bg-card p-1.5 shadow-[var(--shadow-menu)]"
           >
             <div class="space-y-0.5">
               {tool.items.map((item) => (
@@ -88,7 +92,8 @@ const CARET_ICON = 'lucide:chevron-down';
                   target="_blank"
                   rel="noopener noreferrer"
                   data-menu-item
-                  class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-muted transition-colors hover:bg-surface hover:text-ink"
+                  data-ghost
+                  class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-muted transition-colors"
                 >
                   <img
                     src={item.icon}
@@ -110,7 +115,8 @@ const CARET_ICON = 'lucide:chevron-down';
           type="button"
           data-theme-toggle
           aria-label="切换暗色模式"
-          class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink"
+          data-ghost
+          class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors"
         >
           <span data-icon="moon" aria-hidden="true">
             <Icon name="lucide:moon" class="h-6 w-6" />
@@ -126,7 +132,8 @@ const CARET_ICON = 'lucide:chevron-down';
         rel="noopener noreferrer"
         aria-label="GitHub 源码"
         title="GitHub 源码"
-        class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-surface hover:text-ink"
+        data-ghost
+        class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors"
       >
         <Icon name="simple-icons:github" class="h-6 w-6" aria-hidden="true" />
       </a>

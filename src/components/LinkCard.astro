@@ -30,7 +30,7 @@ const fallback = firstLetter(link.title);
   data-sub={sub}
   data-desc={link.desc ? link.desc : undefined}
   {...cardAttrs}
-  class="link-tile group relative flex items-center gap-3 rounded-2xl border border-line bg-card p-3 dark:border-line/60"
+  class="link-tile group relative flex items-center gap-3 rounded-card bg-card p-3"
 >
   <img
     src={iconPath(categoryId, link.id)}
@@ -40,7 +40,7 @@ const fallback = firstLetter(link.title);
     loading="lazy"
     decoding="async"
     data-letter={fallback}
-    class="link-tile-icon h-10 w-10 shrink-0 rounded-xl border border-line object-cover"
+    class="link-tile-icon h-10 w-10 shrink-0 rounded-xl object-cover"
   />
   <span class="min-w-0 flex-1">
     <span class="flex min-w-0 items-center gap-1">
@@ -49,6 +49,6 @@ const fallback = firstLetter(link.title);
       </span>
       {link.badge && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-chip font-medium leading-none text-brand">{link.badge}</span>}
     </span>
-    {link.desc && <span class="mt-0.5 block truncate text-xs text-muted">{link.desc}</span>}
+    {link.desc && <span class="mt-0.5 block truncate text-note text-ink">{link.desc}</span>}
   </span>
 </a>

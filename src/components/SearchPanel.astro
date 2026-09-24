@@ -24,7 +24,7 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
     <!-- scope 胶囊 -->
     <div class="mb-2 flex justify-center sm:mb-3">
       <div
-        class="inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-line bg-card p-1 shadow-[var(--shadow-field)] sm:gap-1.5 dark:border-line/60"
+        class="inline-flex flex-wrap items-center justify-center gap-1 rounded-full bg-card p-1 sm:gap-1.5"
       >
         {
           SCOPE_TABS.map((tab) => (
@@ -46,7 +46,7 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
 
     <div class="relative mx-auto w-full max-w-[50rem]">
       <div
-        class="flex items-center gap-1.5 rounded-2xl border border-line bg-field py-1.5 pl-3.5 pr-1 shadow-[var(--shadow-field)] transition-all sm:gap-2 sm:pl-5 sm:pr-1.5"
+        class="flex items-center gap-1.5 rounded-2xl bg-field py-1.5 pl-3.5 pr-1 transition-all sm:gap-2 sm:pl-5 sm:pr-1.5"
       >
         <input
           type="text"
@@ -71,7 +71,7 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
       <div
         data-role="dropdown"
         hidden
-        class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 max-h-96 overflow-y-auto rounded-xl border border-line bg-field shadow-[var(--shadow-dropdown)]"
+        class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 max-h-96 overflow-y-auto rounded-xl bg-field shadow-[var(--shadow-dropdown)]"
       ></div>
     </div>
 
@@ -81,7 +81,7 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
       class="mt-2 flex min-h-[2.75rem] items-center justify-center sm:mt-3"
       hidden={!isSite(DEFAULT_SCOPE)}
     >
-      <span class="inline-flex items-center gap-1 rounded-full border border-line bg-card px-3.5 py-1 text-dense text-muted shadow-[var(--shadow-field)] sm:px-4 dark:border-line/60"
+      <span class="inline-flex items-center gap-1 rounded-full bg-card px-3.5 py-1 text-dense text-muted sm:px-4"
         >本网站已收录<span class="font-semibold text-brand">{total}</span>个常用链接</span
       >
     </div>
@@ -98,7 +98,7 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
             class="mt-2 flex min-h-[2.75rem] items-center overflow-x-auto scrollbar-hide sm:mt-3"
           >
             <div
-              class="mx-auto flex shrink-0 items-center gap-1 rounded-full border border-line bg-card p-1 shadow-[var(--shadow-field)] dark:border-line/60"
+              class="mx-auto flex shrink-0 items-center gap-1 rounded-full bg-card p-1"
             >
               {
                 ENGINES[sc].map((e, i) => (
