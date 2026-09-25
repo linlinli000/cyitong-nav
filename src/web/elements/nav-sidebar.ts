@@ -125,7 +125,7 @@ class NavSidebar extends HTMLElement {
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          const id = (entry.target as HTMLElement).dataset.spy;
+          const id = entry.target.id;
           if (id) this.setActive(id);
         }
       },
@@ -139,7 +139,10 @@ class NavSidebar extends HTMLElement {
     this.lastActive = id;
 
     this.querySelectorAll<HTMLElement>('.sidebar-cat-link').forEach((link) => {
-      link.classList.toggle('active', link.closest<HTMLElement>('.sidebar-group')?.dataset.cat === id);
+      const match = link.closest<HTMLElement>('.sidebar-group')?.dataset.cat === id;
+      link.classList.toggle('active', match);
+      if (match) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
     });
 
     const group = this.querySelector<HTMLElement>(`.sidebar-group[data-cat="${id}"]`);
