@@ -18,8 +18,8 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
   data-cat-block={category.data.id}
   class="scroll-mt-24 rounded-card bg-card px-3 py-3 sm:px-4 sm:py-4"
 >
-  <div class="mb-4 flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
-    <div class="flex shrink-0 items-center gap-2.5">
+  <div class="relative mb-4 flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
+    <div class="flex shrink-0 items-center gap-2.5 pr-24 lg:pr-0">
       <span class="text-brand">
         <Icon name={categoryIcon(category.data.icon)} class="h-5 w-5" />
       </span>
@@ -32,15 +32,36 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
       </span>
     </div>
 
-    <nav-cat-tabs class="min-w-0 flex-1">
+    <nav-cat-tabs class="min-w-0 flex-1 lg:flex-initial">
       <div class="scrollbar-hide -mx-1 overflow-x-auto px-1">
-        <div class="flex w-max items-center gap-0.5 rounded-xl bg-track p-1">
-          <button type="button" class="cat-tab active" data-filter="">
+        <div
+          class="flex w-max items-center gap-0.5 rounded-xl bg-track p-1"
+          role="tablist"
+          aria-label={`${category.data.name}的子分类筛选`}
+        >
+          <button
+            type="button"
+            id={`cat-tab-${category.data.id}-all`}
+            class="cat-tab active"
+            role="tab"
+            aria-selected="true"
+            aria-controls={`cat-panel-${category.data.id}`}
+            data-filter=""
+          >
             全部
           </button>
           {
             category.data.subs.map((sub) => (
-              <button type="button" class="cat-tab" data-filter={sub.id}>
+              <button
+                type="button"
+                id={`cat-tab-${category.data.id}-${sub.id}`}
+                class="cat-tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls={`cat-panel-${category.data.id}`}
+                tabindex="-1"
+                data-filter={sub.id}
+              >
                 {sub.name}
               </button>
             ))
@@ -48,9 +69,21 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
         </div>
       </div>
     </nav-cat-tabs>
+
+    <span class="cat-more-line" aria-hidden="true"></span>
+
+    <button type="button" class="cat-more absolute top-0 right-0 lg:static" hidden>
+      <span class="cat-more-label">更多</span>
+      <Icon name="lucide:chevron-down" class="cat-more-chevron h-3.5 w-3.5" />
+    </button>
   </div>
 
-  <div class="grid cat-grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+  <div
+    id={`cat-panel-${category.data.id}`}
+    role="tabpanel"
+    aria-labelledby={`cat-tab-${category.data.id}-all`}
+    class="grid cat-grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+  >
     {
       category.data.subs.flatMap((sub) =>
         sub.links.map((link) => (
@@ -59,11 +92,6 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
       )
     }
   </div>
-
-  <button type="button" class="cat-more" hidden>
-    <span class="cat-more-label">查看更多</span>
-    <Icon name="lucide:chevron-down" class="cat-more-chevron h-3.5 w-3.5" />
-  </button>
 </section>
 
 <script>

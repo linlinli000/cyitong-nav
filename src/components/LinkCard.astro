@@ -32,16 +32,23 @@ const fallback = firstLetter(link.title);
   {...cardAttrs}
   class="link-tile group relative flex items-center gap-3 rounded-card bg-card p-3"
 >
-  <img
-    src={iconPath(categoryId, link.id)}
-    alt={link.title}
-    width="40"
-    height="40"
-    loading="lazy"
-    decoding="async"
-    data-letter={fallback}
-    class="link-tile-icon h-10 w-10 shrink-0 rounded-xl object-cover"
-  />
+  <span class="relative block h-10 w-10 shrink-0">
+    <span
+      class="icon-glow"
+      aria-hidden="true"
+      style={`background-image: url('${iconPath(categoryId, link.id)}')`}
+    />
+    <img
+      src={iconPath(categoryId, link.id)}
+      alt={link.title}
+      width="40"
+      height="40"
+      loading="lazy"
+      decoding="async"
+      data-letter={fallback}
+      class="link-tile-icon relative h-10 w-10 rounded-xl object-cover"
+    />
+  </span>
   <span class="min-w-0 flex-1">
     <span class="flex min-w-0 items-center gap-1">
       <span class="truncate text-sm font-semibold text-ink transition-colors group-hover:text-brand">
@@ -49,6 +56,6 @@ const fallback = firstLetter(link.title);
       </span>
       {link.badge && <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-chip font-medium leading-none text-brand">{link.badge}</span>}
     </span>
-    {link.desc && <span class="mt-0.5 block truncate text-note text-ink">{link.desc}</span>}
+    {link.desc && <span class="mt-0.5 block truncate text-note text-muted">{link.desc}</span>}
   </span>
 </a>

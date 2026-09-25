@@ -9,6 +9,7 @@ export class NavCatTabs extends HTMLElement {
   private expanded = false;
   private maxCards = Infinity;
   private moreBtn: HTMLButtonElement | null = null;
+  private moreLine: HTMLElement | null = null;
 
   private onResize = (): void => {
     this.maxCards = this.computeMaxCards();
@@ -22,14 +23,17 @@ export class NavCatTabs extends HTMLElement {
 
   connectedCallback(): void {
     this.addEventListener('click', this.onTabClick);
+    this.addEventListener('keydown', this.onTabKeydown);
     this.moreBtn = this.block().querySelector<HTMLButtonElement>('.cat-more');
     this.moreBtn?.addEventListener('click', this.onMoreClick);
+    this.moreLine = this.block().querySelector<HTMLElement>('.cat-more-line');
     this.onResize();
     window.addEventListener('resize', this.onResize);
   }
 
   disconnectedCallback(): void {
     this.removeEventListener('click', this.onTabClick);
+    this.removeEventListener('keydown', this.onTabKeydown);
     this.moreBtn?.removeEventListener('click', this.onMoreClick);
     window.removeEventListener('resize', this.onResize);
   }
@@ -40,10 +44,35 @@ export class NavCatTabs extends HTMLElement {
     this.activate(btn.dataset.filter ?? '');
   };
 
+  /** tablist 方向键导航 */
+  private onTabKeydown = (e: KeyboardEvent): void => {
+    const tabs = this.tabButtons();
+    const i = tabs.indexOf(document.activeElement as HTMLButtonElement);
+    if (i === -1) return;
+    let next = -1;
+    if (e.key === 'ArrowRight') next = (i + 1) % tabs.length;
+    else if (e.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = tabs.length - 1;
+    if (next === -1) return;
+    e.preventDefault();
+    tabs[next].focus();
+    this.activate(tabs[next].dataset.filter ?? '');
+  };
+
+  private tabButtons(): HTMLButtonElement[] {
+    return [...this.querySelectorAll<HTMLButtonElement>('.cat-tab')];
+  }
+
   activate(filter: string): void {
     this.filter = filter;
-    this.querySelectorAll<HTMLButtonElement>('.cat-tab').forEach((b) => {
-      b.classList.toggle('active', (b.dataset.filter ?? '') === filter);
+    const panel = this.grid();
+    this.tabButtons().forEach((b) => {
+      const selected = (b.dataset.filter ?? '') === filter;
+      b.classList.toggle('active', selected);
+      b.setAttribute('aria-selected', String(selected));
+      b.tabIndex = selected ? 0 : -1;
+      if (selected && b.id) panel?.setAttribute('aria-labelledby', b.id);
     });
     this.applyDisplay();
   }
@@ -76,10 +105,11 @@ export class NavCatTabs extends HTMLElement {
     if (this.moreBtn) {
       const hasOverflow = this.filter === '' && cards.length > this.maxCards;
       this.moreBtn.hidden = !hasOverflow;
+      if (this.moreLine) this.moreLine.hidden = !hasOverflow;
       if (hasOverflow) {
         this.moreBtn.classList.toggle('expanded', this.expanded);
         const label = this.moreBtn.querySelector('.cat-more-label');
-        if (label) label.textContent = this.expanded ? '收起' : '查看更多';
+        if (label) label.textContent = this.expanded ? '收起' : '更多';
       }
     }
   }
