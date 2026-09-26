@@ -25,7 +25,7 @@
   --color-code: color-mix(in srgb, var(--color-ink) 8%, transparent);
   --color-brand: #1e9bff;
   --color-brand-dark: #1a5fa8;
-  --color-brand-solid: #1272c4;
+  --color-brand-solid: #378add;
   --color-brand-soft: color-mix(in srgb, var(--color-brand) 10%, transparent);
   --color-brand-mark: color-mix(in srgb, var(--color-brand) 18%, transparent);
   --color-brand-wash: var(--color-brand-soft);

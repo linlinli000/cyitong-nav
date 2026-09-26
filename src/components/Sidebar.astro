@@ -39,7 +39,7 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
   </div>
 
   <nav class="scrollbar-hide flex-1 overflow-y-auto px-2 py-4" aria-label="分类导航">
-    <div class="space-y-1">
+    <div class="space-y-0.5">
       {
         categories.map((cat) => {
           const linkCount = cat.data.subs.reduce((n, s) => n + s.links.length, 0);
@@ -47,12 +47,12 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
             <div class="sidebar-group" data-cat={cat.data.id}>
               <button
                 type="button"
-                class="sidebar-cat-toggle sidebar-cat-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors"
+                class="sidebar-cat-toggle sidebar-cat-link flex w-full items-center gap-x-2 rounded-lg py-3 font-medium text-muted transition-colors"
                 aria-expanded="false"
                 title={cat.data.name}
               >
                 <span class="sidebar-cat-icon shrink-0 text-brand">
-                  <Icon name={categoryIcon(cat.data.icon)} class="h-5 w-5" />
+                  <Icon name={categoryIcon(cat.data.icon)} class="h-[21px] w-[21px]" />
                 </span>
                 <span class="sidebar-cat-meta">
                   <span class="sidebar-cat-name truncate text-body">{cat.data.name}</span>
@@ -71,7 +71,7 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
                         href={catAnchor(cat.data.id)}
                         data-sub-id={sub.id}
                         data-cat={cat.data.id}
-                        class="sub-link block rounded-lg px-3 py-1.5 text-dense text-muted transition-colors"
+                        class="sub-link block rounded-lg px-3 py-2 text-dense text-muted transition-colors"
                       >
                         {sub.name}
                       </a>
@@ -87,22 +87,22 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
   </nav>
 
   <div class="sidebar-footer px-2 py-4">
-    <div class="space-y-1">
+    <div class="space-y-0.5">
       <a
         href="/about/"
-        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors"
+        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-3 font-medium text-muted transition-colors"
       >
         <span class="sidebar-footer-icon shrink-0 text-brand">
-          <Icon name="heroicons:information-circle-solid" class="h-5 w-5" aria-hidden="true" />
+          <Icon name="heroicons:information-circle-solid" class="h-[21px] w-[21px]" aria-hidden="true" />
         </span>
         <span class="sidebar-footer-label min-w-0 flex-1 truncate text-body">关于本站</span>
       </a>
       <a
         href="/contribute/"
-        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-2 font-medium text-muted transition-colors"
+        class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-3 font-medium text-muted transition-colors"
       >
         <span class="sidebar-footer-icon shrink-0 text-brand">
-          <Icon name="heroicons:chat-bubble-left-right-solid" class="h-5 w-5" aria-hidden="true" />
+          <Icon name="heroicons:chat-bubble-left-right-solid" class="h-[21px] w-[21px]" aria-hidden="true" />
         </span>
         <span class="sidebar-footer-label min-w-0 flex-1 truncate text-body">投稿与反馈</span>
       </a>
