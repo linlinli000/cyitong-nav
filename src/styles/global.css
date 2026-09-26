@@ -11,7 +11,7 @@
   --text-body: 15px;
   --text-read: 16px;
   --radius-card: 0.75rem;
-  --color-surface: #f0f2f5;
+  --color-surface: #f2f4f7;
   --color-card: #ffffff;
   --color-field: #ffffff;
   --color-ink: #484b4f;
@@ -74,9 +74,11 @@ html {
 }
 
 /* 搜索框焦点环 */
+.search-field {
+  outline: 2px solid transparent;
+}
 .search-field:has(input:focus-visible) {
-  outline: 2px solid var(--color-brand);
-  outline-offset: 2px;
+  outline-color: var(--color-brand);
 }
 .search-field input:focus-visible {
   outline: none;
@@ -131,6 +133,23 @@ nav-cat-tabs {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* 横向滚动容器端缘渐隐 */
+[data-fade-x='end'] {
+  mask-image: linear-gradient(to right, black calc(100% - 1.5rem), transparent);
+}
+[data-fade-x='start'] {
+  mask-image: linear-gradient(to right, transparent, black 1.5rem);
+}
+[data-fade-x='both'] {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 1.5rem,
+    black calc(100% - 1.5rem),
+    transparent
+  );
 }
 
 /* 搜索下拉结果滚动 */
@@ -709,7 +728,16 @@ header [data-ghost]:hover {
     padding-left: 2.3rem;
   }
   .doc-page .doc-facts p + p {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+  }
+  /* 分隔线画进条目间隙 */
+  .doc-page .doc-facts p + p::before {
+    content: '';
+    position: absolute;
+    top: -0.75rem;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--color-line);
   }
   .doc-fact-icon {
     position: absolute;

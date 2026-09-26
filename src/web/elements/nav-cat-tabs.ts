@@ -1,5 +1,6 @@
 /** <nav-cat-tabs>：子分类 tab 过滤 + 卡片折叠，仅增强 CategoryBlock 静态标记 */
 import { BREAKPOINT_LG } from '../breakpoints';
+import { watchScrollFade } from '../scroll-fade';
 
 const ROWS_DESKTOP = 3;
 const ROWS_MOBILE = 5;
@@ -10,6 +11,7 @@ export class NavCatTabs extends HTMLElement {
   private maxCards = Infinity;
   private moreBtn: HTMLButtonElement | null = null;
   private moreLine: HTMLElement | null = null;
+  private stopFade: (() => void) | null = null;
 
   private onResize = (): void => {
     this.maxCards = this.computeMaxCards();
@@ -27,6 +29,8 @@ export class NavCatTabs extends HTMLElement {
     this.moreBtn = this.block().querySelector<HTMLButtonElement>('.cat-more');
     this.moreBtn?.addEventListener('click', this.onMoreClick);
     this.moreLine = this.block().querySelector<HTMLElement>('.cat-more-line');
+    const strip = this.querySelector<HTMLElement>('[data-fade-x]');
+    if (strip) this.stopFade = watchScrollFade(strip);
     this.onResize();
     window.addEventListener('resize', this.onResize);
   }
@@ -35,6 +39,8 @@ export class NavCatTabs extends HTMLElement {
     this.removeEventListener('click', this.onTabClick);
     this.removeEventListener('keydown', this.onTabKeydown);
     this.moreBtn?.removeEventListener('click', this.onMoreClick);
+    this.stopFade?.();
+    this.stopFade = null;
     window.removeEventListener('resize', this.onResize);
   }
 

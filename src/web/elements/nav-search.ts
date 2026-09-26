@@ -5,6 +5,7 @@ import { NAV_OPEN_CARD_EVENT, toCardData, toCardDataHtml } from '../card-attrs';
 import { escapeHtml } from '../html-escape';
 import { iconEl } from '../icons';
 import { firstLetter } from '../first-letter';
+import { updateScrollFade, watchScrollFade } from '../scroll-fade';
 import { storageGetJson, storageSetJson } from '../storage';
 
 const SCOPE_KEY = 'nav:scope';
@@ -42,6 +43,7 @@ class NavSearch extends HTMLElement {
 
   private input: HTMLInputElement | null = null;
   private dropdown: HTMLElement | null = null;
+  private stopFades: (() => void)[] = [];
 
   private onDocKeydown = (e: KeyboardEvent): void => {
     const tag = (e.target as HTMLElement).tagName;
@@ -62,6 +64,9 @@ class NavSearch extends HTMLElement {
     this.history = this.loadHistory(this.scope);
     this.cacheRefs();
     this.applyScopeState();
+    this.stopFades = [...this.querySelectorAll<HTMLElement>('[data-fade-x]')].map((el) =>
+      watchScrollFade(el),
+    );
 
     this.addEventListener('input', this.onInput);
     this.addEventListener('focusin', this.onFocusIn);
@@ -72,6 +77,8 @@ class NavSearch extends HTMLElement {
   }
 
   disconnectedCallback(): void {
+    this.stopFades.forEach((stop) => stop());
+    this.stopFades = [];
     document.removeEventListener('keydown', this.onDocKeydown);
     document.removeEventListener('click', this.onDocClick);
   }
@@ -112,6 +119,7 @@ class NavSearch extends HTMLElement {
     const footer = this.querySelector<HTMLElement>('[data-role="site-footer"]');
     this.querySelectorAll<HTMLElement>('[data-role="engine-bar"]').forEach((bar) => {
       bar.hidden = bar.dataset.engineScope !== this.scope;
+      updateScrollFade(bar);
     });
     if (footer) footer.hidden = this.scope !== 'site';
 

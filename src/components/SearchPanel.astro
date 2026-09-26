@@ -22,9 +22,9 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
 <section class="py-8 sm:py-10">
   <nav-search>
     <!-- scope 胶囊 -->
-    <div class="mb-2 flex justify-center sm:mb-3">
+    <div data-fade-x class="scrollbar-hide mb-2 flex overflow-x-auto sm:mb-3">
       <div
-        class="inline-flex flex-wrap items-center justify-center gap-1 rounded-full bg-card p-1 sm:gap-1.5"
+        class="mx-auto flex shrink-0 items-center gap-1 rounded-full bg-card p-1 sm:gap-1.5"
       >
         {
           SCOPE_TABS.map((tab) => (
@@ -95,6 +95,7 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
             data-role="engine-bar"
             data-engine-scope={sc}
             hidden={!active}
+            data-fade-x
             class="mt-2 flex min-h-[2.75rem] items-center overflow-x-auto scrollbar-hide sm:mt-3"
           >
             <div

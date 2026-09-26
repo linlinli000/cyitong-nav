@@ -1,5 +1,6 @@
 ---
 import type { Link } from '../content.config';
+import { Icon } from 'astro-icon/components';
 import { toCardData, toDataAttrs } from '../web/card-attrs';
 import { iconPath } from '../web/icon-path';
 import { firstLetter } from '../web/first-letter';
@@ -58,4 +59,9 @@ const fallback = firstLetter(link.title);
     </span>
     {link.desc && <span class="mt-0.5 block truncate text-note text-muted">{link.desc}</span>}
   </span>
+  <Icon
+    name="lucide:arrow-up-right"
+    aria-hidden="true"
+    class="pointer-events-none absolute top-1.5 right-1.5 h-4 w-4 -translate-x-1 translate-y-1 text-muted opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+  />
 </a>

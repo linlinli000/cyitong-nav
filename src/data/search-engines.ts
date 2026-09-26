@@ -33,6 +33,8 @@ export const ENGINES: Record<SearchScope, Engine[]> = {
     { name: '公众号', url: 'https://weixin.sogou.com/weixin?type=2&query={q}', icon: 'wechat' },
     { name: '微博', url: 'https://s.weibo.com/weibo?q={q}', icon: 'sinaweibo' },
     { name: '豆瓣', url: 'https://www.douban.com/search?q={q}', icon: 'douban' },
+    { name: 'Gitea', url: 'https://gitea.com/explore/repos?q={q}', icon: 'gitea' },
+    { name: 'GitHub', url: 'https://github.com/search?q={q}&type=repositories', icon: 'github' },
   ],
   literature: [
     { name: 'PubMed', url: 'https://pubmed.ncbi.nlm.nih.gov/?term={q}', icon: 'pubmed' },
