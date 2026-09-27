@@ -48,6 +48,26 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
       <div
         class="search-field flex items-center gap-1.5 rounded-2xl bg-field py-1.5 pl-3.5 pr-1 transition-all sm:gap-2 sm:pl-5 sm:pr-1.5"
       >
+        <div class="relative shrink-0 border-r border-line pr-1.5" data-role="mode" hidden>
+          <button
+            type="button"
+            data-role="mode-btn"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            class="mode-btn"
+          >
+            <span data-role="mode-label"></span>
+            <Icon name="lucide:chevron-down" class="mode-chevron h-3 w-3" aria-hidden="true" />
+          </button>
+          <div
+            data-role="mode-menu"
+            role="listbox"
+            aria-label="搜索类型"
+            hidden
+            class="mode-menu absolute left-0 top-full z-30 mt-1.5 min-w-24 rounded-xl bg-card p-1.5 shadow-[var(--shadow-menu)]"
+          ></div>
+        </div>
+
         <input
           type="text"
           data-role="input"

@@ -1,5 +1,5 @@
 /** <nav-search>：站内/引擎搜索、历史、键盘导航 */
-import { ENGINES, SCOPE_TABS, engineUrl, placeholderFor, type SearchScope } from '../../data/search-engines';
+import { ENGINES, SCOPE_TABS, engineUrlFor, placeholderFor, type SearchScope } from '../../data/search-engines';
 import { queryTokens, searchSites, type SiteRecord } from '../search-utils';
 import { NAV_OPEN_CARD_EVENT, toCardData, toCardDataHtml } from '../card-attrs';
 import { escapeHtml } from '../html-escape';
@@ -12,6 +12,7 @@ const SCOPE_KEY = 'nav:scope';
 const MAX_HISTORY = 10;
 const historyKey = (scope: SearchScope): string => `nav:history:${scope}`;
 const engineKey = (scope: SearchScope): string => `nav:engine:${scope}`;
+const modeKey = (scope: SearchScope, engine: number): string => `nav:mode:${scope}:${engine}`;
 
 function loadScope(): SearchScope {
   const s = storageGetJson<string>(SCOPE_KEY, 'search');
@@ -33,6 +34,7 @@ function markHit(text: string, tokens: string[]): string {
 class NavSearch extends HTMLElement {
   private scope: SearchScope = loadScope();
   private engineIdx = 0;
+  private modeIdx = 0;
   private query = '';
   private records: SiteRecord[] = [];
   private results: SiteRecord[] = [];
@@ -43,6 +45,10 @@ class NavSearch extends HTMLElement {
 
   private input: HTMLInputElement | null = null;
   private dropdown: HTMLElement | null = null;
+  private modeWrap: HTMLElement | null = null;
+  private modeBtn: HTMLButtonElement | null = null;
+  private modeLabel: HTMLElement | null = null;
+  private modeMenu: HTMLElement | null = null;
   private stopFades: (() => void)[] = [];
 
   private onDocKeydown = (e: KeyboardEvent): void => {
@@ -56,6 +62,7 @@ class NavSearch extends HTMLElement {
   private onDocClick = (e: MouseEvent): void => {
     if (this.contains(e.target as Node)) return;
     this.hideDropdown();
+    this.closeModeMenu();
   };
 
   connectedCallback(): void {
@@ -99,6 +106,12 @@ class NavSearch extends HTMLElement {
     return typeof idx === 'number' && idx >= 0 && idx < len ? idx : 0;
   }
 
+  private loadModeIdx(scope: SearchScope, engine: number): number {
+    const idx = storageGetJson<number>(modeKey(scope, engine), 0);
+    const len = ENGINES[scope]?.[engine]?.modes?.length ?? 0;
+    return typeof idx === 'number' && idx >= 0 && idx < len ? idx : 0;
+  }
+
   private loadHistory(scope: SearchScope): string[] {
     return storageGetJson<string[]>(historyKey(scope), []);
   }
@@ -106,6 +119,10 @@ class NavSearch extends HTMLElement {
   private cacheRefs(): void {
     this.input = this.querySelector<HTMLInputElement>('[data-role="input"]');
     this.dropdown = this.querySelector<HTMLElement>('[data-role="dropdown"]');
+    this.modeWrap = this.querySelector<HTMLElement>('[data-role="mode"]');
+    this.modeBtn = this.querySelector<HTMLButtonElement>('[data-role="mode-btn"]');
+    this.modeLabel = this.querySelector<HTMLElement>('[data-role="mode-label"]');
+    this.modeMenu = this.querySelector<HTMLElement>('[data-role="mode-menu"]');
   }
 
   /** 按 scope/engineIdx 同步 SSR 静态标记 */
@@ -129,7 +146,46 @@ class NavSearch extends HTMLElement {
       ).forEach((b) => b.classList.toggle('active', Number(b.dataset.engine) === this.engineIdx));
     }
 
-    if (this.input) this.input.placeholder = placeholderFor(this.scope, this.engineIdx);
+    this.syncMode();
+    if (this.input) this.input.placeholder = this.currentPlaceholder();
+  }
+
+  private currentEngine() {
+    return this.scope === 'site' ? undefined : ENGINES[this.scope][this.engineIdx];
+  }
+
+  /** 类型下拉 */
+  private syncMode(): void {
+    if (!this.modeWrap || !this.modeBtn || !this.modeLabel || !this.modeMenu) return;
+    const modes = this.currentEngine()?.modes;
+    this.modeMenu.hidden = true;
+    this.modeBtn.setAttribute('aria-expanded', 'false');
+    if (!modes?.length) {
+      this.modeWrap.hidden = true;
+      return;
+    }
+    this.modeIdx = this.loadModeIdx(this.scope, this.engineIdx);
+    this.modeWrap.hidden = false;
+    this.modeLabel.textContent = modes[this.modeIdx].label;
+    this.modeMenu.innerHTML = modes
+      .map(
+        (m, i) => `
+        <button type="button" role="option" data-mode="${i}" aria-selected="${i === this.modeIdx}"
+          class="mode-item">${escapeHtml(m.label)}</button>`,
+      )
+      .join('');
+  }
+
+  private closeModeMenu(): void {
+    if (this.modeMenu && !this.modeMenu.hidden) this.modeMenu.hidden = true;
+    this.modeBtn?.setAttribute('aria-expanded', 'false');
+  }
+
+  private currentPlaceholder(): string {
+    if (this.scope === 'site') return placeholderFor(this.scope, this.engineIdx);
+    const engine = ENGINES[this.scope][this.engineIdx];
+    const mode = engine.modes?.[this.modeIdx];
+    return mode ? `在 ${engine.name} 搜索${mode.label}…` : placeholderFor(this.scope, this.engineIdx);
   }
 
   // ── 事件（委托到宿主元素） ──
@@ -149,6 +205,16 @@ class NavSearch extends HTMLElement {
 
   private onClick = (e: MouseEvent): void => {
     const t = e.target as HTMLElement;
+
+    if (t.closest('[data-role="mode-btn"]')) {
+      this.toggleModeMenu();
+      return;
+    }
+    const modeItem = t.closest<HTMLButtonElement>('[data-mode]');
+    if (modeItem) {
+      this.setMode(Number(modeItem.dataset.mode));
+      return;
+    }
 
     const scopeBtn = t.closest<HTMLButtonElement>('[data-scope]');
     if (scopeBtn) {
@@ -185,9 +251,13 @@ class NavSearch extends HTMLElement {
     if (e.target !== this.input) return;
     switch (e.key) {
       case 'Escape':
-        this.query = '';
-        this.input!.value = '';
-        this.hideDropdown();
+        if (this.modeMenu && !this.modeMenu.hidden) {
+          this.closeModeMenu();
+        } else {
+          this.query = '';
+          this.input!.value = '';
+          this.hideDropdown();
+        }
         e.preventDefault();
         break;
       case 'ArrowDown':
@@ -228,10 +298,27 @@ class NavSearch extends HTMLElement {
     this.input?.focus();
   }
 
+  private toggleModeMenu(): void {
+    if (!this.modeBtn || !this.modeMenu) return;
+    const open = this.modeMenu.hidden;
+    if (open) this.hideDropdown();
+    this.modeMenu.hidden = !open;
+    this.modeBtn.setAttribute('aria-expanded', String(open));
+  }
+
+  private setMode(i: number): void {
+    this.modeIdx = i;
+    storageSetJson(modeKey(this.scope, this.engineIdx), i);
+    this.syncMode();
+    if (this.input) this.input.placeholder = this.currentPlaceholder();
+    this.input?.focus();
+  }
+
   // ── 下拉面板 ──
 
   private updateDropdown(): void {
     if (!this.dropdown) return;
+    this.closeModeMenu();
     if (!this.query.trim()) {
       this.showHistory();
       return;
@@ -243,10 +330,11 @@ class NavSearch extends HTMLElement {
       this.showDropdown();
     } else {
       const engine = ENGINES[this.scope][this.engineIdx];
+      const mode = engine.modes?.[this.modeIdx];
       this.dropdown.innerHTML = `
         <div class="flex items-center gap-3 px-4 py-3 text-sm text-muted">
           ${iconEl('search', 'h-4 w-4')}
-          <span>按回车在 <span class="font-medium text-brand">${engine.name}</span> 中搜索「<span class="text-ink">${escapeHtml(this.query)}</span>」</span>
+          <span>按回车在 <span class="font-medium text-brand">${engine.name}</span> 中搜索${mode ? `<span class="text-brand">${escapeHtml(mode.label)}</span>` : ''}「<span class="text-ink">${escapeHtml(this.query)}</span>」</span>
         </div>`;
       this.showDropdown();
     }
@@ -291,6 +379,7 @@ class NavSearch extends HTMLElement {
   private showHistory(): void {
     const d = this.dropdown;
     if (!d) return;
+    this.closeModeMenu();
     if (this.history.length === 0) {
       this.hideDropdown();
       return;
@@ -342,7 +431,7 @@ class NavSearch extends HTMLElement {
       if (target) this.openResult(target);
     } else {
       const engine = ENGINES[this.scope][this.engineIdx];
-      window.open(engineUrl(engine, q), '_blank', 'noopener');
+      window.open(engineUrlFor(engine, this.modeIdx, q), '_blank', 'noopener');
     }
     this.saveHistory(q);
     this.hideDropdown();

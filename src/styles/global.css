@@ -196,6 +196,58 @@ nav-cat-tabs {
   font-weight: 600;
 }
 
+/* 搜索类型下拉 */
+.mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  background: transparent;
+  font-size: var(--text-dense);
+  color: var(--color-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+.mode-btn:hover {
+  color: var(--color-ink);
+  background: var(--color-tint);
+}
+.mode-chevron {
+  transition: transform 0.2s ease;
+}
+.mode-btn[aria-expanded='true'] .mode-chevron {
+  transform: rotate(180deg);
+}
+.mode-item {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  background: transparent;
+  text-align: left;
+  font-size: var(--text-dense);
+  color: var(--color-ink);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+.mode-item:hover {
+  background: var(--color-tint);
+}
+.mode-item[aria-selected='true'] {
+  color: var(--color-brand);
+  background: var(--color-brand-wash);
+  font-weight: 600;
+}
+
 /* 明暗切换按钮与系统跟随同步 */
 nav-theme-toggle [data-icon='sun'] {
   display: none;

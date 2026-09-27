@@ -111,35 +111,24 @@ const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&
           </div>
           <p class="mt-2 text-dense text-muted">
             全站数据与代码托管于 <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub</a
-            >，添加一条链接的流程如下；字段含义与多入口、徽章等完整写法以仓库 README 为准。
+            >，会改 YAML 就能参与；字段含义、多入口与徽章等完整写法见仓库 <a
+              href={`${REPO_URL}#readme`}
+              target="_blank"
+              rel="noopener noreferrer">README</a
+            >。
           </p>
           <ol class="doc-steps">
             <li>
-              <strong>确定分类</strong>：数据为「一级分类 → 二级分类 → 链接」三层结构，存放于 <code
-                >src/data/sites/{'{分类id}'}.yaml</code
-              >。将记录加入最贴切的 <code>subs[].links[]</code>，必要时可新建二级分类。
+              <strong>加数据、放图标</strong>：在 <code>src/data/sites/{'{分类id}'}.yaml</code> 的 <code
+                >subs[].links[]</code
+              > 追加记录；图标存为 <code>public/icons/{'{分类id}'}/{'{链接id}'}.webp</code>，文件名与记录的
+              <code>id</code> 一致。
             </li>
             <li>
-              <strong>放置图标</strong>：图标保存为 webp，存放于 <code
-                >public/icons/{'{分类id}'}/{'{链接id}'}.webp</code
-              >，如 <code>public/icons/campus/alipay.webp</code>；文件名须与记录的 <code>id</code> 一致，图片通常取自官网 favicon。
+              <strong>本地校验</strong>：执行 <code>npm run build</code>，构建期会拦下图标缺失、id
+              重复、搜索字段缺失、url 缺少协议头等问题，并指出对应链接。
             </li>
-            <li>
-              <strong>编写数据条目</strong>：链接要放进某个二级分类的 <code>links</code> 下（缩进层级见下）。
-              <pre><code>subs:
-  - id: xueji          # 二级分类 id
-    name: 学籍学历
-    links:
-      - id: chsi
-        title: 学信网
-        desc: 学籍学历与在线验证报告查询
-        pinyin: xuexinwang
-        pinyinFirst: xxw
-        url: "https://www.chsi.com.cn/"</code></pre>
-            </li>
-            <li>
-              <strong>校验并提交</strong>：执行 <code>npm run build</code>，构建期会拦截图标缺失、id 重复、pinyin 缺失、url 缺少协议头等问题，并指出对应链接；通过后提交 Pull Request。
-            </li>
+            <li><strong>发 Pull Request</strong>：构建通过后提交，维护者确认后合并上线。</li>
           </ol>
         </div>
       </div>

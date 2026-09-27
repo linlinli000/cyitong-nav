@@ -4,7 +4,7 @@
 
 线上地址：<https://nav.cyitong.top>
 
-站内另有两个内容页：<https://nav.cyitong.top/about/>（功能说明、收录范围与标准、维护与隐私、免责声明）、<https://nav.cyitong.top/contribute/>（投稿方式与投稿前自查）。
+站内另有两个内容页：<https://nav.cyitong.top/about/>（使用说明、首页设置、常见问题、维护与隐私、免责声明）、<https://nav.cyitong.top/contribute/>（收录条件与邮件 / Issue / Pull Request 投稿方式）。
 
 ## 添加一个链接
 
@@ -21,7 +21,7 @@
 | `scitools` | 科研服务 | | `aitool` | AI 工具 |
 | `tools` | 实用工具 | | | |
 
-链接加进最贴切的二级分类 `subs[].links[]` 即可（必要时也可新增一个二级分类）。收录准入标准见 <https://nav.cyitong.top/about/#rules>：成医师生会反复使用，不限校内。
+链接加进最贴切的二级分类 `subs[].links[]` 即可（必要时也可新增一个二级分类）。收录条件见 <https://nav.cyitong.top/contribute/#criteria>：成医师生会反复使用，不限校内。
 
 ### 2. 放图标
 
