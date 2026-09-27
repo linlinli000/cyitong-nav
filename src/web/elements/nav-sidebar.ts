@@ -5,11 +5,14 @@ import { BREAKPOINT_LG } from '../breakpoints';
 import type { NavCatTabs } from './nav-cat-tabs';
 
 const RAIL_KEY = 'nav:rail';
+/** 侧栏高亮判定锚点 */
+const SPY_ANCHOR = 0.18;
 
 class NavSidebar extends HTMLElement {
   private aside: HTMLElement | null = null;
   private backdrop: HTMLElement | null = null;
   private observer: IntersectionObserver | null = null;
+  private sections: HTMLElement[] = [];
   private lastActive = '';
 
   private flyout = new SidebarFlyout(this, () => this.isCollapsed());
@@ -121,17 +124,28 @@ class NavSidebar extends HTMLElement {
   // ── 滚动监听 ──
 
   private initSpy(): void {
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const id = entry.target.id;
-          if (id) this.setActive(id);
-        }
-      },
-      { rootMargin: '-40% 0px -55% 0px', threshold: 0 },
-    );
-    document.querySelectorAll<HTMLElement>('[data-spy]').forEach((sec) => this.observer?.observe(sec));
+    this.sections = [...document.querySelectorAll<HTMLElement>('[data-spy]')];
+    this.observer = new IntersectionObserver(() => this.syncActive(), {
+      rootMargin: `0px 0px -${Math.round((1 - SPY_ANCHOR) * 100)}% 0px`,
+      threshold: 0,
+    });
+    this.sections.forEach((sec) => this.observer?.observe(sec));
+  }
+
+  /** 全量重算 */
+  private syncActive(): void {
+    if (!this.sections.length) return;
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+      this.setActive(this.sections[this.sections.length - 1].id);
+      return;
+    }
+    const anchor = window.innerHeight * SPY_ANCHOR;
+    let best = this.sections[0].id;
+    for (const sec of this.sections) {
+      if (sec.getBoundingClientRect().top > anchor) break;
+      best = sec.id;
+    }
+    this.setActive(best);
   }
 
   private setActive(id: string): void {
@@ -189,6 +203,7 @@ class NavSidebar extends HTMLElement {
     }
     section.querySelector<NavCatTabs>('nav-cat-tabs')?.activate(filter);
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    this.setActive(cat);
   }
 
   // ── 收起态浮层 ──
