@@ -19,7 +19,7 @@ function isSite(scope: SearchScope): boolean {
 const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
 ---
 
-<section class="py-8 sm:py-10">
+<section class="py-14 sm:py-18">
   <nav-search>
     <!-- scope 胶囊 -->
     <div data-fade-x class="scrollbar-hide mb-2 flex overflow-x-auto sm:mb-3">
@@ -33,7 +33,7 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
               data-scope={tab.id}
               aria-pressed={tab.id === DEFAULT_SCOPE}
               class:list={[
-                'scope-pill inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-dense transition-all sm:px-5 sm:py-2 sm:text-sm',
+                'scope-pill inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4.5 py-2 text-dense transition-all sm:px-5.5 sm:py-2.5 sm:text-sm',
                 tab.id === DEFAULT_SCOPE && 'active',
               ]}
             >
@@ -108,7 +108,7 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
                     data-engine={i}
                     data-engine-scope={sc}
                     class:list={[
-                      'engine-chip inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-dense transition-all sm:px-3',
+                      'engine-chip inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-dense transition-all sm:px-3.5',
                       active && i === DEFAULT_ENGINE && 'active',
                     ]}
                   >
