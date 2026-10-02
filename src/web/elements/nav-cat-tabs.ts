@@ -4,6 +4,7 @@ import { watchScrollFade } from '../scroll-fade';
 
 const ROWS_DESKTOP = 3;
 const ROWS_MOBILE = 5;
+const REVEAL_LANDING_RATIO = 0.65;
 
 export class NavCatTabs extends HTMLElement {
   private filter = '';
@@ -19,9 +20,22 @@ export class NavCatTabs extends HTMLElement {
   };
 
   private onMoreClick = (): void => {
+    const expanding = !this.expanded;
     this.expanded = !this.expanded;
     this.applyDisplay();
+    if (expanding) this.scrollToRevealed();
   };
+
+  private scrollToRevealed(): void {
+    if (window.innerWidth >= BREAKPOINT_LG) return;
+    const first = this.block().querySelectorAll<HTMLElement>('.link-tile')[this.maxCards];
+    if (!first) return;
+    const landing = Math.round(window.innerHeight * REVEAL_LANDING_RATIO);
+    const top = first.getBoundingClientRect().top;
+    if (top < landing) return;
+    const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    window.scrollTo({ top: window.scrollY + top - landing, behavior });
+  }
 
   connectedCallback(): void {
     this.addEventListener('click', this.onTabClick);
@@ -114,6 +128,7 @@ export class NavCatTabs extends HTMLElement {
       if (this.moreLine) this.moreLine.hidden = !hasOverflow;
       if (hasOverflow) {
         this.moreBtn.classList.toggle('expanded', this.expanded);
+        this.moreBtn.setAttribute('aria-expanded', String(this.expanded));
         const label = this.moreBtn.querySelector('.cat-more-label');
         if (label) label.textContent = this.expanded ? '收起' : '更多';
       }

@@ -18,7 +18,7 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
   data-cat-block={category.data.id}
   class="scroll-mt-24 rounded-card bg-card px-3 py-3 sm:px-4 sm:py-4"
 >
-  <div class="relative mb-4 flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
+  <div class="relative mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
     <div class="flex shrink-0 items-center gap-2.5 pr-24 lg:pr-0">
       <span class="text-brand">
         <Icon name={categoryIcon(category.data.icon)} class="h-5 w-5" />
@@ -72,7 +72,13 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
 
     <span class="cat-more-line" aria-hidden="true"></span>
 
-    <button type="button" class="cat-more absolute top-0 right-0 lg:static" hidden>
+    <button
+      type="button"
+      class="cat-more absolute top-0 right-0 lg:static"
+      aria-expanded="false"
+      aria-controls={`cat-panel-${category.data.id}`}
+      hidden
+    >
       <span class="cat-more-label">更多</span>
       <Icon name="lucide:chevron-down" class="cat-more-chevron h-3.5 w-3.5" />
     </button>

@@ -546,6 +546,8 @@ header [data-ghost]:hover {
   font-size: var(--text-dense);
   line-height: 1.5;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition:
     color 0.15s ease,
     background 0.15s ease;
@@ -553,6 +555,14 @@ header [data-ghost]:hover {
 .cat-more:hover {
   color: var(--color-ink);
   background: var(--color-tint);
+}
+@media (max-width: 1023.98px) {
+  .cat-more {
+    padding: 0.2rem 0.6rem;
+  }
+  .cat-more:active {
+    background: var(--color-tint);
+  }
 }
 .cat-more-chevron {
   transition: transform 0.2s ease;
