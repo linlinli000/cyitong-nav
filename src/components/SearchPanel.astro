@@ -2,6 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import { placeholderFor } from '../config/search-engines';
 import type { SiteRecord } from '../web/search-utils';
+import { quickTileInner } from '../web/quick-tile';
 
 interface Props {
   searchIndex: SiteRecord[];
@@ -9,10 +10,38 @@ interface Props {
 
 const { searchIndex } = Astro.props;
 
+// 常用磁贴默认集（nav-hero 与最近使用合并去重）；引用缺失构建期 fail-fast
+const QUICK_PICKS: Array<[string, string]> = [
+  ['campus', 'jwxt'],
+  ['campus', 'lib'],
+  ['campus', 'ykt'],
+  ['campus', 'xgw'],
+  ['study', 'chaoxing'],
+  ['academic', 'cnki'],
+  ['academic', 'pubmed'],
+  ['scitools', 'deepl'],
+];
+const quickLinks = QUICK_PICKS.map(([catId, id]) => {
+  const hit = searchIndex.find((r) => r.catId === catId && r.id === id);
+  if (!hit) throw new Error(`[SearchPanel] QUICK_PICKS 引用的链接不存在：${catId}/${id}`);
+  return hit;
+});
+
 const defaultPlaceholder = placeholderFor('search', 0);
 ---
 
 <section class="py-10 sm:py-18">
+  <!-- 首屏 hero：时钟/日期/问候（客户端对时） -->
+  <div class="mb-6 text-center sm:mb-8">
+    <div class="flex h-10 items-baseline justify-center gap-2.5 sm:h-12">
+      <time
+        id="hero-clock"
+        class="text-4xl leading-none font-extralight tracking-tight text-ink tabular-nums sm:text-5xl"></time>
+      <span id="hero-date" class="text-dense text-muted"></span>
+    </div>
+    <p id="hero-greeting" class="mt-2 text-body text-muted">今天想查什么？</p>
+  </div>
+
   <nav-search>
     <div class="relative mx-auto w-full max-w-[50rem]">
       <div
@@ -75,8 +104,38 @@ const defaultPlaceholder = placeholderFor('search', 0);
       ></div>
     </div>
   </nav-search>
+
+  <!-- 常用磁贴行：nav-hero 与最近使用合并去重后渲染 -->
+  <div
+    id="quick-bar"
+    data-fade-x
+    hidden
+    class="mt-6 flex min-h-[4.25rem] items-center overflow-x-auto scrollbar-hide"
+  >
+    <div id="quick-tiles" class="mx-auto flex w-max shrink-0 items-stretch gap-2 px-1 sm:gap-4">
+      {
+        quickLinks.map((l) => (
+          <a
+            href={l.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-quick-default
+            data-title={l.title}
+            data-icon={l.icon}
+            title={l.title}
+            class="quick-tile"
+          >
+            <Fragment set:html={quickTileInner(l.title, l.icon)} />
+          </a>
+        ))
+      }
+    </div>
+  </div>
 </section>
 
 <script>
   import '../web/elements/nav-search';
+  import { initNavHero } from '../web/nav-hero';
+
+  initNavHero();
 </script>
