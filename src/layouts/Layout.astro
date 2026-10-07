@@ -31,6 +31,7 @@ const isNoindex = robots.includes('noindex');
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const siteRoot = new URL('/', Astro.site);
+const ogImage = new URL('/og.png', Astro.site).href;
 
 const webSiteSchema = {
   '@context': 'https://schema.org',
@@ -40,6 +41,11 @@ const webSiteSchema = {
   url: siteRoot.href,
   description,
   inLanguage: 'zh-CN',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: { '@type': 'EntryPoint', urlTemplate: `${siteRoot.href}?q={search_term_string}` },
+    'query-input': 'required name=search_term_string',
+  },
 };
 ---
 
@@ -54,10 +60,6 @@ const webSiteSchema = {
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta
-      name="keywords"
-      content="成都医学院,成医,成医通,导航,校内系统,医学文献,文献检索,AI工具,实用工具"
-    />
     <meta name="robots" content={robots} />
     {!isNoindex && <link rel="canonical" href={canonical.href} />}
 
@@ -70,6 +72,15 @@ const webSiteSchema = {
         <meta property="og:locale" content="zh_CN" />
         <meta property="og:url" content={canonical.href} />
         <meta property="og:site_name" content="成医通" />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
 
         <script is:inline type="application/ld+json" set:html={jsonForScript(webSiteSchema)}></script>
       </>
