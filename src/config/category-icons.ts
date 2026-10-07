@@ -1,4 +1,4 @@
-/** yaml 分类 icon 语义键 → iconify lucide 名（线性系，用户对比后拍板） */
+/** yaml 分类 icon 语义键 → iconify lucide 名 */
 export const CATEGORY_ICON_NAMES: Record<string, string> = {
   building: 'school',
   book: 'presentation',

@@ -34,7 +34,7 @@ class NavDialog extends HTMLElement {
 
   connectedCallback(): void {
     this.innerHTML = `
-      <dialog class="m-auto w-[min(90vw,22rem)] rounded-2xl border border-line bg-card p-5 text-ink shadow-[var(--shadow-menu)] backdrop:bg-black/50">
+      <dialog class="m-auto w-[min(90vw,22rem)] rounded-2xl border border-line bg-float backdrop-blur-md p-5 text-ink shadow-(--shadow-menu) backdrop:bg-black/40">
         <div class="flex items-center justify-between gap-4">
           <div class="flex min-w-0 items-center gap-2">
             <img data-role="icon" alt="" hidden class="h-6 w-6 shrink-0 rounded-md object-contain">
@@ -87,14 +87,13 @@ class NavDialog extends HTMLElement {
     go.target = '_blank';
     go.rel = 'noopener noreferrer';
     go.title = url;
-    go.className =
-      'mb-3 flex items-center justify-between gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-ink transition-colors hover:border-brand sm:hidden';
+    go.className = 'dlg-row mb-3 sm:hidden';
     go.innerHTML = `
       <span class="min-w-0">
         <span class="block truncate text-sm font-medium">移动端点击此处打开链接</span>
         <span class="block truncate text-note text-muted">${escapeHtml(url)}</span>
       </span>
-      <span class="shrink-0 text-brand">↗</span>`;
+      ${iconEl('chevron-right', 'dlg-row-arrow h-4 w-4 shrink-0')}`;
     body.appendChild(go);
     const img = document.createElement('img');
     img.alt = `${title} 二维码`;
@@ -122,18 +121,18 @@ class NavDialog extends HTMLElement {
   private openEntries(title: string, icon: string, entries: Entry[]): void {
     this.setHeader(title, icon);
     this.dlg!.querySelector('[data-role="body"]')!.innerHTML = `
-      <ul class="space-y-2">
+      <ul class="dlg-list">
         ${entries
           .map(
             (entry) => `
           <li>
-            <a href="${escapeHtml(entry.url)}" target="_blank" rel="noopener noreferrer"
-              class="flex items-center justify-between gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-ink transition-colors hover:border-brand">
-              <span class="min-w-0" title="${escapeHtml(entry.url)}">
+            <a href="${escapeHtml(entry.url)}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(entry.url)}"
+              class="dlg-row">
+              <span class="min-w-0">
                 <span class="block truncate text-sm font-medium">${escapeHtml(entry.label)}</span>
                 <span class="block truncate text-note text-muted">${escapeHtml(entry.url)}</span>
               </span>
-              <span class="shrink-0 text-brand">↗</span>
+              ${iconEl('chevron-right', 'dlg-row-arrow h-4 w-4 shrink-0')}
             </a>
           </li>`,
           )

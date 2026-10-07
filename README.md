@@ -1,10 +1,10 @@
 # 成医通（cyitong-nav）
 
-成都医学院师生导航页，汇集校内系统、医学文献、AI 工具与实用工具；支持站内/引擎搜索、扫码、镜像站。
+成都医学院师生导航页，汇集校内系统、医学文献、AI 工具与实用工具；支持站内/引擎搜索、扫码、镜像站与首页常用磁贴。
 
 线上地址：<https://nav.cyitong.top>
 
-站内另有两个内容页：<https://nav.cyitong.top/about/>（使用说明、首页设置、常见问题、维护与隐私、免责声明）、<https://nav.cyitong.top/contribute/>（收录条件与邮件 / Issue / Pull Request 投稿方式）。
+站内另有两个内容页：<https://nav.cyitong.top/about/>（使用说明、首页设置、常见问题等）与 <https://nav.cyitong.top/contribute/>（收录条件与投稿方式）。
 
 ## 添加一个链接
 
@@ -98,7 +98,7 @@ src/
 ├── content.config.ts     # 数据 schema 与构建期校验
 ├── content/sites/*.yaml  # 唯一内容数据源（7 个分类，贡献者编辑）
 ├── config/               # 开发者维护的静态配置表
-│   ├── category-icons.ts # 分类 icon 语义键 → iconify 包名
+│   ├── category-icons.ts # 分类 icon 语义键 → lucide 图标名
 │   ├── search-engines.ts # 搜索引擎与品牌字形
 │   ├── site-links.ts     # 页脚/侧栏的「关于本站、投稿与反馈」
 │   └── topbar-tools.ts   # 顶栏快捷下拉（翻译 / 网盘 / 邮箱）的数据
@@ -110,9 +110,10 @@ src/
 │   └── SiteLayout.astro  # 页面 chrome：侧栏 + 顶栏 + 页脚
 ├── pages/                # index / about / contribute / 404
 ├── components/           # 纯 .astro 模板组件
-├── styles/global.css     # 颜色令牌与全局状态
+├── styles/global.css     # 设计令牌与全局/组件样式
 └── web/                  # 客户端运行时（原生 TS）
     ├── elements/         # 自注册元素 <nav-*>，副作用导入
+    ├── quick-bar/        # 常用磁贴行：存储 / 磁贴结构 / 行控制器
     ├── card-attrs.ts     # 扫码/入口 data 属性契约（SSR LinkCard 与 nav-search 共用）
     ├── sidebar-flyout.ts # 收起态侧栏的浮出面板（子分类 / 底部链接共用）
     ├── breakpoints.ts    # 视口断点常量（与 Tailwind lg / global.css 同步）

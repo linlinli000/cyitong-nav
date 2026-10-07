@@ -12,5 +12,5 @@ export interface SiteIconOpts {
 export function siteIconHtml(icon: string, title: string, cls: string, opts: SiteIconOpts = {}): string {
   const { alt = title, size } = opts;
   const dim = size ? ` width="${size}" height="${size}"` : '';
-  return `<img src="${escapeHtml(icon)}" alt="${escapeHtml(alt)}"${dim} loading="lazy" decoding="async" data-letter="${escapeHtml(firstLetter(title))}" class="${cls}">`;
+  return `<img src="${escapeHtml(icon)}" alt="${escapeHtml(alt)}"${dim} loading="lazy" decoding="async" referrerpolicy="no-referrer" data-letter="${escapeHtml(firstLetter(title))}" class="${cls}">`;
 }

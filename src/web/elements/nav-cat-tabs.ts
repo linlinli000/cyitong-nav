@@ -33,8 +33,8 @@ export class NavCatTabs extends HTMLElement {
     if (expanding) this.scrollToRevealed();
   };
 
+  /** 展开/收起后滑到新增的第一张卡（65% 视口高着点）；已在其上方则不动 */
   private scrollToRevealed(): void {
-    if (window.innerWidth >= BREAKPOINT_LG) return;
     const first = this.block().querySelectorAll<HTMLElement>('.link-tile')[this.maxCards];
     if (!first) return;
     const landing = Math.round(window.innerHeight * REVEAL_LANDING_RATIO);

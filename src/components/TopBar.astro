@@ -85,7 +85,7 @@ const CARET_ICON = 'lucide:chevron-down';
           </button>
           <div
             data-menu-panel
-            class="absolute right-0 top-full z-50 mt-1.5 min-w-44 rounded-xl bg-card p-1.5 shadow-[var(--shadow-menu)]"
+            class="absolute right-0 top-full z-50 mt-1.5 min-w-44 rounded-xl bg-float backdrop-blur-md p-1.5 shadow-(--shadow-menu)"
           >
             <div class="space-y-0.5">
               {tool.items.map((item) => (
@@ -139,7 +139,7 @@ const CARET_ICON = 'lucide:chevron-down';
   <dialog
     data-role="tools-dlg"
     tabindex="-1"
-    class="m-0 ml-auto h-dvh max-h-dvh w-56 max-w-[84vw] bg-card p-0 text-ink shadow-[var(--shadow-menu)] focus:outline-none backdrop:bg-black/50"
+    class="m-0 ml-auto h-dvh max-h-dvh w-56 max-w-[84vw] bg-float backdrop-blur-md p-0 text-ink shadow-(--shadow-menu) focus:outline-none backdrop:bg-black/40"
   >
     <div class="flex h-full flex-col">
       <div class="flex h-14 shrink-0 items-center px-4">

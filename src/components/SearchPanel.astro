@@ -2,7 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import { placeholderFor } from '../config/search-engines';
 import type { SiteRecord } from '../web/search-utils';
-import { quickTileInner } from '../web/quick-tile';
+import { quickAddHtml, quickTileHtml } from '../web/quick-bar/quick-tile';
 
 interface Props {
   searchIndex: SiteRecord[];
@@ -10,15 +10,15 @@ interface Props {
 
 const { searchIndex } = Astro.props;
 
-// 常用磁贴默认集（nav-hero 与最近使用合并去重）；引用缺失构建期 fail-fast
+// 常用磁贴默认集（quick-bar 与最近使用合并去重）；引用缺失构建期 fail-fast
 const QUICK_PICKS: Array<[string, string]> = [
   ['campus', 'jwxt'],
-  ['campus', 'lib'],
-  ['campus', 'ykt'],
   ['campus', 'xgw'],
   ['study', 'chaoxing'],
-  ['academic', 'cnki'],
+  ['study', 'zhihuishu'],
+  ['campus', 'lib'],
   ['academic', 'pubmed'],
+  ['academic', 'cnki'],
   ['scitools', 'deepl'],
 ];
 const quickLinks = QUICK_PICKS.map(([catId, id]) => {
@@ -64,7 +64,7 @@ const defaultPlaceholder = placeholderFor('search', 0);
             role="listbox"
             aria-label="搜索范围与引擎"
             hidden
-            class="absolute left-0 top-full z-30 mt-1.5 w-[min(20rem,calc(100vw_-_2rem))] max-h-[min(60vh,26rem)] overflow-y-auto rounded-xl bg-card p-2 shadow-[var(--shadow-menu)]"
+            class="absolute left-0 top-full z-30 mt-1.5 w-[min(20rem,calc(100vw_-_2rem))] max-h-[min(60vh,26rem)] overflow-y-auto rounded-xl bg-float backdrop-blur-md p-2 shadow-(--shadow-menu)"
           ></div>
         </div>
 
@@ -100,42 +100,27 @@ const defaultPlaceholder = placeholderFor('search', 0);
         role="listbox"
         aria-label="搜索建议"
         hidden
-        class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 max-h-96 overflow-y-auto rounded-xl bg-field shadow-[var(--shadow-dropdown)]"
+        class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 max-h-96 overflow-y-auto rounded-xl bg-float backdrop-blur-md shadow-(--shadow-dropdown)"
       ></div>
     </div>
   </nav-search>
 
-  <!-- 常用磁贴行：nav-hero 与最近使用合并去重后渲染 -->
-  <div
-    id="quick-bar"
-    data-fade-x
-    hidden
-    class="mt-6 flex min-h-[4.25rem] items-center overflow-x-auto scrollbar-hide"
-  >
+  <!-- 常用磁贴行：SSG 默认集 + 常驻添加格；客户端由 quick-bar 与 pinned/最近使用三层合并重建 -->
+  <div id="quick-bar" data-fade-x class="mt-6 flex min-h-[4.25rem] items-center overflow-x-auto scrollbar-hide">
     <div id="quick-tiles" class="mx-auto flex w-max shrink-0 items-stretch gap-2 px-1 sm:gap-4">
-      {
-        quickLinks.map((l) => (
-          <a
-            href={l.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-quick-default
-            data-title={l.title}
-            data-icon={l.icon}
-            title={l.title}
-            class="quick-tile"
-          >
-            <Fragment set:html={quickTileInner(l.title, l.icon)} />
-          </a>
-        ))
-      }
+      {quickLinks.map((l) => <Fragment set:html={quickTileHtml({ url: l.url, title: l.title, icon: l.icon }, { isDefault: true })} />)}
+      <Fragment set:html={quickAddHtml()} />
     </div>
   </div>
+  <nav-quick-add></nav-quick-add>
 </section>
 
 <script>
   import '../web/elements/nav-search';
+  import '../web/elements/nav-quick-add';
   import { initNavHero } from '../web/nav-hero';
+  import { initQuickBar } from '../web/quick-bar/quick-bar';
 
   initNavHero();
+  initQuickBar();
 </script>
