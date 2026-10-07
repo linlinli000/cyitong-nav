@@ -1,0 +1,25 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<!-- 右下浮动按钮；z-20 低于移动抽屉雾隐(z-30) -->
+<nav-theme-toggle>
+  <button
+    type="button"
+    data-theme-toggle
+    aria-label="切换明暗模式"
+    title="切换明暗模式"
+    class="nav-fab bottom-[5.5rem] hover:-translate-y-0.5 hover:shadow-[var(--shadow-menu)] active:scale-95"
+  >
+    <span data-icon="moon" aria-hidden="true">
+      <Icon name="lucide:moon" class="h-5 w-5" />
+    </span>
+    <span data-icon="sun" aria-hidden="true">
+      <Icon name="lucide:sun" class="h-5 w-5" />
+    </span>
+  </button>
+</nav-theme-toggle>
+
+<script>
+  import '../web/elements/nav-theme-toggle';
+</script>
