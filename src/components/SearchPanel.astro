@@ -1,72 +1,45 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { ENGINES, SCOPE_TABS, placeholderFor, type SearchScope } from '../data/search-engines';
+import { placeholderFor } from '../config/search-engines';
+import type { SiteRecord } from '../web/search-utils';
 
 interface Props {
-  total: number;
+  searchIndex: SiteRecord[];
 }
 
-const { total } = Astro.props;
+const { searchIndex } = Astro.props;
 
-const DEFAULT_SCOPE: SearchScope = 'search';
-const DEFAULT_ENGINE = 0;
-const EXTERNAL_SCOPES = ['search', 'community', 'literature'] as const;
-
-function isSite(scope: SearchScope): boolean {
-  return scope === 'site';
-}
-
-const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
+const defaultPlaceholder = placeholderFor('search', 0);
 ---
 
-<section class="py-14 sm:py-18">
+<section class="py-10 sm:py-18">
   <nav-search>
-    <!-- scope 胶囊 -->
-    <div data-fade-x class="scrollbar-hide mb-2 flex overflow-x-auto sm:mb-3">
-      <div
-        class="mx-auto flex shrink-0 items-center gap-1 rounded-full bg-card p-1 sm:gap-1.5"
-      >
-        {
-          SCOPE_TABS.map((tab) => (
-            <button
-              type="button"
-              data-scope={tab.id}
-              aria-pressed={tab.id === DEFAULT_SCOPE}
-              class:list={[
-                'scope-pill inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4.5 py-2 text-dense transition-all sm:px-5.5 sm:py-2.5 sm:text-sm',
-                tab.id === DEFAULT_SCOPE && 'active',
-              ]}
-            >
-              {tab.label}
-            </button>
-          ))
-        }
-      </div>
-    </div>
-
     <div class="relative mx-auto w-full max-w-[50rem]">
       <div
-        class="search-field flex items-center gap-1.5 rounded-2xl bg-field py-1.5 pl-3.5 pr-1 transition-all sm:gap-2 sm:pl-5 sm:pr-1.5"
+        class="search-field flex items-center gap-1.5 rounded-2xl bg-field py-1.5 pl-1.5 pr-1 transition-all sm:gap-2 sm:pl-2 sm:pr-1.5"
       >
-        <div class="relative shrink-0 border-r border-line pr-1.5" data-role="mode" hidden>
+        <!-- 上下文芯片：范围+引擎+类型 合一 -->
+        <div class="relative shrink-0" data-role="ctx">
           <button
             type="button"
-            data-role="mode-btn"
+            data-role="ctx-btn"
             aria-haspopup="listbox"
             aria-expanded="false"
-            class="mode-btn"
+            class="ctx-btn"
           >
-            <span data-role="mode-label"></span>
-            <Icon name="lucide:chevron-down" class="mode-chevron h-3 w-3" aria-hidden="true" />
+            <span data-role="ctx-label"></span>
+            <Icon name="lucide:chevron-down" class="ctx-chevron h-3 w-3 shrink-0 opacity-80" aria-hidden="true" />
           </button>
           <div
-            data-role="mode-menu"
+            data-role="ctx-menu"
             role="listbox"
-            aria-label="搜索类型"
+            aria-label="搜索范围与引擎"
             hidden
-            class="mode-menu absolute left-0 top-full z-30 mt-1.5 min-w-24 rounded-xl bg-card p-1.5 shadow-[var(--shadow-menu)]"
+            class="absolute left-0 top-full z-30 mt-1.5 w-[min(20rem,calc(100vw_-_2rem))] max-h-[min(60vh,26rem)] overflow-y-auto rounded-xl bg-card p-2 shadow-[var(--shadow-menu)]"
           ></div>
         </div>
+
+        <span class="h-5 w-px bg-line" aria-hidden="true"></span>
 
         <input
           type="text"
@@ -76,6 +49,10 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
           value=""
           placeholder={defaultPlaceholder}
           aria-label="搜索"
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="nav-search-listbox"
+          aria-autocomplete="list"
           class="min-w-0 flex-1 bg-transparent text-body text-ink outline-none placeholder:text-muted sm:text-base"
         />
         <button
@@ -90,58 +67,13 @@ const defaultPlaceholder = placeholderFor(DEFAULT_SCOPE, DEFAULT_ENGINE);
 
       <div
         data-role="dropdown"
+        id="nav-search-listbox"
+        role="listbox"
+        aria-label="搜索建议"
         hidden
         class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 max-h-96 overflow-y-auto rounded-xl bg-field shadow-[var(--shadow-dropdown)]"
       ></div>
     </div>
-
-    <!-- 站内计数行 -->
-    <div
-      data-role="site-footer"
-      class="mt-2 flex min-h-[2.75rem] items-center justify-center sm:mt-3"
-      hidden={!isSite(DEFAULT_SCOPE)}
-    >
-      <span class="inline-flex items-center gap-1 rounded-full bg-card px-3.5 py-1 text-dense text-muted sm:px-4"
-        >本网站已收录<span class="font-semibold text-brand">{total}</span>个常用链接</span
-      >
-    </div>
-
-    <!-- 各外部 scope 引擎 chips 条 -->
-    {
-      EXTERNAL_SCOPES.map((sc) => {
-        const active = sc === DEFAULT_SCOPE;
-        return (
-          <div
-            data-role="engine-bar"
-            data-engine-scope={sc}
-            hidden={!active}
-            data-fade-x
-            class="mt-2 flex min-h-[2.75rem] items-center overflow-x-auto scrollbar-hide sm:mt-3"
-          >
-            <div
-              class="mx-auto flex shrink-0 items-center gap-1 rounded-full bg-card p-1"
-            >
-              {
-                ENGINES[sc].map((e, i) => (
-                  <button
-                    type="button"
-                    data-engine={i}
-                    data-engine-scope={sc}
-                    class:list={[
-                      'engine-chip inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-dense transition-all sm:px-3.5',
-                      active && i === DEFAULT_ENGINE && 'active',
-                    ]}
-                  >
-                    <svg class="h-3.5 w-3.5" aria-hidden="true"><use href={`#icon-${e.icon}`} /></svg>
-                    {e.name}
-                  </button>
-                ))
-              }
-            </div>
-          </div>
-        );
-      })
-    }
   </nav-search>
 </section>
 

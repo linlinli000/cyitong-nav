@@ -1,12 +1,12 @@
 ---
 import '../styles/global.css';
-import { RUNTIME_ICON_NAMES } from '../web/icons';
+import { RUNTIME_ICON_NAMES, STATIC_ICON_NAMES } from '../web/icons';
 import { buildIconSprite } from '../lib/icon-sprite';
-import { ENGINES } from '../data/search-engines';
+import { ENGINES } from '../config/search-engines';
 import type { SiteRecord } from '../web/search-utils';
 
 const engineGlyphs = [...new Set(Object.values(ENGINES).flat().map((e) => e.icon))];
-const iconSymbols = buildIconSprite([...RUNTIME_ICON_NAMES, ...engineGlyphs]);
+const iconSymbols = buildIconSprite([...RUNTIME_ICON_NAMES, ...STATIC_ICON_NAMES, ...engineGlyphs]);
 
 interface Props {
   title?: string;

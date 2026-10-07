@@ -18,14 +18,21 @@ export interface EngineMode {
 export interface ScopeTab {
   id: SearchScope;
   label: string;
+  /** 站内用站点 logo；其余范围待彩色素材 */
+  icon?: string;
 }
 
 export const SCOPE_TABS: ScopeTab[] = [
-  { id: 'site', label: '站内' },
+  { id: 'site', label: '站内', icon: 'logo' },
   { id: 'search', label: '搜索' },
   { id: 'community', label: '社区' },
   { id: 'literature', label: '文献检索' },
 ];
+
+/** 校验字符串是否为合法 scope（localStorage / dataset 读回共用） */
+export function isSearchScope(s: string | undefined): s is SearchScope {
+  return SCOPE_TABS.some((t) => t.id === s);
+}
 
 export const ENGINES: Record<SearchScope, Engine[]> = {
   site: [],
@@ -53,7 +60,7 @@ export const ENGINES: Record<SearchScope, Engine[]> = {
     {
       name: 'GitHub',
       url: 'https://github.com/search?q={q}&type=repositories',
-      icon: 'github',
+      icon: 'github-color',
       modes: [
         { label: '仓库', url: 'https://github.com/search?q={q}&type=repositories' },
         { label: '用户', url: 'https://github.com/search?q={q}&type=users' },
@@ -76,7 +83,7 @@ export const ENGINES: Record<SearchScope, Engine[]> = {
     {
       name: '知网',
       url: 'https://kns.cnki.net/kns8s/defaultresult/index?korder=SU&kw={q}',
-      icon: 'database',
+      icon: 'cnki',
       // kns8s 字段码（2026-09-27 逐个实测）：SU 主题 / TI 篇名 / KY 关键词 / AB 摘要 / FT 全文 / AU 作者 / AF 作者单位 / DOI；JN 不生效（回退主题）
       modes: [
         { label: '主题', url: 'https://kns.cnki.net/kns8s/defaultresult/index?korder=SU&kw={q}' },
@@ -92,7 +99,7 @@ export const ENGINES: Record<SearchScope, Engine[]> = {
     {
       name: '万方',
       url: 'https://s.wanfangdata.com.cn/paper?q={q}',
-      icon: 'library',
+      icon: 'wanfang',
       modes: [
         { label: '论文', url: 'https://s.wanfangdata.com.cn/paper?q={q}' },
         { label: '期刊', url: 'https://s.wanfangdata.com.cn/periodical?q={q}' },
@@ -102,7 +109,7 @@ export const ENGINES: Record<SearchScope, Engine[]> = {
         { label: '标准', url: 'https://s.wanfangdata.com.cn/standard?q={q}' },
       ],
     },
-    { name: '百度学术', url: 'https://xueshu.baidu.com/s?wd={q}', icon: 'graduation-cap' },
+    { name: '百度学术', url: 'https://xueshu.baidu.com/s?wd={q}', icon: 'baiduxueshu' },
     {
       name: '谷歌学术',
       url: 'https://scholar.google.com/scholar?q={q}',

@@ -1,11 +1,19 @@
 /** <nav-search>：站内/引擎搜索、历史、键盘导航 */
-import { ENGINES, SCOPE_TABS, engineUrlFor, placeholderFor, type SearchScope } from '../../data/search-engines';
+import {
+  ENGINES,
+  SCOPE_TABS,
+  engineUrlFor,
+  isSearchScope,
+  placeholderFor,
+  type SearchScope,
+} from '../../config/search-engines';
 import { queryTokens, searchSites, type SiteRecord } from '../search-utils';
 import { NAV_OPEN_CARD_EVENT, toCardData, toCardDataHtml } from '../card-attrs';
 import { escapeHtml } from '../html-escape';
 import { iconEl } from '../icons';
-import { firstLetter } from '../first-letter';
-import { updateScrollFade, watchScrollFade } from '../scroll-fade';
+import { siteIconHtml } from '../site-icon';
+import { BREAKPOINT_MD } from '../breakpoints';
+import { watchScrollFade } from '../scroll-fade';
 import { storageGetJson, storageSetJson } from '../storage';
 
 const SCOPE_KEY = 'nav:scope';
@@ -16,19 +24,25 @@ const modeKey = (scope: SearchScope, engine: number): string => `nav:mode:${scop
 
 function loadScope(): SearchScope {
   const s = storageGetJson<string>(SCOPE_KEY, 'search');
-  return SCOPE_TABS.some((t) => t.id === s) ? (s as SearchScope) : 'search';
+  return isSearchScope(s) ? s : 'search';
 }
 
-/** 命中词高亮 */
+/** 命中词高亮：原文定位分段转义，避免在转义文本上误伤实体 */
 function markHit(text: string, tokens: string[]): string {
   if (!text) return '';
-  const esc = escapeHtml(text);
-  if (tokens.length === 0) return esc;
+  if (tokens.length === 0) return escapeHtml(text);
   const re = new RegExp(
     tokens.filter(Boolean).map((tk) => tk.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'),
     'gi',
   );
-  return esc.replace(re, (m) => `<mark class="search-hit">${m}</mark>`);
+  let out = '';
+  let last = 0;
+  for (const m of text.matchAll(re)) {
+    const i = m.index ?? 0;
+    out += escapeHtml(text.slice(last, i)) + `<mark class="search-hit">${escapeHtml(m[0])}</mark>`;
+    last = i + m[0].length;
+  }
+  return out + escapeHtml(text.slice(last));
 }
 
 class NavSearch extends HTMLElement {
@@ -45,13 +59,13 @@ class NavSearch extends HTMLElement {
 
   private input: HTMLInputElement | null = null;
   private dropdown: HTMLElement | null = null;
-  private modeWrap: HTMLElement | null = null;
-  private modeBtn: HTMLButtonElement | null = null;
-  private modeLabel: HTMLElement | null = null;
-  private modeMenu: HTMLElement | null = null;
+  private ctxBtn: HTMLButtonElement | null = null;
+  private ctxLabel: HTMLElement | null = null;
+  private ctxMenu: HTMLElement | null = null;
   private stopFades: (() => void)[] = [];
 
   private onDocKeydown = (e: KeyboardEvent): void => {
+    if (e.isComposing) return;
     const tag = (e.target as HTMLElement).tagName;
     if (e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA' && !e.metaKey && !e.ctrlKey && !e.altKey) {
       e.preventDefault();
@@ -60,9 +74,10 @@ class NavSearch extends HTMLElement {
   };
 
   private onDocClick = (e: MouseEvent): void => {
-    if (this.contains(e.target as Node)) return;
+    // 菜单选中重渲染后目标已摘出 DOM，contains 会误判，故按传播路径判断归属
+    if (e.composedPath().includes(this)) return;
     this.hideDropdown();
-    this.closeModeMenu();
+    this.closeCtxMenu();
   };
 
   connectedCallback(): void {
@@ -71,6 +86,17 @@ class NavSearch extends HTMLElement {
     this.history = this.loadHistory(this.scope);
     this.cacheRefs();
     this.applyScopeState();
+    // /?q=xxx（JSON-LD SearchAction）预填展开
+    const urlQ = new URLSearchParams(location.search).get('q');
+    if (urlQ) {
+      this.query = urlQ;
+      if (this.input) this.input.value = urlQ;
+      this.updateDropdown();
+    }
+    // 新标签页：仅桌面精确指针自动聚焦，触屏不抢焦点
+    if (window.matchMedia(`(min-width: ${BREAKPOINT_MD}px) and (pointer: fine)`).matches) {
+      this.input?.focus({ preventScroll: true });
+    }
     this.stopFades = [...this.querySelectorAll<HTMLElement>('[data-fade-x]')].map((el) =>
       watchScrollFade(el),
     );
@@ -113,72 +139,104 @@ class NavSearch extends HTMLElement {
   }
 
   private loadHistory(scope: SearchScope): string[] {
-    return storageGetJson<string[]>(historyKey(scope), []);
+    const h = storageGetJson<string[]>(historyKey(scope), []);
+    return Array.isArray(h) ? h.filter((x): x is string => typeof x === 'string') : [];
   }
 
   private cacheRefs(): void {
     this.input = this.querySelector<HTMLInputElement>('[data-role="input"]');
     this.dropdown = this.querySelector<HTMLElement>('[data-role="dropdown"]');
-    this.modeWrap = this.querySelector<HTMLElement>('[data-role="mode"]');
-    this.modeBtn = this.querySelector<HTMLButtonElement>('[data-role="mode-btn"]');
-    this.modeLabel = this.querySelector<HTMLElement>('[data-role="mode-label"]');
-    this.modeMenu = this.querySelector<HTMLElement>('[data-role="mode-menu"]');
+    this.ctxBtn = this.querySelector<HTMLButtonElement>('[data-role="ctx-btn"]');
+    this.ctxLabel = this.querySelector<HTMLElement>('[data-role="ctx-label"]');
+    this.ctxMenu = this.querySelector<HTMLElement>('[data-role="ctx-menu"]');
   }
 
   /** 按 scope/engineIdx 同步 SSR 静态标记 */
   private applyScopeState(): void {
-    this.querySelectorAll<HTMLButtonElement>('[data-scope]').forEach((b) => {
-      const on = b.dataset.scope === this.scope;
-      b.classList.toggle('active', on);
-      b.setAttribute('aria-pressed', String(on));
-    });
-
-    const footer = this.querySelector<HTMLElement>('[data-role="site-footer"]');
-    this.querySelectorAll<HTMLElement>('[data-role="engine-bar"]').forEach((bar) => {
-      bar.hidden = bar.dataset.engineScope !== this.scope;
-      updateScrollFade(bar);
-    });
-    if (footer) footer.hidden = this.scope !== 'site';
-
-    if (this.scope !== 'site') {
-      this.querySelectorAll<HTMLButtonElement>(
-        `[data-role="engine-bar"][data-engine-scope="${this.scope}"] [data-engine]`,
-      ).forEach((b) => b.classList.toggle('active', Number(b.dataset.engine) === this.engineIdx));
-    }
-
-    this.syncMode();
+    // 类型下标与 UI 解耦：即使类型按钮不在 DOM，占位符/搜索 URL 也要用到
+    this.modeIdx = this.loadModeIdx(this.scope, this.engineIdx);
+    this.syncCtxLabel();
+    if (this.ctxMenu && !this.ctxMenu.hidden) this.renderCtxMenu();
     if (this.input) this.input.placeholder = this.currentPlaceholder();
   }
 
-  private currentEngine() {
-    return this.scope === 'site' ? undefined : ENGINES[this.scope][this.engineIdx];
-  }
+  // ── 上下文芯片（范围+引擎+类型 统一选择器） ──
 
-  /** 类型下拉 */
-  private syncMode(): void {
-    if (!this.modeWrap || !this.modeBtn || !this.modeLabel || !this.modeMenu) return;
-    const modes = this.currentEngine()?.modes;
-    this.modeMenu.hidden = true;
-    this.modeBtn.setAttribute('aria-expanded', 'false');
-    if (!modes?.length) {
-      this.modeWrap.hidden = true;
+  private syncCtxLabel(): void {
+    if (!this.ctxLabel) return;
+    if (this.scope === 'site') {
+      this.ctxLabel.innerHTML = `${iconEl('logo', 'h-3.5 w-3.5 shrink-0')}<span>站内</span>`;
       return;
     }
-    this.modeIdx = this.loadModeIdx(this.scope, this.engineIdx);
-    this.modeWrap.hidden = false;
-    this.modeLabel.textContent = modes[this.modeIdx].label;
-    this.modeMenu.innerHTML = modes
-      .map(
-        (m, i) => `
-        <button type="button" role="option" data-mode="${i}" aria-selected="${i === this.modeIdx}"
-          class="mode-item">${escapeHtml(m.label)}</button>`,
-      )
-      .join('');
+    // 标签只显示引擎·类型（范围由菜单/占位符承担）；无类型显示引擎名
+    const engine = ENGINES[this.scope][this.engineIdx];
+    const mode = engine.modes?.[this.modeIdx];
+    const text = mode?.label ?? engine.name;
+    this.ctxLabel.innerHTML = `${iconEl(engine.icon, 'h-3.5 w-3.5 shrink-0')}<span>${escapeHtml(text)}</span>`;
   }
 
-  private closeModeMenu(): void {
-    if (this.modeMenu && !this.modeMenu.hidden) this.modeMenu.hidden = true;
-    this.modeBtn?.setAttribute('aria-expanded', 'false');
+  private renderCtxMenu(): void {
+    if (!this.ctxMenu) return;
+    const scopeGroup = this.ctxGroup(
+      '范围',
+      SCOPE_TABS.map(
+        (t) => `
+      <button type="button" role="option" aria-selected="${t.id === this.scope}" data-pick-scope="${t.id}"
+        class="ctx-item${t.id === this.scope ? ' active' : ''}">${t.icon ? iconEl(t.icon, 'h-3.5 w-3.5 shrink-0') : ''}${escapeHtml(t.label)}</button>`,
+      ).join(''),
+    );
+    if (this.scope === 'site') {
+      this.ctxMenu.innerHTML = scopeGroup;
+      return;
+    }
+    const engine = ENGINES[this.scope][this.engineIdx];
+    const engineGroup = this.ctxGroup(
+      '引擎',
+      ENGINES[this.scope]
+        .map(
+          (e, i) => `
+        <button type="button" role="option" aria-selected="${i === this.engineIdx}"
+          data-pick-engine="${i}"
+          class="ctx-item${i === this.engineIdx ? ' active' : ''}">
+          ${iconEl(e.icon, 'h-3.5 w-3.5 shrink-0')}${escapeHtml(e.name)}
+        </button>`,
+        )
+        .join(''),
+    );
+    const modeGroup = engine.modes?.length
+      ? this.ctxGroup(
+          '类型',
+          engine.modes
+            .map(
+              (m, i) => `
+            <button type="button" role="option" aria-selected="${i === this.modeIdx}" data-pick-mode="${i}"
+              class="ctx-item${i === this.modeIdx ? ' active' : ''}">${escapeHtml(m.label)}</button>`,
+            )
+            .join(''),
+        )
+      : '';
+    this.ctxMenu.innerHTML = scopeGroup + engineGroup + modeGroup;
+  }
+
+  /** listbox 子级须为 option/group：分组标题对读屏隐藏 */
+  private ctxGroup(label: string, items: string): string {
+    return `<div class="ctx-cap" aria-hidden="true">${label}</div><div class="ctx-row" role="group" aria-label="${label}">${items}</div>`;
+  }
+
+  private toggleCtxMenu(): void {
+    if (!this.ctxMenu || !this.ctxBtn) return;
+    const open = this.ctxMenu.hidden;
+    if (open) {
+      this.hideDropdown();
+      this.renderCtxMenu();
+    }
+    this.ctxMenu.hidden = !open;
+    this.ctxBtn.setAttribute('aria-expanded', String(open));
+  }
+
+  private closeCtxMenu(): void {
+    if (this.ctxMenu && !this.ctxMenu.hidden) this.ctxMenu.hidden = true;
+    this.ctxBtn?.setAttribute('aria-expanded', 'false');
   }
 
   private currentPlaceholder(): string {
@@ -199,6 +257,8 @@ class NavSearch extends HTMLElement {
 
   private onFocusIn = (e: FocusEvent): void => {
     if (e.target !== this.input) return;
+    // 输入框接管时收起 ctx 菜单，两面板不并存
+    this.closeCtxMenu();
     if (this.query) this.updateDropdown();
     else this.showHistory();
   };
@@ -206,26 +266,36 @@ class NavSearch extends HTMLElement {
   private onClick = (e: MouseEvent): void => {
     const t = e.target as HTMLElement;
 
-    if (t.closest('[data-role="mode-btn"]')) {
-      this.toggleModeMenu();
+    if (t.closest('[data-role="ctx-btn"]')) {
+      this.toggleCtxMenu();
       return;
     }
-    const modeItem = t.closest<HTMLButtonElement>('[data-mode]');
-    if (modeItem) {
-      this.setMode(Number(modeItem.dataset.mode));
+    const pickScope = t.closest<HTMLButtonElement>('[data-pick-scope]');
+    if (pickScope) {
+      const scope = pickScope.dataset.pickScope;
+      if (isSearchScope(scope)) {
+        this.switchScope(scope);
+        this.renderCtxMenu();
+        this.ctxBtn?.focus();
+      }
+      return;
+    }
+    // 引擎项只在当前 scope 菜单里渲染，无需再校验
+    const pickEngine = t.closest<HTMLButtonElement>('[data-pick-engine]');
+    if (pickEngine) {
+      this.setEngine(Number(pickEngine.dataset.pickEngine));
+      this.renderCtxMenu();
+      this.ctxBtn?.focus();
+      return;
+    }
+    const pickMode = t.closest<HTMLButtonElement>('[data-pick-mode]');
+    if (pickMode) {
+      this.setMode(Number(pickMode.dataset.pickMode));
+      this.renderCtxMenu();
+      this.ctxBtn?.focus();
       return;
     }
 
-    const scopeBtn = t.closest<HTMLButtonElement>('[data-scope]');
-    if (scopeBtn) {
-      this.switchScope(scopeBtn.dataset.scope as SearchScope);
-      return;
-    }
-    const engBtn = t.closest<HTMLButtonElement>('[data-engine]');
-    if (engBtn && engBtn.dataset.engineScope === this.scope) {
-      this.setEngine(Number(engBtn.dataset.engine));
-      return;
-    }
     if (t.closest('[data-role="submit"]')) {
       this.doSearch();
       return;
@@ -248,12 +318,18 @@ class NavSearch extends HTMLElement {
   };
 
   private onKeydown = (e: KeyboardEvent): void => {
-    if (e.target !== this.input) return;
+    if (e.isComposing) return;
+    const t = e.target as HTMLElement;
+    // Esc 对芯片/菜单也生效；方向键与 Enter 仅在输入框内
+    const onCtx = t.closest('[data-role="ctx-btn"], [data-role="ctx-menu"]') != null;
+    if (t !== this.input && !onCtx) return;
     switch (e.key) {
       case 'Escape':
-        if (this.modeMenu && !this.modeMenu.hidden) {
-          this.closeModeMenu();
-        } else {
+        if (this.ctxMenu && !this.ctxMenu.hidden) {
+          this.closeCtxMenu();
+          // 菜单已消费 Esc，阻断传播避免文档级监听连带反应
+          e.stopPropagation();
+        } else if (t === this.input) {
           this.query = '';
           this.input!.value = '';
           this.hideDropdown();
@@ -261,14 +337,17 @@ class NavSearch extends HTMLElement {
         e.preventDefault();
         break;
       case 'ArrowDown':
+        if (t !== this.input) return;
         this.moveCursor(1);
         e.preventDefault();
         break;
       case 'ArrowUp':
+        if (t !== this.input) return;
         this.moveCursor(-1);
         e.preventDefault();
         break;
       case 'Enter':
+        if (t !== this.input) return;
         this.doSearch();
         e.preventDefault();
         break;
@@ -288,37 +367,24 @@ class NavSearch extends HTMLElement {
     if (this.input) this.input.value = '';
     this.hideDropdown();
     this.applyScopeState();
-    this.input?.focus();
   }
 
   private setEngine(i: number): void {
     this.engineIdx = i;
     storageSetJson(engineKey(this.scope), i);
     this.applyScopeState();
-    this.input?.focus();
-  }
-
-  private toggleModeMenu(): void {
-    if (!this.modeBtn || !this.modeMenu) return;
-    const open = this.modeMenu.hidden;
-    if (open) this.hideDropdown();
-    this.modeMenu.hidden = !open;
-    this.modeBtn.setAttribute('aria-expanded', String(open));
   }
 
   private setMode(i: number): void {
     this.modeIdx = i;
     storageSetJson(modeKey(this.scope, this.engineIdx), i);
-    this.syncMode();
-    if (this.input) this.input.placeholder = this.currentPlaceholder();
-    this.input?.focus();
+    this.applyScopeState();
   }
 
   // ── 下拉面板 ──
 
   private updateDropdown(): void {
     if (!this.dropdown) return;
-    this.closeModeMenu();
     if (!this.query.trim()) {
       this.showHistory();
       return;
@@ -332,7 +398,7 @@ class NavSearch extends HTMLElement {
       const engine = ENGINES[this.scope][this.engineIdx];
       const mode = engine.modes?.[this.modeIdx];
       this.dropdown.innerHTML = `
-        <div class="flex items-center gap-3 px-4 py-3 text-sm text-muted">
+        <div role="option" aria-selected="false" aria-disabled="true" class="flex items-center gap-3 px-4 py-3 text-sm text-muted">
           ${iconEl('search', 'h-4 w-4')}
           <span>按回车在 <span class="font-medium text-brand">${engine.name}</span> 中搜索${mode ? `<span class="text-brand">${escapeHtml(mode.label)}</span>` : ''}「<span class="text-ink">${escapeHtml(this.query)}</span>」</span>
         </div>`;
@@ -349,12 +415,12 @@ class NavSearch extends HTMLElement {
     }
     d.innerHTML = this.results
       .map(
-        (r) => `
+        (r, i) => `
         <a href="${escapeHtml(r.url)}" target="_blank" rel="noopener noreferrer"${toCardDataHtml(toCardData(r))}
+          role="option" aria-selected="false" id="nav-search-opt-${i}"
           title="${escapeHtml(`${r.title} · ${r.catName}/${r.subName}（首字母 ${r.pinyinFirst}）`)}"
           class="flex items-center gap-3 px-3 py-2 transition-colors hover:bg-surface/60">
-          <img src="${escapeHtml(r.icon)}" alt="${escapeHtml(r.title)}" class="h-8 w-8 shrink-0 rounded-lg object-cover"
-            data-letter="${escapeHtml(firstLetter(r.title))}">
+          ${siteIconHtml(r.icon, r.title, 'h-8 w-8 shrink-0 rounded-lg object-cover')}
           <span class="min-w-0 flex-1">
             <span class="flex min-w-0 items-center gap-1.5">
               <span class="min-w-0 truncate text-sm font-semibold text-ink">${markHit(r.title, this.tokens)}</span>
@@ -373,17 +439,25 @@ class NavSearch extends HTMLElement {
   }
 
   private applyCursor(): void {
-    this.rowEls.forEach((a, i) => a.classList.toggle('search-row-active', i === this.cursor));
+    this.rowEls.forEach((a, i) => {
+      const active = i === this.cursor;
+      a.classList.toggle('search-row-active', active);
+      a.setAttribute('aria-selected', String(active));
+    });
+    const active = this.cursor >= 0 ? this.rowEls[this.cursor] : null;
+    if (active?.id) this.input?.setAttribute('aria-activedescendant', active.id);
+    else this.input?.removeAttribute('aria-activedescendant');
   }
 
   private showHistory(): void {
     const d = this.dropdown;
     if (!d) return;
-    this.closeModeMenu();
     if (this.history.length === 0) {
       this.hideDropdown();
       return;
     }
+    this.rowEls = [];
+    this.cursor = -1;
     d.innerHTML = `
       <div class="flex items-center justify-between px-3 py-2 text-note text-muted">
         <span>最近搜索</span>
@@ -391,8 +465,9 @@ class NavSearch extends HTMLElement {
       </div>
       ${this.history
         .map(
-          (h) => `
+          (h, i) => `
           <button type="button" data-history="${escapeHtml(h)}"
+            role="option" aria-selected="false" id="nav-search-hist-${i}"
             class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-ink transition-colors hover:bg-surface/60">
             <span class="text-muted">${iconEl('history', 'h-3.5 w-3.5')}</span>
             <span class="truncate">${escapeHtml(h)}</span>
@@ -404,11 +479,16 @@ class NavSearch extends HTMLElement {
   }
 
   private showDropdown(): void {
-    if (this.dropdown) this.dropdown.hidden = false;
+    if (!this.dropdown) return;
+    this.dropdown.hidden = false;
+    this.input?.setAttribute('aria-expanded', 'true');
   }
 
   private hideDropdown(): void {
-    if (this.dropdown) this.dropdown.hidden = true;
+    if (!this.dropdown) return;
+    this.dropdown.hidden = true;
+    this.input?.setAttribute('aria-expanded', 'false');
+    this.input?.removeAttribute('aria-activedescendant');
   }
 
   // ── 键盘导航与搜索动作 ──
@@ -425,6 +505,7 @@ class NavSearch extends HTMLElement {
   private doSearch(): void {
     const q = this.query.trim();
     if (!q) return;
+    this.closeCtxMenu();
 
     if (this.scope === 'site') {
       const target = this.cursor >= 0 && this.results[this.cursor] ? this.results[this.cursor] : this.results[0];
