@@ -28,3 +28,8 @@ export async function getSiteData(): Promise<SiteData> {
 
   return { categories, searchIndex, totalLinks: searchIndex.length };
 }
+
+/** 分类下的链接总数（侧栏与分类块共用） */
+export function categoryLinkCount(cat: CollectionEntry<'sites'>): number {
+  return cat.data.subs.reduce((n, s) => n + s.links.length, 0);
+}

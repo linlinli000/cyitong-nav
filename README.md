@@ -8,11 +8,11 @@
 
 ## 添加一个链接
 
-数据是三层结构：**一级分类 → 二级分类 → 链接**，存在 `src/data/sites/*.yaml`。加一条链接按下面步骤操作。
+数据是三层结构：**一级分类 → 二级分类 → 链接**，存在 `src/content/sites/*.yaml`。加一条链接按下面步骤操作。
 
 ### 1. 确定分类
 
-七个一级分类，文件同名（`src/data/sites/{id}.yaml`）：
+七个一级分类，文件同名（`src/content/sites/{id}.yaml`）：
 
 | id | 名称 | | id | 名称 |
 |---|---|---|---|---|
@@ -96,10 +96,11 @@ public/
 
 src/
 ├── content.config.ts     # 数据 schema 与构建期校验
-├── data/
-│   ├── sites/*.yaml      # 唯一数据源
+├── content/sites/*.yaml  # 唯一内容数据源（7 个分类，贡献者编辑）
+├── config/               # 开发者维护的静态配置表
 │   ├── category-icons.ts # 分类 icon 语义键 → iconify 包名
 │   ├── search-engines.ts # 搜索引擎与品牌字形
+│   ├── site-links.ts     # 页脚/侧栏的「关于本站、投稿与反馈」
 │   └── topbar-tools.ts   # 顶栏快捷下拉（翻译 / 网盘 / 邮箱）的数据
 ├── lib/
 │   ├── icon-sprite.ts    # 运行期图标 → <symbol>（服务端）

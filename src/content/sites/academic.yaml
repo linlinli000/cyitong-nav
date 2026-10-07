@@ -145,8 +145,8 @@ subs:
         pinyinFirst: scihub
         url:
           - { label: 主站, url: https://sci-hub.ru/ }
-          - { label: 主站, url: https://sci-hub.st/ }
-          - { label: 主站, url: https://sci-hub.su/ }
+          - { label: 备用, url: https://sci-hub.st/ }
+          - { label: 备用, url: https://sci-hub.su/ }
           - { label: 镜像导航, url: https://sci-hub.shop/ }
         badge: 镜像
       - id: scidown

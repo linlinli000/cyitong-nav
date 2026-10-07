@@ -101,7 +101,7 @@ subs:
         desc: 一句话生成 PPT，自动配图排版
         pinyin: aippt
         pinyinFirst: aippt
-        url: https://www.aippt.cn/?seller=itab
+        url: https://www.aippt.cn/
       - id: gamma
         title: Gamma
         desc: AI 生成演示文稿与网页，自动排版

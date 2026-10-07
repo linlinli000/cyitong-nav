@@ -53,7 +53,7 @@ const subSchema = z.object({
 });
 
 const sites = defineCollection({
-  loader: glob({ pattern: '*.yaml', base: './src/data/sites' }),
+  loader: glob({ pattern: '*.yaml', base: './src/content/sites' }),
   schema: z
     .object({
       order: z.number().int(),

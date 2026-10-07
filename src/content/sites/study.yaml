@@ -131,7 +131,7 @@ subs:
         desc: 免费学习 WPS/Office 办公技巧
         pinyin: wpsxuetang
         pinyinFirst: wpsxt
-        url: "https://www.wps.cn/learning?spm=5176.28103460.0.0.68e62988EREePp"
+        url: https://www.wps.cn/learning
       - id: runoob
         title: 菜鸟教程
         desc: 各语言入门教程与在线运行工具
