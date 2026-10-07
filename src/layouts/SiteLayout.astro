@@ -6,6 +6,7 @@ import Sidebar from '../components/Sidebar.astro';
 import TopBar from '../components/TopBar.astro';
 import Footer from '../components/Footer.astro';
 import BackToTop from '../components/BackToTop.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 interface Props {
   categories: CollectionEntry<'sites'>[];
@@ -26,11 +27,13 @@ const { categories, totalLinks, isHome, title, description, robots, searchIndex 
     <Sidebar categories={categories} isHome={isHome} />
   </nav-sidebar>
 
-  <div class="site-content min-h-screen lg:pl-56">
+  <!-- 侧栏让位由 global.css 的 nav-sidebar:has() 规则唯一维护 -->
+  <div class="site-content min-h-screen">
     <TopBar isHome={isHome} />
     <slot />
     <Footer totalLinks={totalLinks} />
     <BackToTop />
+    <ThemeToggle />
   </div>
 </Layout>
 

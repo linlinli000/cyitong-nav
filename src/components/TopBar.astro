@@ -1,6 +1,8 @@
 ---
 import { Icon } from 'astro-icon/components';
-import { TOOLS } from '../data/topbar-tools';
+import { TOOLS } from '../config/topbar-tools';
+import { SITE_LINKS, brandHref } from '../config/site-links';
+import ToolIcon from './ToolIcon.astro';
 
 interface Props {
   isHome: boolean;
@@ -8,17 +10,15 @@ interface Props {
 
 const { isHome } = Astro.props;
 
-const brandHref = isHome ? '#top' : '/';
-
 const MENU_ICON = 'lucide:menu';
 const CARET_ICON = 'lucide:chevron-down';
 ---
 
-<header class="sticky top-0 z-20 bg-bar backdrop-blur">
+<header class="sticky top-0 z-20 bg-bar backdrop-blur-md">
   <div class="relative flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5 lg:px-4">
     <!-- 移动居中品牌 -->
     <a
-      href={brandHref}
+      href={brandHref(isHome)}
       aria-label="成医通"
       class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 whitespace-nowrap lg:hidden"
     >
@@ -54,6 +54,8 @@ const CARET_ICON = 'lucide:chevron-down';
 
       <a
         href="https://wiki.cyitong.top"
+        target="_blank"
+        rel="noopener noreferrer"
         aria-label="wiki"
         title="wiki"
         data-ghost
@@ -95,13 +97,7 @@ const CARET_ICON = 'lucide:chevron-down';
                   data-ghost
                   class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-muted transition-colors"
                 >
-                  <img
-                    src={item.icon}
-                    alt={item.name}
-                    aria-hidden="true"
-                    loading="lazy"
-                    class="h-6 w-6 shrink-0 rounded-md object-contain"
-                  />
+                  <ToolIcon icon={item.icon} />
                   <span class="truncate">{item.name}</span>
                 </a>
               ))}
@@ -110,22 +106,6 @@ const CARET_ICON = 'lucide:chevron-down';
         </div>
       ))}
 
-      <nav-theme-toggle>
-        <button
-          type="button"
-          data-theme-toggle
-          aria-label="切换暗色模式"
-          data-ghost
-          class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors"
-        >
-          <span data-icon="moon" aria-hidden="true">
-            <Icon name="lucide:moon" class="h-6 w-6" />
-          </span>
-          <span data-icon="sun" aria-hidden="true">
-            <Icon name="lucide:sun" class="h-6 w-6" />
-          </span>
-        </button>
-      </nav-theme-toggle>
       <a
         href="https://github.com/linlinli000/cyitong-nav"
         target="_blank"
@@ -135,14 +115,89 @@ const CARET_ICON = 'lucide:chevron-down';
         data-ghost
         class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors"
       >
-        <Icon name="simple-icons:github" class="h-6 w-6" aria-hidden="true" />
+        <svg class="h-6 w-6" aria-hidden="true"><use href="#icon-github"/></svg>
       </a>
+
+      <!-- 移动端工具箱入口（桌面用上方下拉） -->
+      <button
+        type="button"
+        data-role="tools-open"
+        aria-label="打开工具箱"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        data-ghost
+        class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors lg:hidden"
+      >
+        <Icon name="lucide:layout-grid" class="h-5.5 w-5.5" aria-hidden="true" />
+      </button>
     </div>
   </div>
 </header>
 
-<!-- 顶部栏脚本：主题切换 / 下拉交互 -->
+<!-- 移动端工具箱抽屉（翻译/网盘/邮箱全量 + 底部站内链接） -->
+<nav-tools>
+  <dialog
+    data-role="tools-dlg"
+    tabindex="-1"
+    class="m-0 ml-auto h-dvh max-h-dvh w-56 max-w-[84vw] bg-card p-0 text-ink shadow-[var(--shadow-menu)] focus:outline-none backdrop:bg-black/50"
+  >
+    <div class="flex h-full flex-col">
+      <div class="flex h-14 shrink-0 items-center px-4">
+        <span class="flex items-center gap-2 text-lg font-bold">
+          <Icon name="lucide:layout-grid" class="h-5 w-5 text-brand" aria-hidden="true" />
+          工具箱
+        </span>
+      </div>
+      <div class="scrollbar-hide flex-1 space-y-0.5 overflow-y-auto px-2 pb-4 pt-1">
+        {
+          TOOLS.map((tool) => (
+            <section>
+              <h3 class="mb-1.5 flex items-center gap-x-2 rounded-lg py-3 pl-3.5 pr-2 text-body font-medium text-muted">
+                <Icon name={tool.icon} class="h-[21px] w-[21px] shrink-0" aria-hidden="true" />
+                {tool.label}
+                <span class="ml-auto shrink-0 text-note text-muted">{tool.items.length}</span>
+              </h3>
+              <div class="grid grid-cols-2 gap-1.5">
+                {tool.items.map((item) => (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex h-[72px] flex-col items-center justify-center gap-1.5 rounded-xl bg-surface px-2 text-dense text-muted transition-colors hover:bg-track hover:text-ink"
+                  >
+                    <img
+                      src={item.icon}
+                      alt=""
+                      aria-hidden="true"
+                      loading="lazy"
+                      class="h-6 w-6 shrink-0 rounded-md object-contain"
+                    />
+                    <span class="max-w-full min-w-0 truncate text-center">{item.name}</span>
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))
+        }
+      </div>
+      <div class="shrink-0 space-y-0.5 px-2 py-4">
+        {
+          SITE_LINKS.map((l) => (
+            <a
+              href={l.href}
+              class="flex w-full items-center gap-x-2 rounded-lg py-3 pl-3.5 pr-2 font-medium text-muted transition-colors hover:bg-tint hover:text-ink"
+            >
+              <Icon name={l.icon} class="h-[21px] w-[21px] shrink-0 text-brand" aria-hidden="true" />
+              <span class="min-w-0 truncate text-body">{l.label}</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </dialog>
+</nav-tools>
+
 <script>
-  import '../web/elements/nav-theme-toggle';
   import '../web/header-dropdown';
+  import '../web/elements/nav-tools';
 </script>

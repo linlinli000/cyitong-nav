@@ -1,0 +1,9 @@
+---
+interface Props {
+  icon: string;
+}
+
+const { icon } = Astro.props;
+---
+
+<img src={icon} alt="" aria-hidden="true" loading="lazy" class="h-6 w-6 shrink-0 rounded-md object-contain" />

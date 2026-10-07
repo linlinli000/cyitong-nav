@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { SITE_LINKS } from '../config/site-links';
 
 interface Props {
   totalLinks: number;
@@ -15,20 +16,17 @@ const year = new Date().getFullYear();
       aria-label="站内链接"
       class="mb-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm"
     >
-      <a
-        href="/about/"
-        class="inline-flex items-center gap-1.5 whitespace-nowrap text-muted transition-colors hover:text-ink"
-      >
-        <Icon name="heroicons:information-circle-solid" class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
-        关于本站
-      </a>
-      <a
-        href="/contribute/"
-        class="inline-flex items-center gap-1.5 whitespace-nowrap text-muted transition-colors hover:text-ink"
-      >
-        <Icon name="heroicons:chat-bubble-left-right-solid" class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
-        投稿与反馈
-      </a>
+      {
+        SITE_LINKS.map((l) => (
+          <a
+            href={l.href}
+            class="inline-flex items-center gap-1.5 whitespace-nowrap text-muted transition-colors hover:text-ink"
+          >
+            <Icon name={l.icon} class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+            {l.label}
+          </a>
+        ))
+      }
     </nav>
     <div class="flex flex-col items-center gap-3 text-center text-sm text-muted">
       <p>成医通已收录 <span class="font-semibold text-brand">{totalLinks}</span> 个常用链接 · 成都医学院师生导航</p>
@@ -39,7 +37,14 @@ const year = new Date().getFullYear();
         <Icon name="lucide:shield-check" class="h-3.5 w-3.5 shrink-0 text-brand" aria-hidden="true" />
         第三方非官方站 · 学生维护
       </p>
-      <p class="text-note text-muted/70">© {year} 成医通 · Made with ♥ for CMC</p>
+      <p class="text-note text-muted/70">© <span data-year>{year}</span> 成医通 · Made with ♥ for CMC</p>
     </div>
   </div>
 </footer>
+
+<script is:inline>
+  // 构建期年份作兜底，运行时对时避免跨年显示旧年份
+  document.querySelectorAll('[data-year]').forEach((el) => {
+    el.textContent = String(new Date().getFullYear());
+  });
+</script>

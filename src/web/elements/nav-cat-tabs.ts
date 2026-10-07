@@ -1,5 +1,6 @@
 /** <nav-cat-tabs>：子分类 tab 过滤 + 卡片折叠，仅增强 CategoryBlock 静态标记 */
 import { BREAKPOINT_LG } from '../breakpoints';
+import { scrollBehavior } from '../motion';
 import { watchScrollFade } from '../scroll-fade';
 
 const ROWS_DESKTOP = 3;
@@ -13,10 +14,16 @@ export class NavCatTabs extends HTMLElement {
   private moreBtn: HTMLButtonElement | null = null;
   private moreLine: HTMLElement | null = null;
   private stopFade: (() => void) | null = null;
+  private resizeRaf = 0;
 
   private onResize = (): void => {
-    this.maxCards = this.computeMaxCards();
-    this.applyDisplay();
+    // rAF 合帧后再全量切换显隐
+    if (this.resizeRaf) return;
+    this.resizeRaf = requestAnimationFrame(() => {
+      this.resizeRaf = 0;
+      this.maxCards = this.computeMaxCards();
+      this.applyDisplay();
+    });
   };
 
   private onMoreClick = (): void => {
@@ -33,7 +40,7 @@ export class NavCatTabs extends HTMLElement {
     const landing = Math.round(window.innerHeight * REVEAL_LANDING_RATIO);
     const top = first.getBoundingClientRect().top;
     if (top < landing) return;
-    const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    const behavior = scrollBehavior();
     window.scrollTo({ top: window.scrollY + top - landing, behavior });
   }
 
@@ -55,6 +62,8 @@ export class NavCatTabs extends HTMLElement {
     this.moreBtn?.removeEventListener('click', this.onMoreClick);
     this.stopFade?.();
     this.stopFade = null;
+    if (this.resizeRaf) cancelAnimationFrame(this.resizeRaf);
+    this.resizeRaf = 0;
     window.removeEventListener('resize', this.onResize);
   }
 

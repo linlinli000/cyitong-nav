@@ -43,7 +43,7 @@ interface Browser {
 
 const BROWSERS: Browser[] = [
   {
-    icon: 'simple-icons:googlechrome',
+    icon: 'googlechrome',
     name: 'Google Chrome 设为首页',
     steps: [
       '复制本站地址：https://nav.cyitong.top',
@@ -53,7 +53,7 @@ const BROWSERS: Browser[] = [
     ],
   },
   {
-    icon: 'simple-icons:microsoftedge',
+    icon: 'microsoftedge',
     name: 'Microsoft Edge 设为首页',
     steps: [
       '复制本站地址：https://nav.cyitong.top',
@@ -110,7 +110,6 @@ interface Contact {
   label: string;
   value: string;
   href: string;
-  external?: boolean;
 }
 
 const CONTACTS: Contact[] = [
@@ -208,7 +207,7 @@ const FAQS: Faq[] = [
             <div class="doc-card">
               <div class="doc-card-head">
                 <span class="doc-icon">
-                  <Icon name={browser.icon} class="h-5 w-5" aria-hidden="true" />
+                  <svg class="h-5 w-5" aria-hidden="true"><use href={`#icon-${browser.icon}`}/></svg>
                 </span>
                 <h3>{browser.name}</h3>
               </div>
@@ -293,12 +292,7 @@ const FAQS: Faq[] = [
       <div class="doc-rows my-4">
         {
           CONTACTS.map((c) => (
-            <a
-              href={c.href}
-              class="doc-row"
-              target={c.external ? '_blank' : undefined}
-              rel={c.external ? 'noopener noreferrer' : undefined}
-            >
+            <a href={c.href} class="doc-row">
               <Icon name={c.icon} class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
               <span class="doc-row-label">{c.label}</span>
               <span class="doc-row-value">{c.value}</span>

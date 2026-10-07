@@ -1,7 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon/components';
-import { categoryIcon } from '../data/category-icons';
+import { categoryIcon } from '../config/category-icons';
+import { categoryLinkCount } from '../lib/site-data';
 import LinkCard from './LinkCard.astro';
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
 }
 
 const { category } = Astro.props;
-const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
+const total = categoryLinkCount(category);
 ---
 
 <section
@@ -21,7 +22,7 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
   <div class="relative mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
     <div class="flex shrink-0 items-center gap-2.5 pr-24 lg:pr-0">
       <span class="text-brand">
-        <Icon name={categoryIcon(category.data.icon)} class="h-5 w-5" />
+        <Icon name={categoryIcon(category.data.icon)} class="h-5 w-5" aria-hidden="true" />
       </span>
       <h2 class="text-lg font-bold text-ink">{category.data.name}</h2>
       <span
@@ -80,7 +81,7 @@ const total = category.data.subs.reduce((n, s) => n + s.links.length, 0);
       hidden
     >
       <span class="cat-more-label">更多</span>
-      <Icon name="lucide:chevron-down" class="cat-more-chevron h-3.5 w-3.5" />
+      <Icon name="lucide:chevron-down" class="cat-more-chevron h-3.5 w-3.5" aria-hidden="true" />
     </button>
   </div>
 

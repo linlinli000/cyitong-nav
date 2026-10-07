@@ -57,7 +57,11 @@ roots.forEach((root) => {
 
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (!isOpen(root)) openRoot(root);
+    if (isOpen(root)) {
+      closeRoot(root);
+      return;
+    }
+    openRoot(root);
   });
 
   root.addEventListener('click', (e) => {

@@ -106,13 +106,17 @@ class NavDialog extends HTMLElement {
       p.textContent = note;
       body.appendChild(p);
     }
+    // 先开盖再异步生成，qrcode 首载有延迟
+    if (!this.dlg!.open) this.dlg!.showModal();
     try {
       const { default: QRCode } = await import('qrcode');
       img.src = await QRCode.toDataURL(url, { width: 256, margin: 1, errorCorrectionLevel: 'M' });
     } catch {
-      body.innerHTML = '<p class="py-8 text-center text-sm text-muted">二维码生成失败</p>';
+      // 等待期间可能已打开其他卡片，内容被替换后不回写
+      if (img.isConnected) {
+        body.innerHTML = '<p class="py-8 text-center text-sm text-muted">二维码生成失败</p>';
+      }
     }
-    if (!this.dlg!.open) this.dlg!.showModal();
   }
 
   private openEntries(title: string, icon: string, entries: Entry[]): void {

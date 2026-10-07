@@ -17,7 +17,7 @@ const MAIL = 'linlinli_000@163.com';
 const ISSUE_URL = 'https://github.com/linlinli000/cyitong-nav/issues/new';
 const REPO_URL = 'https://github.com/linlinli000/cyitong-nav';
 
-// 与卡片展示的模板同源，改一处即可；点击时各行已填好
+// 与卡片展示模板同源，点击时各行已填好
 const MAIL_FIELDS = [
   '反馈类型：投稿 / 链接失效 / 不宜收录',
   '网站名称：',
@@ -82,7 +82,7 @@ const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&
         <div class="doc-card">
           <div class="doc-card-head">
             <span class="doc-icon">
-              <Icon name="simple-icons:github" class="h-5 w-5" aria-hidden="true" />
+              <svg class="h-5 w-5" aria-hidden="true"><use href="#icon-github"/></svg>
             </span>
             <h3>提交 Issue</h3>
           </div>
@@ -119,7 +119,7 @@ const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&
           </p>
           <ol class="doc-steps">
             <li>
-              <strong>加数据、放图标</strong>：在 <code>src/data/sites/{'{分类id}'}.yaml</code> 的 <code
+              <strong>加数据、放图标</strong>：在 <code>src/content/sites/{'{分类id}'}.yaml</code> 的 <code
                 >subs[].links[]</code
               > 追加记录；图标存为 <code>public/icons/{'{分类id}'}/{'{链接id}'}.webp</code>，文件名与记录的
               <code>id</code> 一致。

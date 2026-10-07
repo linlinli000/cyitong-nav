@@ -1,16 +1,19 @@
 /** <nav-sidebar>：分类手风琴、滚动高亮、移动抽屉、桌面折叠图标条（浮层见 sidebar-flyout） */
 import { SidebarFlyout } from '../sidebar-flyout';
 import { storageSet } from '../storage';
+import { lockScroll, unlockScroll } from '../scroll-lock';
 import { BREAKPOINT_LG } from '../breakpoints';
+import { scrollBehavior } from '../motion';
 import type { NavCatTabs } from './nav-cat-tabs';
 
-const RAIL_KEY = 'nav:rail';
+const RAIL_KEY = 'nav:rail'; // 与 Sidebar.astro 的 inline 脚本同键，改名两处同步
 /** 侧栏高亮判定锚点 */
 const SPY_ANCHOR = 0.18;
 
 class NavSidebar extends HTMLElement {
   private aside: HTMLElement | null = null;
   private backdrop: HTMLElement | null = null;
+  private mobileOpener: HTMLElement | null = null;
   private observer: IntersectionObserver | null = null;
   private sections: HTMLElement[] = [];
   private lastActive = '';
@@ -28,9 +31,10 @@ class NavSidebar extends HTMLElement {
       this.toggleRail();
       return;
     }
-    const opener = (e.target as Element).closest('[data-mobile-nav-open]');
+    const opener = (e.target as Element).closest<HTMLElement>('[data-mobile-nav-open]');
     if (opener) {
       e.preventDefault();
+      this.mobileOpener = opener;
       this.openDrawer();
     }
   };
@@ -47,11 +51,14 @@ class NavSidebar extends HTMLElement {
 
   private onDocKeydown = (e: KeyboardEvent): void => {
     if (e.key !== 'Escape') return;
+    // 焦点在 modal dialog 内时 Esc 归它消费，侧栏不连带关闭
+    if ((e.target as Element).closest?.('dialog[open]')) return;
     if (this.flyout.isOpen()) {
       this.flyout.close(true);
       return;
     }
-    this.closeDrawer();
+    // 仅在自家抽屉打开时收起
+    if (this.drawerOpen()) this.closeDrawer();
   };
 
   private onToggleClick = (e: MouseEvent): void => {
@@ -102,7 +109,7 @@ class NavSidebar extends HTMLElement {
     this.removeEventListener('click', this.flyout.onItemClick);
     this.backdrop?.removeEventListener('click', this.onBackdropClick);
     this.flyout.destroy();
-    document.body.classList.remove('overflow-hidden');
+    if (this.drawerOpen()) unlockScroll();
   }
 
   // ── 折叠/展开 ──
@@ -162,7 +169,7 @@ class NavSidebar extends HTMLElement {
     const group = this.querySelector<HTMLElement>(`.sidebar-group[data-cat="${id}"]`);
     if (group) {
       this.setGroupOpen(group, true);
-      group.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      group.scrollIntoView({ block: 'nearest', behavior: scrollBehavior() });
     }
   }
 
@@ -197,12 +204,12 @@ class NavSidebar extends HTMLElement {
     if (!cat) return;
     const section = document.querySelector<HTMLElement>(`[data-cat-block="${cat}"]`);
     if (!section) {
-      // 内容页无分类区块：回首页锚点；页内也没有则静默，避免误跳
+      // 内容页无分类区块：回首页锚点，页内也没有则静默
       if (!document.querySelector('[data-cat-block]')) window.location.href = `/#${cat}`;
       return;
     }
     section.querySelector<NavCatTabs>('nav-cat-tabs')?.activate(filter);
-    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    section.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
     this.setActive(cat);
   }
 
@@ -235,16 +242,19 @@ class NavSidebar extends HTMLElement {
     this.aside?.classList.remove('-translate-x-full');
     this.aside?.classList.add('translate-x-0');
     if (this.backdrop) this.backdrop.hidden = false;
-    document.body.classList.add('overflow-hidden');
+    lockScroll();
     this.setOpenerExpanded(true);
   }
 
   private closeDrawer(): void {
+    const wasOpen = this.drawerOpen();
     this.aside?.classList.remove('translate-x-0');
     this.aside?.classList.add('-translate-x-full');
     if (this.backdrop) this.backdrop.hidden = true;
-    document.body.classList.remove('overflow-hidden');
+    unlockScroll();
     this.setOpenerExpanded(false);
+    // 仅从打开态关闭时归还焦点
+    if (wasOpen) this.mobileOpener?.focus({ preventScroll: true });
   }
 
   private setOpenerExpanded(expanded: boolean): void {
