@@ -19,7 +19,7 @@ const QUICK_PICKS: Array<[string, string]> = [
   ['campus', 'lib'],
   ['academic', 'pubmed'],
   ['academic', 'cnki'],
-  ['scitools', 'deepl'],
+  ['campus', 'shiguang'],
 ];
 const quickLinks = QUICK_PICKS.map(([catId, id]) => {
   const hit = searchIndex.find((r) => r.catId === catId && r.id === id);
