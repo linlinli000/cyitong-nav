@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 import { categoryIcon } from '../config/category-icons';
 import { categoryLinkCount } from '../lib/site-data';
-import { SITE_LINKS } from '../config/site-links';
+import { FOOTER_LINKS } from '../config/site-links';
 
 interface Props {
   categories: CollectionEntry<'sites'>[];
@@ -14,8 +14,6 @@ const { categories, isHome } = Astro.props;
 
 // 内容页无分类区块，锚点须带回首页路径
 const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
-
-const FOOTER_LINKS = [...SITE_LINKS].reverse();
 ---
 
 <aside id="sidebar" class="-translate-x-full">
@@ -69,22 +67,22 @@ const FOOTER_LINKS = [...SITE_LINKS].reverse();
   <div class="sidebar-footer">
     <!-- 桌面端：折叠成图标条（移动端隐藏） -->
     <div class="sidebar-footer-rail">
-      <button type="button" data-sidebar-toggle class="sidebar-footer-link" aria-label="收起侧边栏">
-        <span class="sidebar-footer-icon">
+      <button type="button" data-sidebar-toggle class="footer-link" aria-label="收起侧边栏">
+        <span class="footer-link-icon">
           <Icon name="lucide:panel-left-close" class="footer-icon footer-icon--close" aria-hidden="true" />
           <Icon name="lucide:panel-left-open" class="footer-icon footer-icon--open" aria-hidden="true" />
         </span>
-        <span class="sidebar-footer-label">收起</span>
+        <span class="footer-link-label">收起</span>
       </button>
     </div>
     <!-- 移动端：站内链接（投稿/关于），顺序与右侧工具箱抽屉一致 -->
     <div class="sidebar-footer-links">
       {FOOTER_LINKS.map((l) => (
-        <a href={l.href} class="sidebar-footer-link">
-          <span class="sidebar-footer-icon">
+        <a href={l.href} class="footer-link">
+          <span class="footer-link-icon">
             <Icon name={l.icon} aria-hidden="true" />
           </span>
-          <span class="sidebar-footer-label">{l.label}</span>
+          <span class="footer-link-label">{l.label}</span>
         </a>
       ))}
     </div>

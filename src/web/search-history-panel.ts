@@ -35,7 +35,7 @@ export function renderHistoryPanel(body: HTMLElement, active: SearchScope): void
     const n = readHistory(s).length;
     return `<button type="button" role="tab" aria-selected="${s === active}"
       class="history-tab${s === active ? ' active' : ''}" data-history-tab="${s}">
-      ${escapeHtml(LABEL[s])}${n > 0 ? `<span class="history-tab-count">${n}</span>` : ''}
+      ${escapeHtml(LABEL[s])}${n > 0 ? `<span class="count-badge">${n}</span>` : ''}
     </button>`;
   }).join('');
 

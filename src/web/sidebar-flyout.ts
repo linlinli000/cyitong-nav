@@ -7,7 +7,7 @@ const CLOSE_DELAY_MS = 150;
 
 /** 浮层锚点：分类组或底部链接 */
 function anchorOf(target: Element): HTMLElement | null {
-  return target.closest<HTMLElement>('.sidebar-group, .sidebar-footer-link');
+  return target.closest<HTMLElement>('.sidebar-group, .footer-link');
 }
 
 export class SidebarFlyout {
@@ -96,7 +96,7 @@ export class SidebarFlyout {
   };
 
   onItemClick = (e: MouseEvent): void => {
-    if ((e.target as Element).closest('.sidebar-footer-link')) this.close(false);
+    if ((e.target as Element).closest('.footer-link')) this.close(false);
   };
 
   // ── 浮层自身的事件 ──
@@ -151,7 +151,7 @@ export class SidebarFlyout {
       if (!this.shownFor(group)) this.openGroup(group, moveFocus);
       return;
     }
-    const link = target.closest<HTMLElement>('.sidebar-footer-link');
+    const link = target.closest<HTMLElement>('.footer-link');
     if (link && !this.shownFor(link)) this.openTip(link);
   }
 
@@ -189,7 +189,7 @@ export class SidebarFlyout {
 
     const label = document.createElement('span');
     label.className = 'sidebar-tip-text';
-    label.textContent = link.querySelector('.sidebar-footer-label')?.textContent?.trim() ?? '';
+    label.textContent = link.querySelector('.footer-link-label')?.textContent?.trim() ?? '';
     if (!label.textContent) return;
 
     this.el.classList.add('sidebar-tip');

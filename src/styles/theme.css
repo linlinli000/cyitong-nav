@@ -154,7 +154,7 @@ nav-sidebar {
   }
 
   #sidebar.is-collapsed .sidebar-cat-meta,
-  #sidebar.is-collapsed .sidebar-footer-label {
+  #sidebar.is-collapsed .footer-link-label {
     opacity: 0;
     pointer-events: none;
   }

@@ -50,7 +50,7 @@ body.page-inner:not(.scrolled) .topbar-pill {
   color: var(--color-brand);
   background: var(--color-brand-mark);
 }
-.history-tab.active .history-tab-count {
+.history-tab.active .count-badge {
   background: color-mix(in srgb, currentColor 18%, transparent);
 }
 #sidebar.-translate-x-full {
