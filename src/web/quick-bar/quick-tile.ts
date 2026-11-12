@@ -1,8 +1,8 @@
 /** 常用磁贴完整结构（容器 > 链接）：SSG(SearchPanel) 与客户端(quick-bar.ts) 共用此函数，改结构只改这里；管理操作统一走右键/长按菜单 */
-import { escapeHtml } from '../html-escape';
-import { iconEl } from '../icons';
+import { escapeHtml } from '../shared/html-escape';
+import { iconEl } from '../shared/icons';
 import type { QuickSite } from './quick-store';
-import { siteIconHtml } from '../site-icon';
+import { siteIconHtml } from '../shared/site-icon';
 
 interface QuickTileOpts {
   /** 已固定：磁贴右上角显示纯指示图钉（不可点，操作走右键/长按菜单） */

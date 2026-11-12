@@ -1,8 +1,8 @@
 /** <nav-dialog>：文档级拦截 a[data-entries]/a[data-qr] 点击 → 入口/二维码弹窗 */
-import { escapeHtml } from '../html-escape';
+import { escapeHtml } from '../shared/html-escape';
 import type { Entry } from '../../content.config';
-import { iconEl } from '../icons';
-import { NAV_OPEN_CARD_EVENT, toCardDataFromDataset, type CardData } from '../card-attrs';
+import { iconEl } from '../shared/icons';
+import { NAV_OPEN_CARD_EVENT, toCardDataFromDataset, type CardData } from '../shared/card-attrs';
 
 class NavDialog extends HTMLElement {
   private dlg: HTMLDialogElement | null = null;

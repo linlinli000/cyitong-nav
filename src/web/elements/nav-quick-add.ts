@@ -1,5 +1,5 @@
 /** <nav-quick-add>：添加快捷方式对话框；图标解析 上传 > 站内收录（同 host 复用） > unavatar 抓取 > 首字母兜底 */
-import { iconEl } from '../icons';
+import { iconEl } from '../shared/icons';
 import {
   MAX_PINS,
   QUICK_ADD_OPEN_EVENT,
@@ -9,8 +9,8 @@ import {
   savePins,
   type QuickSite,
 } from '../quick-bar/quick-store';
-import type { SiteRecord } from '../search-utils';
-import { siteIconHtml } from '../site-icon';
+import type { SiteRecord } from '../shared/search-utils';
+import { siteIconHtml } from '../shared/site-icon';
 
 const MAX_ICON_PX = 96;
 const MAX_FILE_BYTES = 2 * 1024 * 1024;

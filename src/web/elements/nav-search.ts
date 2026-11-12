@@ -7,12 +7,12 @@ import {
   placeholderFor,
   type SearchScope,
 } from '../../config/search-engines';
-import { queryTokens, searchSites, type SiteRecord } from '../search-utils';
-import { NAV_OPEN_CARD_EVENT, toCardData, toCardDataHtml } from '../card-attrs';
-import { escapeHtml } from '../html-escape';
-import { iconEl } from '../icons';
-import { siteIconHtml } from '../site-icon';
-import { BREAKPOINT_MD } from '../breakpoints';
+import { queryTokens, searchSites, type SiteRecord } from '../shared/search-utils';
+import { NAV_OPEN_CARD_EVENT, toCardData, toCardDataHtml } from '../shared/card-attrs';
+import { escapeHtml } from '../shared/html-escape';
+import { iconEl } from '../shared/icons';
+import { siteIconHtml } from '../shared/site-icon';
+import { BREAKPOINT_MD } from '../shared/breakpoints';
 import { watchScrollFade } from '../scroll-fade';
 import { storageGetJson, storageSetJson } from '../storage';
 

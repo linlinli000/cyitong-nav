@@ -1,5 +1,5 @@
 /** 扫码/入口 data 契约：SSR 产属性、客户端读属性，卡片/搜索索引/弹窗共用 */
-import type { Entry } from '../content.config';
+import type { Entry } from '../../content.config';
 import { escapeHtml } from './html-escape';
 
 export interface CardData {

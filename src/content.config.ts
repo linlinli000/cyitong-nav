@@ -3,7 +3,7 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import { existsSync } from 'node:fs';
-import { iconPath } from './web/icon-path';
+import { iconPath } from './web/shared/icon-path';
 
 const CATEGORY_IDS = ['campus', 'study', 'exam', 'academic', 'scitools', 'aitool', 'tools'] as const;
 

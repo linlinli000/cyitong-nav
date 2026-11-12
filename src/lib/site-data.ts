@@ -1,8 +1,8 @@
 /** 站点数据读取口（服务端专用） */
 
 import { getCollection, type CollectionEntry } from 'astro:content';
-import type { SiteRecord } from '../web/search-utils';
-import { iconPath } from '../web/icon-path';
+import type { SiteRecord } from '../web/shared/search-utils';
+import { iconPath } from '../web/shared/icon-path';
 
 export interface SiteData {
   categories: CollectionEntry<'sites'>[];

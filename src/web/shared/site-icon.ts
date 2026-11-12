@@ -1,6 +1,10 @@
-/** 站点图标 img：data-letter 由 img-fallback 在加载失败时换首字母色块（SSG 与客户端共用） */
+/** 站点图标 img（SSG 与客户端共用） */
 import { escapeHtml } from './html-escape';
-import { firstLetter } from './first-letter';
+
+/** 图标缺失时色块显示的字，空标题给中性点号 */
+function firstLetter(title: string): string {
+  return title.trim().charAt(0) || '·';
+}
 
 export interface SiteIconOpts {
   /** 装饰性图标传空串，默认用标题 */
