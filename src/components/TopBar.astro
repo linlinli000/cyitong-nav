@@ -81,7 +81,7 @@ const TOOLS_FOOTER = [...SITE_LINKS].reverse();
                   aria-hidden="true"
                 />
               </button>
-              <div data-menu-panel class="absolute right-0 top-full z-50 mt-1 min-w-36">
+              <div data-menu-panel class="absolute right-0 top-full z-(--z-menu) mt-1 min-w-36">
                 {tool.items.map((sub) => (
                   <a
                     href={sub.url}
@@ -165,15 +165,11 @@ const TOOLS_FOOTER = [...SITE_LINKS].reverse();
 </div>
 
 <!-- 移动端工具箱抽屉（翻译/网盘/邮箱全量 + 底部站内链接）：
-     与左侧侧栏同一套机制——普通定位面板 + 普通遮罩 div，不用的 <dialog> 的 ::backdrop（会走 top layer 盖住另一个抽屉） -->
+     与左侧侧栏同一套机制——普通定位面板 + 普通遮罩 div，不用 <dialog> 的 ::backdrop（会走 top layer 盖住另一个抽屉） -->
 <nav-tools>
-  <div data-tools-backdrop hidden class="fixed inset-0 z-30 bg-black/40"></div>
-  <div
-    data-role="tools-panel"
-    tabindex="-1"
-    hidden
-    class="m-0 ml-auto h-dvh max-h-dvh w-56 max-w-[84vw] bg-float backdrop-blur-md p-0 text-ink shadow-(--shadow-menu) focus:outline-none"
-  >
+  <div data-tools-backdrop hidden class="fixed inset-0 z-(--z-overlay) bg-black/40"></div>
+  <!-- 面板几何/视觉全在 theme.css：无层规则优先于 utility 层，挂 class 只会被覆盖 -->
+  <div data-role="tools-panel" tabindex="-1" hidden>
     <div class="tools-inner flex h-full flex-col">
       <div class="tools-head">
         <span class="drawer-title">工具箱</span>
@@ -194,14 +190,14 @@ const TOOLS_FOOTER = [...SITE_LINKS].reverse();
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex h-[60px] flex-col items-center justify-center gap-1.5 rounded-xl bg-surface px-2 text-body text-ink transition-colors hover:bg-track hover:text-brand"
+                    class="flex h-[60px] flex-col items-center justify-center gap-1.5 rounded-(--r-lg) bg-surface px-2 text-body text-ink transition-colors hover:bg-track hover:text-brand"
                   >
                     <img
                       src={item.icon}
                       alt=""
                       aria-hidden="true"
                       loading="lazy"
-                      class="h-6 w-6 shrink-0 rounded-md object-contain"
+                      class="h-6 w-6 shrink-0 rounded-(--r-sm) object-contain"
                     />
                     <span class="max-w-full min-w-0 truncate text-center">{item.name}</span>
                   </a>

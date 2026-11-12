@@ -24,7 +24,6 @@
   --color-track: var(--color-tint);
   --color-fill: var(--color-tint);
   --color-hover: rgba(220, 220, 220, 0.6);
-  --color-bar: rgba(245, 245, 245, 0.75);
   --color-float: rgba(255, 255, 255, 0.96);
   --color-subtle: #6b6e73;
   --color-code: rgba(116, 116, 116, 0.1);
@@ -37,6 +36,9 @@
   --color-brand-mark: rgba(30, 155, 255, 0.16);
   --color-brand-wash: rgba(30, 155, 255, 0.12);
   --color-on-solid: #ffffff;
+  /* hero 渐变上的文字：亮/暗模式都压白，与 on-solid 区分语义 */
+  --color-on-hero: #ffffff;
+  --color-divider: rgba(127, 127, 127, 0.15);
   --color-tooltip: #111111;
   --color-on-tooltip: #ffffff;
   --color-danger: #e33636;
@@ -46,6 +48,10 @@
   --ease-ui: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-pop: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-glide: cubic-bezier(0.16, 1, 0.3, 1);
+  /* 时长梯队：微交互 / 常规过渡 / 大位移，档位语义固定，不要互相抹平 */
+  --dur-fast: 150ms;
+  --dur-base: 200ms;
+  --dur-slow: 300ms;
 }
 
 /* ===== 布局 token（所有组件只引用这里的变量） ===== */
@@ -55,11 +61,14 @@
   --rail-gap: 15px;
   --gutter: 10px;
   --page-max: 1600px;
+  --r-xl: 16px;
   --r-lg: 12px;
   --r-md: 8px;
   --r-sm: 6px;
   --z-content: 1;
   --z-fab: 20;
+  /* 遮罩与页内浮面板同层：低于抽屉、高于内容，先后由 DOM 顺序决 */
+  --z-overlay: 30;
   --z-drawer: 40;
   --z-menu: 60;
   --z-tooltip: 90;
@@ -71,15 +80,12 @@
   --glass-blur: saturate(2) blur(15px);
   --glass-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.1);
   --nav-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  --tile-shadow: inset 0 0 25px rgba(116, 116, 116, 0.1);
   --hero-grad: linear-gradient(90deg, #587c9f 0%, #7d7b7e 50%, #a27a5e 100%);
 
-  --shadow-tile: var(--tile-shadow);
+  --shadow-tile: inset 0 0 25px rgba(116, 116, 116, 0.1);
   /* 双层阴影：近影定边缘，远影定高度 */
   --shadow-dropdown: 0 1px 3px rgb(0 0 0 / 0.08), 0 4px 24px rgb(0 0 0 / 0.12);
   --shadow-menu: 0 2px 6px rgb(0 0 0 / 0.08), 0 10px 30px rgb(0 0 0 / 0.12);
-  --shadow-flyout: 0 2px 6px rgb(0 0 0 / 0.08), 0 12px 32px rgb(0 0 0 / 0.12);
-  --shadow-card: 0 2px 4px rgb(0 0 0 / 0.04), 0 6px 18px rgb(0 0 0 / 0.08);
   --shadow-tab: 0 1px 2px rgb(0 0 0 / 0.06);
 }
 
@@ -94,18 +100,15 @@
   --color-tint: rgba(255, 255, 255, 0.08);
   --color-fill: var(--color-tint);
   --color-hover: rgba(255, 255, 255, 0.08);
-  --color-bar: rgba(45, 46, 47, 0.85);
   --color-float: rgba(45, 46, 47, 0.94);
   --color-brand: #3fa9ff;
   --color-brand-dark: #7fc3f5;
   --color-brand-wash: var(--color-brand-mark);
   --color-danger: #f87171;
   --glass-bg: rgba(45, 46, 47, 0.75);
-  --tile-shadow: inset 0 0 25px rgba(255, 255, 255, 0.05);
+  --shadow-tile: inset 0 0 25px rgba(255, 255, 255, 0.05);
   --shadow-dropdown: 0 1px 3px rgb(0 0 0 / 0.24), 0 4px 24px rgb(0 0 0 / 0.4);
   --shadow-menu: 0 2px 6px rgb(0 0 0 / 0.28), 0 10px 30px rgb(0 0 0 / 0.45);
-  --shadow-flyout: 0 2px 6px rgb(0 0 0 / 0.3), 0 12px 32px rgb(0 0 0 / 0.5);
-  --shadow-card: 0 2px 4px rgb(0 0 0 / 0.16), 0 6px 18px rgb(0 0 0 / 0.3);
 }
 
 @font-face {
@@ -145,35 +148,10 @@ html {
   outline-offset: 2px;
 }
 
-/* 搜索框焦点环 */
-.search-field {
-  outline: 2px solid transparent;
-}
-.search-field:has(input:focus-visible) {
-  outline-color: var(--color-brand);
-}
-.search-field input:focus-visible {
-  outline: none;
-}
-
-/* 表单输入框贴身聚焦环 */
-.quick-field,
-.quick-field:focus-visible {
-  outline: none;
-}
-.quick-field {
-  transition: border-color 0.15s var(--ease-ui), box-shadow 0.15s var(--ease-ui);
-}
-.quick-field:focus {
-  border-color: var(--color-brand);
-  
-  box-shadow: none;
-}
-
 body {
   @apply bg-surface text-ink antialiased;
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: var(--text-read);
   font-weight: 300;
   line-height: 1.5;
   padding-top: var(--nav-h);

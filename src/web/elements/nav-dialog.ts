@@ -34,11 +34,11 @@ class NavDialog extends HTMLElement {
 
   connectedCallback(): void {
     this.innerHTML = `
-      <dialog class="m-auto w-[min(90vw,22rem)] rounded-2xl border border-line bg-float backdrop-blur-md p-5 text-ink shadow-(--shadow-menu) backdrop:bg-black/40">
+      <dialog class="m-auto w-[min(90vw,22rem)] rounded-(--r-xl) border border-line bg-float p-5 text-ink shadow-(--shadow-menu) backdrop:bg-black/40">
         <div class="flex items-center justify-between gap-4">
           <div class="flex min-w-0 items-center gap-2">
-            <img data-role="icon" alt="" hidden class="h-6 w-6 shrink-0 rounded-md object-contain">
-            <h3 data-role="title" class="truncate text-base font-semibold"></h3>
+            <img data-role="icon" alt="" hidden class="h-6 w-6 shrink-0 rounded-(--r-sm) object-contain">
+            <h3 data-role="title" class="truncate text-base"></h3>
           </div>
           <button type="button" data-role="close" class="shrink-0 text-muted transition-colors hover:text-ink" aria-label="关闭">
             ${iconEl('x', 'h-5 w-5')}
@@ -90,14 +90,15 @@ class NavDialog extends HTMLElement {
     go.className = 'dlg-row mb-3 sm:hidden';
     go.innerHTML = `
       <span class="min-w-0">
-        <span class="block truncate text-sm font-medium">移动端点击此处打开链接</span>
+        <span class="block truncate text-sm">移动端点击此处打开链接</span>
         <span class="block truncate text-note text-muted">${escapeHtml(url)}</span>
       </span>
       ${iconEl('chevron-right', 'dlg-row-arrow h-4 w-4 shrink-0')}`;
     body.appendChild(go);
     const img = document.createElement('img');
     img.alt = `${title} 二维码`;
-    img.className = 'mx-auto h-64 w-64 rounded-xl bg-white p-2';
+    // 二维码固定白底：暗色模式下扫码仍需黑白对比
+    img.className = 'mx-auto h-64 w-64 rounded-(--r-lg) bg-white p-2';
     body.appendChild(img);
     if (note) {
       const p = document.createElement('p');
@@ -129,7 +130,7 @@ class NavDialog extends HTMLElement {
             <a href="${escapeHtml(entry.url)}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(entry.url)}"
               class="dlg-row">
               <span class="min-w-0">
-                <span class="block truncate text-sm font-medium">${escapeHtml(entry.label)}</span>
+                <span class="block truncate text-sm">${escapeHtml(entry.label)}</span>
                 <span class="block truncate text-note text-muted">${escapeHtml(entry.url)}</span>
               </span>
               ${iconEl('chevron-right', 'dlg-row-arrow h-4 w-4 shrink-0')}

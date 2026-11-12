@@ -399,7 +399,7 @@ class NavSearch extends HTMLElement {
       this.dropdown.innerHTML = `
         <div role="option" aria-selected="false" aria-disabled="true" class="flex items-center gap-3 px-4 py-3 text-sm text-muted">
           ${iconEl('search', 'h-4 w-4')}
-          <span>按回车在 <span class="font-medium text-brand">${engine.name}</span> 中搜索${mode ? `<span class="text-brand">${escapeHtml(mode.label)}</span>` : ''}「<span class="text-ink">${escapeHtml(this.query)}</span>」</span>
+          <span>按回车在 <span class="text-brand">${engine.name}</span> 中搜索${mode ? `<span class="text-brand">${escapeHtml(mode.label)}</span>` : ''}「<span class="text-ink">${escapeHtml(this.query)}</span>」</span>
         </div>`;
       this.showDropdown();
     }
@@ -419,10 +419,10 @@ class NavSearch extends HTMLElement {
           role="option" aria-selected="false" id="nav-search-opt-${i}"
           title="${escapeHtml(`${r.title} · ${r.catName}/${r.subName}（首字母 ${r.pinyinFirst}）`)}"
           class="flex items-center gap-3 px-3 py-2 transition-colors hover:bg-surface/60">
-          ${siteIconHtml(r.icon, r.title, 'h-8 w-8 shrink-0 rounded-lg object-cover')}
+          ${siteIconHtml(r.icon, r.title, 'h-8 w-8 shrink-0 rounded-(--r-md) object-cover')}
           <span class="min-w-0 flex-1">
             <span class="flex min-w-0 items-center gap-1.5">
-              <span class="min-w-0 truncate text-sm font-semibold text-ink">${markHit(r.title, this.tokens)}</span>
+              <span class="min-w-0 truncate text-sm text-ink">${markHit(r.title, this.tokens)}</span>
               ${r.badge ? `<span class="tile-badge">${escapeHtml(r.badge)}</span>` : ''}
             </span>
             ${r.desc ? `<span class="mt-0.5 block truncate text-note text-muted">${markHit(r.desc, this.tokens)}</span>` : ''}

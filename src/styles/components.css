@@ -7,10 +7,10 @@
   max-height: 0;
   overflow: hidden;
   opacity: 0;
-  transition: max-height 0.25s var(--ease-pop), opacity 0.2s var(--ease-pop);
+  transition: max-height 0.25s var(--ease-pop), opacity var(--dur-base) var(--ease-pop);
 }
 .sidebar-chevron {
-  transition: transform 0.2s var(--ease-ui);
+  transition: transform var(--dur-base) var(--ease-ui);
 }
 
 /* 侧边栏滚动区域隐藏滚动条 */
@@ -57,14 +57,24 @@
   color: var(--color-brand);
 }
 
-/* ===== 右下悬浮球外壳（回到顶部/明暗切换共用；视觉由 theme.css 的 .nav-fab 统一维护） ===== */
+/* ===== 右下悬浮球（回到顶部/明暗切换共用）：实底白卡 + 描边 + 投影；滚动隐现由 theme.css 维护 ===== */
 .nav-fab {
   position: fixed;
   right: 1.5rem;
   z-index: var(--z-fab);
   display: grid;
   place-items: center;
-  transition: all 0.2s var(--ease-ui);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--color-line);
+  background: var(--color-card);
+  color: var(--color-muted);
+  box-shadow: var(--shadow-dropdown);
+  transition: all var(--dur-base) var(--ease-ui);
+}
+.nav-fab:hover {
+  color: var(--color-brand);
 }
 
 /* 明暗切换图标随主题互换 */
@@ -89,7 +99,7 @@ nav-theme-toggle [data-icon='sun'] {
 
 nav-sidebar .sidebar-cat-toggle:hover,
 nav-sidebar .sub-link:hover,
-nav-sidebar .sidebar-footer-link:hover,
+nav-sidebar .footer-link:hover,
 header [data-ghost]:hover {
   background: var(--color-tint);
   color: var(--color-ink);
@@ -138,7 +148,7 @@ header [data-ghost]:hover {
   z-index: var(--z-tooltip);
   max-width: 16rem;
   padding: 0.3rem 0.6rem;
-  border-radius: 0.5rem;
+  border-radius: var(--r-md);
   background: var(--color-tooltip);
   color: var(--color-on-tooltip);
   font-size: var(--text-note);
@@ -170,7 +180,7 @@ header [data-ghost]:hover {
 /* 桌面栅格让位由 theme.css 的 .page-shell 唯一维护（折叠时切 --rail-w） */
 @media (min-width: 1024px) {
   #sidebar {
-    transition: width 0.2s var(--ease-pop);
+    transition: width var(--dur-base) var(--ease-pop);
   }
 }
 
@@ -180,9 +190,9 @@ header [data-ghost]:hover {
   opacity: 0;
   transform: translateY(4px);
   transition:
-    opacity 0.15s var(--ease-pop),
-    transform 0.15s var(--ease-pop),
-    visibility 0s linear 0.15s;
+    opacity var(--dur-fast) var(--ease-pop),
+    transform var(--dur-fast) var(--ease-pop),
+    visibility 0s linear var(--dur-fast);
 }
 
 /* 收起态浮出的子分类面板 */
@@ -222,7 +232,7 @@ header [data-ghost]:hover {
   border: none;
   background: transparent;
   color: var(--color-muted);
-  border-radius: 0.5rem;
+  border-radius: var(--r-md);
   padding: 0.3rem 0.8rem;
   font-size: var(--text-dense);
   line-height: 1.5;
@@ -230,9 +240,9 @@ header [data-ghost]:hover {
   white-space: nowrap;
   cursor: pointer;
   transition:
-    color 0.15s var(--ease-ui),
-    background 0.15s var(--ease-ui),
-    box-shadow 0.15s var(--ease-ui);
+    color var(--dur-fast) var(--ease-ui),
+    background var(--dur-fast) var(--ease-ui),
+    box-shadow var(--dur-fast) var(--ease-ui);
 }
 .cat-tab:hover {
   color: var(--color-ink);
@@ -244,7 +254,7 @@ header [data-ghost]:hover {
   align-items: center;
   gap: 0.25rem;
   padding: 0.3rem 0.8rem;
-  border-radius: 0.5rem;
+  border-radius: var(--r-md);
   background: var(--color-track);
   color: var(--color-muted);
   font-size: var(--text-dense);
@@ -253,8 +263,8 @@ header [data-ghost]:hover {
   white-space: nowrap;
   flex-shrink: 0;
   transition:
-    color 0.15s var(--ease-ui),
-    background 0.15s var(--ease-ui);
+    color var(--dur-fast) var(--ease-ui),
+    background var(--dur-fast) var(--ease-ui);
 }
 .cat-more:hover {
   color: var(--color-ink);
@@ -269,7 +279,7 @@ header [data-ghost]:hover {
   }
 }
 .cat-more-chevron {
-  transition: transform 0.2s var(--ease-ui);
+  transition: transform var(--dur-base) var(--ease-ui);
 }
 
 /* 「更多」与 tab 之间的延伸线 */
@@ -305,9 +315,9 @@ header [data-ghost]:hover {
   background: var(--color-brand-solid);
   color: var(--color-on-solid);
   transition:
-    background-color 0.15s var(--ease-ui),
-    filter 0.15s var(--ease-ui),
-    transform 0.15s var(--ease-ui);
+    background-color var(--dur-fast) var(--ease-ui),
+    filter var(--dur-fast) var(--ease-ui),
+    transform var(--dur-fast) var(--ease-ui);
 }
 .btn-brand:hover {
   background: var(--color-brand-hover);
@@ -322,9 +332,9 @@ header [data-ghost]:hover {
   background: var(--color-card);
   color: var(--color-ink);
   transition:
-    border-color 0.15s var(--ease-ui),
-    color 0.15s var(--ease-ui),
-    transform 0.15s var(--ease-ui);
+    border-color var(--dur-fast) var(--ease-ui),
+    color var(--dur-fast) var(--ease-ui),
+    transform var(--dur-fast) var(--ease-ui);
 }
 .btn-outline:hover {
   border-color: var(--color-brand);
@@ -340,9 +350,9 @@ header [data-ghost]:hover {
   background: var(--color-card);
   color: var(--color-ink);
   transition:
-    border-color 0.15s var(--ease-ui),
-    background-color 0.15s var(--ease-ui),
-    color 0.15s var(--ease-ui);
+    border-color var(--dur-fast) var(--ease-ui),
+    background-color var(--dur-fast) var(--ease-ui),
+    color var(--dur-fast) var(--ease-ui);
 }
 .btn-upload:hover {
   border-color: var(--color-brand);
@@ -425,7 +435,7 @@ header [data-ghost]:hover {
   .doc-page pre {
     margin: 0.75rem 0;
     padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
+    border-radius: var(--r-md);
     background: var(--color-code);
     overflow-x: auto;
   }
@@ -529,7 +539,7 @@ header [data-ghost]:hover {
     place-items: center;
     width: 1.7rem;
     height: 1.7rem;
-    border-radius: 0.5rem;
+    border-radius: var(--r-md);
     background: var(--color-brand-soft);
     color: var(--color-brand);
   }
@@ -557,7 +567,7 @@ header [data-ghost]:hover {
     display: none;
   }
   .doc-page .doc-faq-chevron {
-    transition: transform 0.2s var(--ease-ui);
+    transition: transform var(--dur-base) var(--ease-ui);
   }
   .doc-page .doc-faq details[open] .doc-faq-chevron {
     transform: rotate(180deg);
@@ -589,7 +599,7 @@ header [data-ghost]:hover {
     color: var(--color-ink);
     font-size: var(--text-dense);
     text-decoration: none;
-    transition: background 0.15s var(--ease-ui);
+    transition: background var(--dur-fast) var(--ease-ui);
   }
   /* 分隔线左缘对齐行内文字（1.15 padding + 2.25 图标 + 0.7 gap） */
   .doc-page .doc-row + .doc-row {
@@ -654,7 +664,7 @@ header [data-ghost]:hover {
   gap: 0.25rem;
   max-width: 12.5rem;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--r-md);
   padding: 0.3rem 0.5rem;
   background: transparent;
   font-size: var(--text-dense);
@@ -662,8 +672,8 @@ header [data-ghost]:hover {
   white-space: nowrap;
   cursor: pointer;
   transition:
-    color 0.15s var(--ease-ui),
-    background 0.15s var(--ease-ui);
+    color var(--dur-fast) var(--ease-ui),
+    background var(--dur-fast) var(--ease-ui);
 }
 .ctx-btn:hover {
   color: var(--color-ink);
@@ -682,7 +692,7 @@ header [data-ghost]:hover {
   text-overflow: ellipsis;
 }
 .ctx-btn .ctx-chevron {
-  transition: transform 0.2s var(--ease-ui);
+  transition: transform var(--dur-base) var(--ease-ui);
 }
 .ctx-btn[aria-expanded='true'] .ctx-chevron {
   transform: rotate(180deg);
@@ -708,7 +718,7 @@ header [data-ghost]:hover {
   align-items: center;
   gap: 0.35rem;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--r-md);
   padding: 0.35rem 0.6rem;
   background: transparent;
   font-size: var(--text-dense);
@@ -716,8 +726,8 @@ header [data-ghost]:hover {
   white-space: nowrap;
   cursor: pointer;
   transition:
-    color 0.15s var(--ease-ui),
-    background 0.15s var(--ease-ui);
+    color var(--dur-fast) var(--ease-ui),
+    background var(--dur-fast) var(--ease-ui);
 }
 .ctx-item:hover {
   color: var(--color-ink);
@@ -730,9 +740,6 @@ header [data-ghost]:hover {
     padding-bottom: 0.6rem;
   }
 }
-/* ===== 选中态（分类 tab；置于 :hover 之后，保证选中优先于悬停） ===== */
-/* 上下文项选中态：浅蓝 wash，不走白字实底 */
-
 /* ===== 常用磁贴行（容器>链接；结构单一源 web/quick-bar/quick-tile.ts，管理操作走右键/长按菜单） ===== */
 .quick-tile-wrap {
   position: relative;
@@ -753,7 +760,7 @@ header [data-ghost]:hover {
   color: var(--color-brand);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s var(--ease-ui);
+  transition: opacity var(--dur-fast) var(--ease-ui);
 }
 .quick-tile-wrap:hover .quick-pin-flag {
   opacity: 1;
@@ -764,19 +771,23 @@ header [data-ghost]:hover {
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 0.5rem;
-  border-radius: 0.75rem;
+  border-radius: var(--r-lg);
   min-width: 0;
-  transition: background 0.15s var(--ease-ui);
+  transition: background var(--dur-fast) var(--ease-ui);
   /* 触屏长按弹自定义菜单：抑制系统链接预览与文本选择 */
   -webkit-touch-callout: none;
 }
+/* 磁贴 hover 比通用 tint 更淡（6%）：磁贴已有彩色描边，底色再重会抢 */
 .quick-tile:hover {
-  background: var(--color-tint);
+  background: rgba(116, 116, 116, 0.06);
+}
+.dark .quick-tile:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 .quick-tile > span {
   font-size: var(--text-note);
   color: var(--color-ink);
-  transition: color 0.15s var(--ease-ui);
+  transition: color var(--dur-fast) var(--ease-ui);
 }
 .quick-tile:hover > span {
   color: var(--color-brand);
@@ -792,7 +803,7 @@ header [data-ghost]:hover {
   border: 1px dashed var(--color-line);
   color: var(--color-muted);
   background: var(--color-surface);
-  transition: border-color 0.15s var(--ease-ui), color 0.15s var(--ease-ui), background 0.15s var(--ease-ui);
+  transition: border-color var(--dur-fast) var(--ease-ui), color var(--dur-fast) var(--ease-ui), background var(--dur-fast) var(--ease-ui);
 }
 .add-tile:hover {
   border-color: var(--color-brand);
@@ -816,11 +827,11 @@ header [data-ghost]:hover {
   display: block;
   width: 100%;
   padding: 0.4rem 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: var(--r-md);
   text-align: left;
   font-size: var(--text-body);
   color: var(--color-ink);
-  transition: background 0.15s var(--ease-ui);
+  transition: background var(--dur-fast) var(--ease-ui);
 }
 .quick-menu button:hover,
 .quick-menu button:focus-visible {
@@ -847,7 +858,7 @@ header [data-ghost]:hover {
   font-size: var(--text-note);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s var(--ease-ui);
+  transition: opacity var(--dur-base) var(--ease-ui);
 }
 
 /* 移动端磁贴换 2 行×5 列网格（9 格 = 8 磁贴 + 添加格），上限与 quick-bar.ts 的 MAX_SHOW 一致；放不下横向滚动。
@@ -883,10 +894,10 @@ header [data-ghost]:hover {
   }
 }
 [data-role='tools-panel']:not([hidden]) {
-  animation: drawer-slide-in 0.2s var(--ease-pop);
+  animation: drawer-slide-in var(--dur-base) var(--ease-pop);
 }
 [data-role='tools-panel'].closing {
-  animation: drawer-slide-out 0.2s var(--ease-pop) forwards;
+  animation: drawer-slide-out var(--dur-base) var(--ease-pop) forwards;
 }
 @keyframes drawer-slide-out {
   from {
@@ -896,15 +907,6 @@ header [data-ghost]:hover {
     transform: translateX(100%);
   }
 }
-@keyframes drawer-fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
 /* ===== 弹窗（nav-dialog / nav-quick-add）===== */
 /* 选项：白卡描边（bg-card 与全站卡片同语言）；hover 中性灰不变蓝，蓝只做激活态 */
 @layer components {
@@ -919,10 +921,10 @@ header [data-ghost]:hover {
     gap: 0.5rem;
     padding: 0.625rem 0.75rem;
     border: 1px solid var(--color-line);
-    border-radius: 0.5rem;
+    border-radius: var(--r-md);
     background: var(--color-card);
     color: var(--color-ink);
-    transition: background 0.15s var(--ease-ui);
+    transition: background var(--dur-fast) var(--ease-ui);
   }
   .dlg-row:hover,
   .dlg-row:focus-visible {
@@ -930,7 +932,7 @@ header [data-ghost]:hover {
   }
   .dlg-row-arrow {
     color: var(--color-muted);
-    transition: color 0.15s var(--ease-ui);
+    transition: color var(--dur-fast) var(--ease-ui);
   }
   .dlg-row:hover .dlg-row-arrow,
   .dlg-row:focus-visible .dlg-row-arrow {
@@ -951,9 +953,715 @@ header [data-ghost]:hover {
 }
 nav-dialog dialog[open],
 nav-quick-add dialog[open] {
-  animation: dlg-pop-in 0.2s var(--ease-pop);
+  animation: dlg-pop-in var(--dur-base) var(--ease-pop);
 }
 nav-dialog dialog[open]::backdrop,
 nav-quick-add dialog[open]::backdrop {
-  animation: drawer-fade-in 0.2s var(--ease-pop);
+  animation: drawer-fade-in var(--dur-base) var(--ease-pop);
+}
+/* 弹窗磨砂与其余浮层同一配方（--glass-blur），不再用 backdrop-blur utility 第二套 */
+nav-dialog dialog,
+nav-quick-add dialog {
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+
+
+
+/* ===== 自 theme.css 归位的组件视觉（顶栏 / 历史面板 / 侧栏行）：布局与几何仍留 theme ===== */
+/* ── 顶栏：固定在视口顶部的毛玻璃药丸 ─────────────────────────────── */
+.topbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--nav-h);
+  padding: var(--gutter);
+  z-index: var(--z-topbar);
+  pointer-events: none;
+}
+
+.topbar-pill {
+  pointer-events: auto;
+  max-width: var(--page-max);
+  height: 100%;
+  margin: 0 auto;
+  border-radius: var(--r-lg);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+  transition:
+    background var(--dur-slow) var(--ease-ui),
+    -webkit-backdrop-filter var(--dur-slow) var(--ease-ui),
+    backdrop-filter var(--dur-slow) var(--ease-ui),
+    box-shadow var(--dur-slow) var(--ease-ui);
+}
+
+
+/* 内容页（关于/投稿/404）：未滚动时顶栏不悬浮，直接融进页面底色；
+   滚动后恢复毛玻璃药丸 + 阴影（切换在 states.css 的 body.scrolled / page-inner） */
+
+.topbar-inner {
+  height: 100%;
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.topbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-right: 24px;
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.topbar-brand img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.topbar-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.topbar-brand-text b {
+  font-size: 18px;
+  color: var(--color-ink);
+  letter-spacing: 0.02em;
+}
+
+.topbar-brand-text small {
+  font-size: 10px;
+  color: var(--color-muted);
+  letter-spacing: 0.04em;
+}
+
+.topbar-menu,
+.topbar-quick {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.topbar-menu {
+  margin-right: 16px;
+  font-size: var(--text-body);
+}
+
+.topbar-menu > li {
+  position: relative;
+}
+
+.topbar-menu > li > a {
+  display: block;
+  padding: 15px 10px;
+  color: var(--color-ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-slow) var(--ease-ui);
+}
+
+.topbar-menu > li > a:hover,
+.topbar-menu > li.is-current > a {
+  color: var(--color-brand);
+}
+
+.topbar-menu > li.is-current > a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 20px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--color-brand);
+  transform: translateX(-50%);
+}
+
+.topbar-spacer {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* 右侧快捷链与左侧菜单同规格：15px / padding 15px 10px / 行高 22.5px，hover 同为品牌色 */
+.topbar-quick {
+  margin-right: 16px;
+  font-size: var(--text-body);
+  color: var(--color-ink);
+}
+
+.topbar-quick > li > a,
+.topbar-quick [data-menu-btn] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 15px 10px;
+  color: var(--color-ink);
+  font-size: var(--text-body);
+  line-height: 22.5px;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: color var(--dur-slow) var(--ease-ui);
+}
+
+.topbar-quick > li > a:hover,
+.topbar-quick [data-menu-btn]:hover {
+  color: var(--color-brand);
+}
+
+/* 顶栏下拉箭头：展开时 180° 翻转（最后一个 svg 即箭头） */
+.topbar-quick [data-menu-btn] svg:last-child {
+  transition: transform var(--dur-base) var(--ease-ui);
+}
+
+.topbar-quick [data-menu-btn][aria-expanded="true"] svg:last-child {
+  transform: rotate(180deg);
+}
+
+.topbar-icons {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0;
+}
+
+.topbar-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin: 2px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--color-ink);
+  font-size: 17px;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background var(--dur-base) var(--ease-ui),
+    color var(--dur-base) var(--ease-ui),
+    transform 0.16s var(--ease-pop);
+}
+
+/* hover 反馈只在支持悬停的设备上生效，避免触屏点完保持高亮（不位移，只换底色） */
+@media (hover: hover) {
+  .topbar-icon:hover {
+    opacity: 0.72;
+    background: rgba(116, 116, 116, 0.1);
+  }
+}
+
+.topbar-icon:active {
+  transform: scale(0.9);
+}
+
+.topbar-icon svg {
+  width: 19px;
+  height: 19px;
+  transition: transform 0.25s var(--ease-pop);
+}
+
+/* ── 图标动效 ─────────────────────────────────────────────────────── */
+/* 汉堡：三条线，展开时上 / 下两条对折成 ×，中间一条缩没 */
+.menu-btn {
+  position: relative;
+}
+
+.menu-btn .menu-bar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 2px;
+  margin: -1px 0 0 -9px;
+  border-radius: 2px;
+  background: currentColor;
+  transition:
+    transform 0.32s var(--ease-pop),
+    width 0.32s var(--ease-pop),
+    opacity 0.18s var(--ease-ui);
+}
+
+.menu-btn .menu-bar:nth-child(1) {
+  transform: translateY(-6px);
+}
+
+.menu-btn .menu-bar:nth-child(3) {
+  width: 12px;
+  transform: translateY(6px);
+}
+
+.menu-btn[aria-expanded="true"] .menu-bar:nth-child(1) {
+  transform: translateY(0) rotate(45deg);
+}
+
+.menu-btn[aria-expanded="true"] .menu-bar:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0.2);
+}
+
+.menu-btn[aria-expanded="true"] .menu-bar:nth-child(3) {
+  width: 18px;
+  transform: translateY(0) rotate(-45deg);
+}
+
+/* 工具箱按钮：四宫格 ⇄ ×，打开时一个转出去、一个转进来 */
+.tools-btn {
+  position: relative;
+}
+
+.tools-btn .tools-icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition:
+    opacity var(--dur-base) var(--ease-ui),
+    transform 0.32s var(--ease-pop);
+}
+
+.tools-btn .tools-icon--close {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.7);
+}
+
+.tools-btn[aria-expanded="true"] .tools-icon--grid {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.7);
+}
+
+.tools-btn[aria-expanded="true"] .tools-icon--close {
+  opacity: 1;
+  transform: none;
+}
+
+/* 顶栏图标的显示断点：用语义类接管，避免 Tailwind 的 hidden/lg:* 与主题层互相覆盖 */
+.topbar-icon--desktop,
+.topbar-icon--sm,
+.topbar-icon--md {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .topbar-icon--sm {
+    display: grid;
+  }
+}
+
+@media (min-width: 768px) {
+  .topbar-icon--md {
+    display: grid;
+  }
+}
+
+@media (min-width: 1024px) {
+  .topbar-icon--mobile {
+    display: none;
+  }
+
+  .topbar-icon--desktop {
+    display: grid;
+  }
+}
+
+/* 顶栏下拉面板 */
+[data-menu-panel] {
+  border-radius: var(--r-lg);
+  border: 0;
+  padding: 8px;
+  background: var(--color-float);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-menu);
+}
+
+.search-dropdown,
+[data-role="ctx-menu"] {
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+
+[data-menu-panel] [data-menu-item] {
+  border-radius: var(--r-md);
+  padding: 6px 12px;
+  font-size: var(--text-dense);
+  color: var(--color-muted);
+}
+
+[data-menu-panel] [data-menu-item]:hover {
+  background: var(--color-tint);
+  color: var(--color-ink);
+}
+
+/* ── 顶栏搜索历史面板：按 scope 分组（站内/搜索/社区/文献） ────────── */
+.topbar-history {
+  position: fixed;
+  top: calc(var(--nav-h) - 2px);
+  right: var(--gutter);
+  z-index: var(--z-topmost);
+  width: min(360px, calc(100vw - var(--gutter) * 2));
+  max-height: min(62vh, 520px);
+  overflow-y: auto;
+  padding: 8px;
+  border-radius: var(--r-lg);
+  background: var(--color-float);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--shadow-menu);
+  animation: topbar-pop-in var(--dur-fast) var(--ease-pop);
+}
+
+.topbar-history[hidden] {
+  display: none;
+}
+
+
+@keyframes topbar-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px 8px;
+  font-size: var(--text-note);
+  color: var(--color-muted);
+}
+
+.history-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.history-clear,
+.history-clear-all {
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  font-size: var(--text-note);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-ui), background var(--dur-fast) var(--ease-ui);
+}
+
+.history-clear:hover,
+.history-clear-all:hover {
+  color: var(--color-brand);
+  background: var(--color-tint);
+}
+
+.history-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 2px 8px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.history-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  font-size: var(--text-note);
+  color: var(--color-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-ui), background var(--dur-fast) var(--ease-ui);
+}
+
+.history-tab:hover {
+  color: var(--color-ink);
+  background: var(--color-tint);
+}
+
+
+.history-pane {
+  padding-top: 4px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  font-size: var(--text-dense);
+  font-weight: 300;
+  color: var(--color-ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-ui);
+}
+
+.history-item svg {
+  color: var(--color-muted);
+}
+
+.history-item span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.history-item:hover {
+  background: var(--color-tint);
+}
+
+.history-empty {
+  padding: 28px 8px;
+  text-align: center;
+  font-size: var(--text-caption);
+  color: var(--color-muted);
+}
+
+/* 深色模式：胶囊条、图标底色、卡片内阴影同步换深 */
+/* 搜索框显式加深（不依赖变量链路，避免缓存/变量覆盖导致夜间仍发白） */
+.dark .search-field {
+  background: #24262a;
+  border: 1px solid var(--color-tint);
+}
+
+.dark .quick-tile-wrap,
+.dark #quick-tiles > .add-tile {
+  background: var(--color-card);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.dark #quick-tiles > .add-tile {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.dark .quick-tile > span {
+  color: var(--color-ink);
+}
+
+.dark #quick-tiles > .add-tile > span:last-child {
+  color: var(--color-muted);
+}
+
+.sidebar-header {
+  display: none;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 2px 8px 10px;
+}
+
+/* 抽屉顶部的章节标题：左侧「分类」与右侧「工具箱」共用同一规格 */
+.drawer-title {
+  font-size: var(--text-caption);
+  font-weight: 400;
+  color: var(--color-muted);
+  letter-spacing: 0.12em;
+}
+
+.tools-head {
+  flex: 0 0 auto;
+  padding: 2px 8px 10px;
+}
+
+/* 工具箱分组图标统一走品牌色 */
+.tools-group-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  color: var(--color-brand);
+}
+
+.sidebar-cat-toggle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 39px;
+  height: 39px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--color-ink);
+  font-size: var(--text-body);
+  font-weight: 300;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--dur-slow) var(--ease-ui);
+}
+
+.sidebar-cat-toggle:hover {
+  background: var(--color-tint);
+  color: var(--color-ink);
+}
+
+/* hover 时分类名转主题蓝（图标本来就蓝，保持一致） */
+.sidebar-cat-toggle:hover .sidebar-cat-name {
+  color: var(--color-brand);
+}
+
+.dark .sidebar-cat-toggle:hover {
+  background: var(--color-hover);
+}
+
+.sidebar-cat-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  color: var(--color-brand);
+  font-size: 18px;
+}
+
+.sidebar-cat-icon svg {
+  width: 18px;
+  height: 18px;
+  grid-area: 1 / 1;
+}
+
+/* 收起 / 展开两个图标叠在同一格，按折叠态切换（桌面折叠后变「向右展开」） */
+.footer-icon--open {
+  display: none;
+}
+
+.sidebar-cat-meta {
+  display: inline-flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 0;
+  margin-left: 8px;
+}
+
+.sidebar-cat-name {
+  font-size: var(--text-body);
+  font-weight: 300;
+  color: var(--color-ink);
+}
+
+.sidebar-cat-count {
+  display: none;
+}
+
+/* 展开指示箭头：桌面 / 移动端都显示，展开时顺时针转 90° */
+.sidebar-chevron {
+  display: block;
+  flex: 0 0 14px;
+  margin-left: auto;
+  width: 14px;
+  height: 14px;
+  color: var(--color-muted);
+  opacity: 0.55;
+  transition: transform var(--dur-base) var(--ease-ui);
+}
+
+
+.sub-link {
+  display: block;
+  padding: 6px 9px 6px 39px;
+  border-radius: var(--r-md);
+  font-size: var(--text-caption);
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: background var(--dur-slow) var(--ease-ui);
+}
+
+.sub-link:hover {
+  background: var(--color-hover);
+  color: var(--color-brand);
+}
+
+/* 底部「收起」栏：跟在分类列表后面，透明；上方一条居中淡分隔线隔开列表与按钮 */
+.sidebar-footer {
+  flex: 0 0 auto;
+  position: relative;
+  margin: 0;
+  padding: 10px 0 0;
+  background: transparent;
+}
+
+.sidebar-footer::before {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 0;
+  height: 1px;
+  background: var(--color-divider);
+}
+
+.sidebar-footer > div {
+  margin: 0;
+}
+
+.sidebar-footer-rail {
+  display: none;
+}
+.sidebar-footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem; 
+}
+@media (min-width: 1024px) {
+  .sidebar-footer-rail {
+    display: block;
+  }
+  .sidebar-footer-links {
+    display: none;
+  }
+}
+
+/* 展开指示箭头 hover 提亮（展开态的旋转/提亮在 states.css） */
+.sidebar-cat-link:hover .sidebar-chevron {
+  opacity: 0.9;
+}
+
+/* ===== 表单聚焦环（搜索框 / 弹窗输入框） ===== */
+.search-field {
+  outline: 2px solid transparent;
+}
+.search-field:has(input:focus-visible) {
+  outline-color: var(--color-brand);
+}
+.search-field input:focus-visible {
+  outline: none;
+}
+.quick-field,
+.quick-field:focus-visible {
+  outline: none;
+}
+.quick-field {
+  transition: border-color var(--dur-fast) var(--ease-ui), box-shadow var(--dur-fast) var(--ease-ui);
+}
+.quick-field:focus {
+  border-color: var(--color-brand);
+  box-shadow: none;
 }

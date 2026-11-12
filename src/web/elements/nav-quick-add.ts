@@ -46,7 +46,7 @@ function stripWww(host: string): string {
 }
 
 const INPUT_CLS =
-  'quick-field min-w-0 flex-1 rounded-lg border border-line bg-field px-3 py-2 text-sm text-ink placeholder:text-muted';
+  'quick-field min-w-0 flex-1 rounded-(--r-md) border border-line bg-field px-3 py-2 text-sm text-ink placeholder:text-muted';
 
 class NavQuickAdd extends HTMLElement {
   private dlg: HTMLDialogElement | null = null;
@@ -56,9 +56,9 @@ class NavQuickAdd extends HTMLElement {
 
   connectedCallback(): void {
     this.innerHTML = `
-      <dialog class="m-auto w-[min(90vw,24rem)] rounded-2xl border border-line bg-float backdrop-blur-md p-5 text-ink shadow-(--shadow-menu) backdrop:bg-black/40">
+      <dialog class="m-auto w-[min(90vw,24rem)] rounded-(--r-xl) border border-line bg-float p-5 text-ink shadow-(--shadow-menu) backdrop:bg-black/40">
         <div class="flex items-center justify-between gap-4">
-          <h3 class="text-base font-semibold">添加快捷方式</h3>
+          <h3 class="text-base">添加快捷方式</h3>
           <button type="button" data-role="close" class="shrink-0 text-muted transition-colors hover:text-ink" aria-label="关闭">
             ${iconEl('x', 'h-5 w-5')}
           </button>
@@ -74,17 +74,17 @@ class NavQuickAdd extends HTMLElement {
           </div>
           <div class="mt-3 flex items-center gap-3">
             <span class="w-13 shrink-0 text-right text-dense text-muted">图标：</span>
-            <span data-role="preview" class="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xl border border-line bg-surface"></span>
+            <span data-role="preview" class="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-(--r-lg) border border-line bg-surface"></span>
             <input data-role="file" type="file" accept="image/*" class="hidden" />
             <span class="min-w-0 truncate text-note text-muted" title="留空自动抓取；站内已收录的站点会复用其图标">留空自动抓取</span>
           </div>
           <p data-role="err" class="mt-2.5 hidden text-note text-danger"></p>
           <div class="mt-5 flex items-center gap-2">
-            <button type="button" data-role="pick" class="btn-upload flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-sm">
+            <button type="button" data-role="pick" class="btn-upload flex flex-1 items-center justify-center gap-1.5 rounded-(--r-lg) py-2 text-sm">
               ${iconEl('upload', 'h-4 w-4')}
               <span>上传图片</span>
             </button>
-            <button type="submit" class="btn-brand flex-1 rounded-xl py-2 text-sm">添加</button>
+            <button type="submit" class="btn-brand flex-1 rounded-(--r-lg) py-2 text-sm">添加</button>
           </div>
         </form>
       </dialog>`;
@@ -155,7 +155,7 @@ class NavQuickAdd extends HTMLElement {
     const title = this.querySelector<HTMLInputElement>('[data-role="title"]')?.value.trim() ?? '';
     const icon = raw ? this.iconFor(raw) : this.uploadedIcon;
     preview.innerHTML = icon
-      ? siteIconHtml(icon, title || '预览', 'h-10 w-10 rounded-xl object-cover', { alt: '', size: 40 })
+      ? siteIconHtml(icon, title || '预览', 'h-10 w-10 rounded-(--r-lg) object-cover', { alt: '', size: 40 })
       : '';
   }
 
