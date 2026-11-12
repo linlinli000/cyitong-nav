@@ -98,6 +98,17 @@ const QUICK = TOOLS;
       </ul>
 
       <div class="topbar-icons">
+        <button
+          type="button"
+          data-topbar-history-open
+          aria-label="搜索历史"
+          title="搜索历史"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          class="topbar-icon"
+        >
+          <Icon name="lucide:history" aria-hidden="true" />
+        </button>
         <a
           href="https://wiki.cyitong.top"
           target="_blank"
@@ -137,6 +148,18 @@ const QUICK = TOOLS;
     </nav>
   </div>
 </header>
+
+<!-- 顶栏搜索历史：默认展示引擎搜索，tab 切换站内/社区/文献各自的隔离历史 -->
+<div class="topbar-history" data-topbar-history hidden>
+  <div class="history-head">
+    <span>搜索历史</span>
+    <span class="history-actions">
+      <button type="button" class="history-clear" data-clear-current>清空本类</button>
+      <button type="button" class="history-clear-all" data-clear-all>全部清空</button>
+    </span>
+  </div>
+  <div class="history-body" data-history-body></div>
+</div>
 
 <!-- 移动端工具箱抽屉（翻译/网盘/邮箱全量 + 底部站内链接） -->
 <nav-tools>
@@ -204,4 +227,92 @@ const QUICK = TOOLS;
 <script>
   import '../web/header-dropdown';
   import '../web/elements/nav-tools';
+  import { isSearchScope, type SearchScope } from '../config/search-engines';
+  import {
+    DEFAULT_HISTORY_TAB,
+    clearAll,
+    clearScope,
+    renderHistoryPanel,
+    replaySearch,
+  } from '../web/search-history-panel';
+
+  // 顶栏搜索历史：默认引擎搜索，点 tab 切到站内/社区/文献各自的历史
+  const histPop = document.querySelector<HTMLElement>('[data-topbar-history]');
+  const histBody = histPop?.querySelector<HTMLElement>('[data-history-body]') ?? null;
+  const histBtn = document.querySelector<HTMLElement>('[data-topbar-history-open]');
+
+  let histTab: SearchScope = DEFAULT_HISTORY_TAB;
+
+  const renderHist = (): void => {
+    if (histBody) renderHistoryPanel(histBody, histTab);
+  };
+
+  const openHist = (): void => {
+    if (!histPop) return;
+    histTab = DEFAULT_HISTORY_TAB;
+    renderHist();
+    histPop.hidden = false;
+    histBtn?.setAttribute('aria-expanded', 'true');
+  };
+
+  const closeHist = (): void => {
+    if (!histPop) return;
+    histPop.hidden = true;
+    histBtn?.setAttribute('aria-expanded', 'false');
+  };
+
+  histBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (histPop?.hidden) openHist();
+    else closeHist();
+  });
+
+  histPop?.addEventListener('click', (e) => {
+    const t = e.target as Element;
+
+    const tab = t.closest<HTMLElement>('[data-history-tab]');
+    if (tab) {
+      const scope = tab.dataset.historyTab;
+      if (isSearchScope(scope) && scope !== histTab) {
+        histTab = scope;
+        renderHist();
+      }
+      return;
+    }
+
+    const item = t.closest<HTMLElement>('[data-q]');
+    if (item) {
+      const scope = item.dataset.scope;
+      const q = item.dataset.q;
+      if (isSearchScope(scope) && q) {
+        replaySearch(scope, q);
+        closeHist();
+      }
+      return;
+    }
+
+    if (t.closest('[data-clear-current]')) {
+      clearScope(histTab);
+      renderHist();
+      return;
+    }
+
+    if (t.closest('[data-clear-all]')) {
+      clearAll();
+      renderHist();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!histPop || histPop.hidden) return;
+    // 面板内切 tab 会重建 innerHTML，target 已脱离文档，用事件路径判断归属
+    const path = e.composedPath();
+    if (path.includes(histPop)) return;
+    if (path.some((n) => n instanceof Element && n.hasAttribute('data-topbar-history-open'))) return;
+    closeHist();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && histPop && !histPop.hidden) closeHist();
+  });
 </script>
