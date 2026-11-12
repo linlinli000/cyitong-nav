@@ -6,11 +6,7 @@ import {
   type SearchScope,
 } from '../config/search-engines';
 import { escapeHtml } from './shared/html-escape';
-import { storageGetJson, storageSetJson } from './storage';
-
-const historyKey = (s: SearchScope): string => `nav:history:${s}`;
-const engineKey = (s: SearchScope): string => `nav:engine:${s}`;
-const modeKey = (s: SearchScope, e: number): string => `nav:mode:${s}:${e}`;
+import { loadEngineIdx, loadModeIdx, readHistory, writeHistory } from './search-store';
 
 /** tab 顺序：引擎搜索置顶（默认页），其余按使用场景排列 */
 export const HISTORY_TABS: SearchScope[] = ['search', 'site', 'community', 'literature'];
@@ -20,13 +16,6 @@ const LABEL = Object.fromEntries(SCOPE_TABS.map((t) => [t.id, t.label])) as Reco
   SearchScope,
   string
 >;
-
-const readHistory = (s: SearchScope): string[] => {
-  const h = storageGetJson<string[]>(historyKey(s), []);
-  return Array.isArray(h)
-    ? h.filter((x): x is string => typeof x === 'string' && x.trim() !== '')
-    : [];
-};
 
 /** 渲染 tab 条 + 当前分类列表 */
 export function renderHistoryPanel(body: HTMLElement, active: SearchScope): void {
@@ -73,20 +62,16 @@ export function replaySearch(scope: SearchScope, q: string): void {
     return;
   }
 
-  const engines = ENGINES[scope];
-  const rawIdx = storageGetJson<number>(engineKey(scope), 0);
-  const idx = typeof rawIdx === 'number' && rawIdx >= 0 && rawIdx < engines.length ? rawIdx : 0;
-  const engine = engines[idx];
-  const rawMode = storageGetJson<number>(modeKey(scope, idx), 0);
-  const modeLen = engine.modes?.length ?? 0;
-  const modeIdx = typeof rawMode === 'number' && rawMode >= 0 && rawMode < modeLen ? rawMode : 0;
+  const idx = loadEngineIdx(scope);
+  const engine = ENGINES[scope][idx];
+  const modeIdx = loadModeIdx(scope, idx);
   window.open(engineUrlFor(engine, modeIdx, q), '_blank', 'noopener');
 }
 
 export function clearScope(scope: SearchScope): void {
-  storageSetJson(historyKey(scope), []);
+  writeHistory(scope, []);
 }
 
 export function clearAll(): void {
-  SCOPE_TABS.forEach((t) => storageSetJson(historyKey(t.id), []));
+  SCOPE_TABS.forEach((t) => writeHistory(t.id, []));
 }

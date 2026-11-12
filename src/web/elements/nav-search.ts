@@ -14,13 +14,18 @@ import { iconEl } from '../shared/icons';
 import { siteIconHtml } from '../shared/site-icon';
 import { BREAKPOINT_MD } from '../shared/breakpoints';
 import { watchScrollFade } from '../scroll-fade';
+import {
+  loadEngineIdx,
+  loadModeIdx,
+  pushHistory,
+  readHistory,
+  saveEngineIdx,
+  saveModeIdx,
+  writeHistory,
+} from '../search-store';
 import { storageGetJson, storageSetJson } from '../storage';
 
 const SCOPE_KEY = 'nav:scope';
-const MAX_HISTORY = 10;
-const historyKey = (scope: SearchScope): string => `nav:history:${scope}`;
-const engineKey = (scope: SearchScope): string => `nav:engine:${scope}`;
-const modeKey = (scope: SearchScope, engine: number): string => `nav:mode:${scope}:${engine}`;
 
 function loadScope(): SearchScope {
   const s = storageGetJson<string>(SCOPE_KEY, 'search');
@@ -82,8 +87,8 @@ class NavSearch extends HTMLElement {
 
   connectedCallback(): void {
     this.records = this.readIndex();
-    this.engineIdx = this.loadEngineIdx(this.scope);
-    this.history = this.loadHistory(this.scope);
+    this.engineIdx = loadEngineIdx(this.scope);
+    this.history = readHistory(this.scope);
     this.cacheRefs();
     this.applyScopeState();
     // /?q=xxx（JSON-LD SearchAction）预填展开
@@ -126,23 +131,6 @@ class NavSearch extends HTMLElement {
     }
   }
 
-  private loadEngineIdx(scope: SearchScope): number {
-    const idx = storageGetJson<number>(engineKey(scope), 0);
-    const len = ENGINES[scope]?.length ?? 0;
-    return typeof idx === 'number' && idx >= 0 && idx < len ? idx : 0;
-  }
-
-  private loadModeIdx(scope: SearchScope, engine: number): number {
-    const idx = storageGetJson<number>(modeKey(scope, engine), 0);
-    const len = ENGINES[scope]?.[engine]?.modes?.length ?? 0;
-    return typeof idx === 'number' && idx >= 0 && idx < len ? idx : 0;
-  }
-
-  private loadHistory(scope: SearchScope): string[] {
-    const h = storageGetJson<string[]>(historyKey(scope), []);
-    return Array.isArray(h) ? h.filter((x): x is string => typeof x === 'string') : [];
-  }
-
   private cacheRefs(): void {
     this.input = this.querySelector<HTMLInputElement>('[data-role="input"]');
     this.dropdown = this.querySelector<HTMLElement>('[data-role="dropdown"]');
@@ -153,7 +141,7 @@ class NavSearch extends HTMLElement {
 
   private applyScopeState(): void {
     // 类型下标与 UI 解耦：即使类型按钮不在 DOM，占位符/搜索 URL 也要用到
-    this.modeIdx = this.loadModeIdx(this.scope, this.engineIdx);
+    this.modeIdx = loadModeIdx(this.scope, this.engineIdx);
     this.syncCtxLabel();
     if (this.ctxMenu && !this.ctxMenu.hidden) this.renderCtxMenu();
     if (this.input) this.input.placeholder = this.currentPlaceholder();
@@ -306,7 +294,7 @@ class NavSearch extends HTMLElement {
     }
     if (t.closest('[data-clear-history]')) {
       this.history = [];
-      storageSetJson(historyKey(this.scope), []);
+      writeHistory(this.scope, []);
       this.showHistory();
       return;
     }
@@ -359,8 +347,8 @@ class NavSearch extends HTMLElement {
     if (scope === this.scope) return;
     this.scope = scope;
     storageSetJson(SCOPE_KEY, scope);
-    this.engineIdx = this.loadEngineIdx(scope);
-    this.history = this.loadHistory(scope);
+    this.engineIdx = loadEngineIdx(scope);
+    this.history = readHistory(scope);
     this.query = '';
     this.cursor = -1;
     if (this.input) this.input.value = '';
@@ -370,13 +358,13 @@ class NavSearch extends HTMLElement {
 
   private setEngine(i: number): void {
     this.engineIdx = i;
-    storageSetJson(engineKey(this.scope), i);
+    saveEngineIdx(this.scope, i);
     this.applyScopeState();
   }
 
   private setMode(i: number): void {
     this.modeIdx = i;
-    storageSetJson(modeKey(this.scope, this.engineIdx), i);
+    saveModeIdx(this.scope, this.engineIdx, i);
     this.applyScopeState();
   }
 
@@ -536,8 +524,7 @@ class NavSearch extends HTMLElement {
   }
 
   private saveHistory(q: string): void {
-    this.history = [q, ...this.history.filter((h) => h !== q)].slice(0, MAX_HISTORY);
-    storageSetJson(historyKey(this.scope), this.history);
+    this.history = pushHistory(this.scope, q, this.history);
   }
 }
 
