@@ -32,11 +32,11 @@ const defaultPlaceholder = placeholderFor('search', 0);
 ---
 
 <section class="hero">
-  <!-- 首屏 hero：时钟/日期/问候（客户端对时），白色细体压在渐变上 -->
+  <!-- 首屏 hero：SSR 先出等宽占位，保证 LCP 候选在第一帧就有内容；真实时间由 nav-hero 每秒校准 -->
   <div class="hero-lead">
     <div class="hero-lead-row">
-      <time id="hero-clock" class="tabular-nums"></time>
-      <span id="hero-date"></span>
+      <time id="hero-clock" class="tabular-nums">--:--</time>
+      <span id="hero-date">--月--日 周-</span>
     </div>
     <p id="hero-greeting">今天想查什么？</p>
   </div>
