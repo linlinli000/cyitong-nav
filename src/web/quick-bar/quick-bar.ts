@@ -1,4 +1,4 @@
-/** 常用磁贴行（#quick-bar）控制器：pinned→最近→SSG 默认集三层合并渲染；固定/移除统一走右键/长按菜单 */
+/** 常用磁贴行控制器：pinned → 最近 → SSG 默认集三层合并渲染 */
 import {
   MAX_PINS,
   MAX_STORE,
@@ -20,8 +20,8 @@ import { updateScrollFade, watchScrollFade } from '../scroll-fade';
 import { placeBelow } from '../place';
 import { storageSetJson } from '../storage';
 
-/** 行内磁贴上限：桌面 8 磁贴 + 添加格横排；移动端 2 行×5 列网格同为 8 磁贴 + 添加格 = 9 格，窄屏横向滚动（网格布局见 global.css） */
-const MAX_SHOW = 8;
+/** 行内磁贴上限：9 磁贴 + 添加格 = 10 格，桌面 10 列、移动端 2 行×5 列正好铺满 */
+const MAX_SHOW = 9;
 const LONG_PRESS_MS = 500;
 const MOVE_CANCEL_PX = 10;
 

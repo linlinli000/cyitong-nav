@@ -13,13 +13,11 @@ const { categories, searchIndex, totalLinks } = await getSiteData();
   searchIndex={searchIndex}
   isHome={true}
 >
-  <main class="mx-auto max-w-[112rem] px-3 py-6 sm:px-4">
-    <h1 class="sr-only">成医通：成都医学院师生第三方导航</h1>
-    <SearchPanel searchIndex={searchIndex} />
+  <SearchPanel searchIndex={searchIndex} slot="hero" />
 
-    <div class="mt-6 space-y-6 sm:mt-10" data-nosnippet>
-      {categories.map((cat) => <CategoryBlock category={cat} />)}
-    </div>
+  <main class="cat-list" data-nosnippet>
+    <h1 class="sr-only">成医通：成都医学院师生第三方导航</h1>
+    {categories.map((cat) => <CategoryBlock category={cat} />)}
   </main>
 </SiteLayout>
 

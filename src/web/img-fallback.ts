@@ -1,4 +1,4 @@
-/** 图标加载失败换成同尺寸首字色块（客户端专用，委托 document 的 error） */
+/** 图标加载失败换成同尺寸首字色块 */
 let registered = false;
 
 export function registerLetterFallback(): void {

@@ -10,127 +10,131 @@ interface Props {
 
 const { isHome } = Astro.props;
 
-const MENU_ICON = 'lucide:menu';
-const CARET_ICON = 'lucide:chevron-down';
+/** 顶栏主导航：与站内页面一一对应 */
+const NAV = [
+  { label: '首页', href: '/', icon: 'lucide:home', current: isHome },
+  { label: '投稿与反馈', href: '/contribute/', icon: 'lucide:edit-3', current: false },
+  { label: '关于本站', href: '/about/', icon: 'lucide:info', current: false },
+];
+
+/** 右侧快捷项：只用带下拉的三组工具（翻译 / 网盘 / 邮箱），不再放站内锚点文字链 */
+const QUICK = TOOLS;
 ---
 
-<header class="sticky top-0 z-20 bg-bar backdrop-blur-md">
-  <div class="relative flex items-center justify-between gap-3 px-4 py-2.5 sm:px-5 lg:px-4">
-    <!-- 移动居中品牌 -->
-    <a
-      href={brandHref(isHome)}
-      aria-label="成医通"
-      class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 whitespace-nowrap lg:hidden"
-    >
-      <img src="/logo.svg" alt="成医通" width="32" height="32" class="h-8 w-8 shrink-0" />
-      <span class="leading-none">
-        <span class="block text-base font-bold text-ink">成医通</span>
-        <span class="mt-1 hidden text-chip text-muted min-[360px]:block">nav.cyitong.top</span>
-      </span>
-    </a>
-
-    <div class="flex items-center gap-2">
+<header class="topbar">
+  <div class="topbar-pill">
+    <nav class="topbar-inner" aria-label="站点导航">
       <button
         type="button"
         data-mobile-nav-open
         aria-label="打开菜单"
         aria-expanded="false"
-        data-ghost
-        class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors lg:hidden"
+        class="topbar-icon topbar-icon--mobile menu-btn"
       >
-        <Icon name={MENU_ICON} class="h-6 w-6" aria-hidden="true" />
+        <span class="menu-bar" aria-hidden="true"></span>
+        <span class="menu-bar" aria-hidden="true"></span>
+        <span class="menu-bar" aria-hidden="true"></span>
       </button>
 
-      <button
-        type="button"
-        data-sidebar-toggle
-        aria-label="收起侧边栏"
-        aria-expanded="true"
-        data-ghost
-        class="hidden h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors lg:grid"
-      >
-        <Icon name={MENU_ICON} class="h-6 w-6" aria-hidden="true" />
-      </button>
-
-      <a
-        href="https://wiki.cyitong.top"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="wiki"
-        title="wiki"
-        data-ghost
-        class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted transition-colors"
-      >
-        <Icon name="lucide:book-open" class="h-5 w-5 shrink-0" aria-hidden="true" />
-        <span class="hidden lg:inline">wiki</span>
-      </a>
-    </div>
-
-    <div class="flex items-center gap-2">
-      <!-- 翻译/网盘/邮箱 快捷下拉 -->
-      {TOOLS.map((tool) => (
-        <div class="relative hidden lg:block" data-menu>
-          <button
-            type="button"
-            data-menu-btn
-            aria-haspopup="true"
-            aria-expanded="false"
-            title={tool.label}
-            data-ghost
-            class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-sm font-medium text-muted transition-colors"
-          >
-            <Icon name={tool.icon} class="h-5 w-5 shrink-0" aria-hidden="true" />
-            {tool.label}
-            <Icon name={CARET_ICON} class="h-3 w-3 shrink-0 opacity-70" aria-hidden="true" />
-          </button>
-          <div
-            data-menu-panel
-            class="absolute right-0 top-full z-50 mt-1.5 min-w-44 rounded-xl bg-float backdrop-blur-md p-1.5 shadow-(--shadow-menu)"
-          >
-            <div class="space-y-0.5">
-              {tool.items.map((item) => (
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-menu-item
-                  data-ghost
-                  class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-muted transition-colors"
-                >
-                  <ToolIcon icon={item.icon} />
-                  <span class="truncate">{item.name}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      ))}
-
-      <a
-        href="https://github.com/linlinli000/cyitong-nav"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="GitHub 源码"
-        title="GitHub 源码"
-        data-ghost
-        class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors"
-      >
-        <svg class="h-6 w-6" aria-hidden="true"><use href="#icon-github"/></svg>
+      <a href={brandHref(isHome)} class="topbar-brand" aria-label="成医通">
+        <img src="/logo.svg" alt="成医通" width="36" height="36" />
+        <span class="topbar-brand-text">
+          <b>成医通</b>
+          <small>nav.cyitong.top</small>
+        </span>
       </a>
 
-      <!-- 移动端工具箱入口（桌面用上方下拉） -->
-      <button
-        type="button"
-        data-role="tools-open"
-        aria-label="打开工具箱"
-        aria-haspopup="dialog"
-        aria-expanded="false"
-        data-ghost
-        class="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-muted transition-colors lg:hidden"
-      >
-        <Icon name="lucide:layout-grid" class="h-5.5 w-5.5" aria-hidden="true" />
-      </button>
-    </div>
+      <ul class="topbar-menu">
+        {
+          NAV.map((item) => (
+            <li class={item.current ? 'is-current' : ''}>
+              <a href={item.href} aria-current={item.current ? 'page' : undefined}>
+                <Icon name={item.icon} class="mr-1.5 inline h-4 w-4 align-[-2px]" aria-hidden="true" />
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <span class="topbar-spacer" aria-hidden="true"></span>
+
+      <ul class="topbar-quick">
+        {
+          QUICK.map((tool) => (
+            <li class="relative" data-menu="">
+              <button
+                type="button"
+                data-menu-btn
+                aria-haspopup="true"
+                aria-expanded="false"
+                title={tool.label}
+              >
+                <Icon name={tool.icon} class="h-4 w-4 shrink-0" aria-hidden="true" />
+                {tool.label}
+                <Icon
+                  name="lucide:chevron-down"
+                  class="h-3 w-3 shrink-0 opacity-70"
+                  aria-hidden="true"
+                />
+              </button>
+              <div data-menu-panel class="absolute right-0 top-full z-50 mt-1 min-w-36">
+                {tool.items.map((sub) => (
+                  <a
+                    href={sub.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-menu-item
+                    class="flex items-center gap-2"
+                  >
+                    <ToolIcon icon={sub.icon} />
+                    <span class="truncate">{sub.name}</span>
+                  </a>
+                ))}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="topbar-icons">
+        <a
+          href="https://wiki.cyitong.top"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="wiki"
+          title="wiki"
+          class="topbar-icon topbar-icon--sm"
+        >
+          <Icon name="lucide:book-open" aria-hidden="true" />
+        </a>
+        <a
+          href="https://github.com/linlinli000/cyitong-nav"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub 源码"
+          title="GitHub 源码"
+          class="topbar-icon topbar-icon--md"
+        >
+          <svg class="h-5 w-5" aria-hidden="true"><use href="#icon-github" /></svg>
+        </a>
+        <button
+          type="button"
+          data-role="tools-open"
+          aria-label="打开工具箱"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          class="topbar-icon topbar-icon--mobile tools-btn"
+        >
+          <span class="tools-icon tools-icon--grid" aria-hidden="true">
+            <Icon name="lucide:layout-grid" />
+          </span>
+          <span class="tools-icon tools-icon--close" aria-hidden="true">
+            <Icon name="lucide:x" />
+          </span>
+        </button>
+      </div>
+    </nav>
   </div>
 </header>
 

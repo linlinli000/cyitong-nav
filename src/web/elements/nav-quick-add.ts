@@ -80,7 +80,10 @@ class NavQuickAdd extends HTMLElement {
           </div>
           <p data-role="err" class="mt-2.5 hidden text-note text-danger"></p>
           <div class="mt-5 flex items-center gap-2">
-            <button type="button" data-role="pick" class="btn-outline flex-1 rounded-xl py-2 text-sm">上传图片</button>
+            <button type="button" data-role="pick" class="btn-upload flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-sm">
+              ${iconEl('upload', 'h-4 w-4')}
+              <span>上传图片</span>
+            </button>
             <button type="submit" class="btn-brand flex-1 rounded-xl py-2 text-sm">添加</button>
           </div>
         </form>

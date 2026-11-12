@@ -1,0 +1,105 @@
+/* =========================================================================
+   状态覆盖层：由脚本动态切换的激活态 / 展开态 / 显隐态，置于最后保证覆盖默认态
+   ========================================================================= */
+
+.sidebar-group.open .sidebar-sub {
+  max-height: 480px;
+  opacity: 1;
+}
+.sidebar-group.open .sidebar-chevron {
+  transform: rotate(90deg);
+}
+.link-tip-pop.show {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.12s var(--ease-ui);
+}
+[data-menu-panel].open {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.15s var(--ease-pop),
+    transform 0.15s var(--ease-pop),
+    visibility 0s;
+}
+.sidebar-flyout.open {
+  display: block;
+}
+.cat-more.expanded .cat-more-chevron {
+  transform: rotate(180deg);
+}
+.cat-tab.active {
+  color: var(--color-on-solid);
+  background: var(--color-brand-solid);
+  box-shadow: var(--shadow-tab);
+  font-weight: 600;
+}
+.ctx-item.active {
+  color: var(--color-brand);
+  background: var(--color-brand-mark);
+  font-weight: 600;
+}
+.quick-toast.show {
+  opacity: 1;
+}
+body.scrolled .topbar-pill {
+  box-shadow: var(--nav-shadow);
+}
+body.page-inner:not(.scrolled) .topbar-pill {
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.history-tab.active {
+  color: var(--color-brand);
+  background: var(--color-brand-mark);
+}
+.history-tab.active .history-tab-count {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+#sidebar.-translate-x-full {
+  transform: translateX(calc(-100% - var(--gutter) * 2));
+}
+#sidebar.translate-x-0 {
+  transform: translateX(0);
+}
+#sidebar.is-collapsed .footer-icon--close {
+  display: none;
+}
+#sidebar.is-collapsed .footer-icon--open {
+  display: block;
+}
+.sidebar-cat-link:hover .sidebar-chevron,
+.sidebar-group.open .sidebar-chevron {
+  opacity: 0.9;
+}
+
+.sidebar-group.open .sidebar-chevron {
+  transform: rotate(90deg);
+}
+.sidebar-cat-link.active,
+.sidebar-cat-link.active:hover {
+  color: var(--color-brand);
+  background: var(--color-brand-wash);
+}
+
+.sidebar-cat-link.active .sidebar-cat-icon,
+.sidebar-cat-link.active .sidebar-cat-name {
+  color: var(--color-brand);
+}
+
+.sidebar-cat-link.active .sidebar-cat-name {
+  font-weight: 400;
+}
+#quick-tiles > .add-tile.is-pop {
+  animation: add-tile-pop 0.38s var(--ease-pop);
+}
+.cat-tab.active,
+.cat-tab.active:hover {
+  color: #fff;
+  background: var(--color-brand-solid);
+  box-shadow: var(--shadow-tab);
+  font-weight: 400;
+}

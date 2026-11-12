@@ -30,34 +30,28 @@ const cardAttrs = toDataAttrs(card);
   data-sub={sub}
   data-desc={link.desc ? link.desc : undefined}
   {...cardAttrs}
-  class="link-tile group relative flex items-center gap-3 rounded-card bg-card p-3"
+  class="link-tile"
 >
-  <span class="relative block h-10 w-10 shrink-0">
+  <span class="tile-icon-wrap">
     <span
       class="icon-glow"
       aria-hidden="true"
       style={`background-image: url('${iconPath(categoryId, link.id)}')`}
+    ></span>
+    <Fragment
+      set:html={siteIconHtml(iconPath(categoryId, link.id), link.title, 'tile-icon', { size: 40 })}
     />
-    <Fragment set:html={siteIconHtml(iconPath(categoryId, link.id), link.title, 'link-tile-icon relative h-10 w-10 rounded-xl object-cover', { size: 40 })} />
   </span>
-  <span class="min-w-0 flex-1">
-    <span class="block truncate text-sm font-semibold text-ink transition-colors group-hover:text-brand">
-      {link.title}
-    </span>
-    {(link.desc || link.badge) && (
-      <span class="mt-0.5 flex min-w-0 items-center gap-1">
-        {link.badge && (
-          <span class="shrink-0 rounded bg-brand/10 px-1 py-0.5 text-chip font-medium leading-none text-brand">
-            {link.badge}
-          </span>
-        )}
-        {link.desc && <span class="min-w-0 truncate text-note text-muted">{link.desc}</span>}
-      </span>
-    )}
+  <span class="tile-body">
+    <span class="tile-title">{link.title}</span>
+    {
+      (link.desc || link.badge) && (
+        <span class="tile-desc-row">
+          {link.badge && <span class="tile-badge">{link.badge}</span>}
+          {link.desc && <span class="tile-desc">{link.desc}</span>}
+        </span>
+      )
+    }
   </span>
-  <Icon
-    name="lucide:arrow-up-right"
-    aria-hidden="true"
-    class="pointer-events-none absolute top-1.5 right-1.5 h-4 w-4 -translate-x-1 translate-y-1 text-muted opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
-  />
+  <Icon name="lucide:arrow-up-right" class="tile-arrow" aria-hidden="true" />
 </a>

@@ -1,4 +1,4 @@
-/** 常用磁贴完整结构（容器 > 链接）：SSG(SearchPanel) 与客户端(quick-bar.ts) 共用此函数，改结构只改这里；管理操作统一走右键/长按菜单 */
+/** 磁贴完整结构（容器 > 链接）：SSG 与客户端共用，改结构只改这里 */
 import { escapeHtml } from '../shared/html-escape';
 import { iconEl } from '../shared/icons';
 import type { QuickSite } from './quick-store';
@@ -17,18 +17,18 @@ export function quickTileHtml(item: QuickSite, opts: QuickTileOpts = {}): string
       <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer"
         data-title="${escapeHtml(item.title)}" data-icon="${escapeHtml(item.icon)}"${opts.isDefault ? ' data-quick-default' : ''}
         title="${escapeHtml(item.title)}" aria-haspopup="menu" class="quick-tile">
-        ${siteIconHtml(item.icon, item.title, 'h-10 w-10 rounded-xl object-cover', { alt: '', size: 40 })}
-        <span class="max-w-20 truncate">${escapeHtml(item.title)}</span>
+        ${siteIconHtml(item.icon, item.title, 'quick-tile-icon', { alt: '', size: 22 })}
+        <span>${escapeHtml(item.title)}</span>
       </a>
       ${opts.pinned ? `<span class="quick-pin-flag" aria-hidden="true">${iconEl('pin', 'h-2.5 w-2.5')}</span>` : ''}
     </div>`;
 }
 
-/** 行尾常驻的"添加快捷方式"格（双端常显，不靠 hover）；加号套 40px 容器盒与其他磁贴图标对齐 */
+/** 行尾常驻的"添加快捷方式"格：与胶囊磁贴同高（36px），加号套 22px 盒与图标对齐 */
 export function quickAddHtml(): string {
   return `
-    <button type="button" data-quick-add class="quick-tile add-tile" aria-label="添加快捷方式" title="添加快捷方式">
-      <span class="grid h-10 w-10 place-items-center rounded-xl bg-surface">${iconEl('plus', 'h-5 w-5')}</span>
-      <span class="max-w-20 truncate">添加</span>
+    <button type="button" data-quick-add class="add-tile" aria-label="添加快捷方式" title="添加快捷方式">
+      <span class="add-tile-icon">${iconEl('plus', 'h-4 w-4')}</span>
+      <span>添加</span>
     </button>`;
 }

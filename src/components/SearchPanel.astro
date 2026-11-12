@@ -20,6 +20,7 @@ const QUICK_PICKS: Array<[string, string]> = [
   ['academic', 'pubmed'],
   ['academic', 'cnki'],
   ['campus', 'shiguang'],
+  ['study', 'icourse'],
 ];
 const quickLinks = QUICK_PICKS.map(([catId, id]) => {
   const hit = searchIndex.find((r) => r.catId === catId && r.id === id);
@@ -30,23 +31,19 @@ const quickLinks = QUICK_PICKS.map(([catId, id]) => {
 const defaultPlaceholder = placeholderFor('search', 0);
 ---
 
-<section class="py-10 sm:py-18">
-  <!-- 首屏 hero：时钟/日期/问候（客户端对时） -->
-  <div class="mb-6 text-center sm:mb-8">
-    <div class="flex h-10 items-baseline justify-center gap-2.5 sm:h-12">
-      <time
-        id="hero-clock"
-        class="text-4xl leading-none font-extralight tracking-tight text-ink tabular-nums sm:text-5xl"></time>
-      <span id="hero-date" class="text-dense text-muted"></span>
+<section class="hero">
+  <!-- 首屏 hero：时钟/日期/问候（客户端对时），白色细体压在渐变上 -->
+  <div class="hero-lead">
+    <div class="hero-lead-row">
+      <time id="hero-clock" class="tabular-nums"></time>
+      <span id="hero-date"></span>
     </div>
-    <p id="hero-greeting" class="mt-2 text-body text-muted">今天想查什么？</p>
+    <p id="hero-greeting">今天想查什么？</p>
   </div>
 
-  <nav-search>
-    <div class="relative mx-auto w-full max-w-[50rem]">
-      <div
-        class="search-field flex items-center gap-1.5 rounded-2xl bg-field py-1.5 pl-1.5 pr-1 transition-all sm:gap-2 sm:pl-2 sm:pr-1.5"
-      >
+  <nav-search class="hero-search">
+    <div class="relative w-full">
+      <div class="search-field flex items-center">
         <!-- 上下文芯片：范围+引擎+类型 合一 -->
         <div class="relative shrink-0" data-role="ctx">
           <button
@@ -64,7 +61,7 @@ const defaultPlaceholder = placeholderFor('search', 0);
             role="listbox"
             aria-label="搜索范围与引擎"
             hidden
-            class="absolute left-0 top-full z-30 mt-1.5 w-[min(20rem,calc(100vw_-_2rem))] max-h-[min(60vh,26rem)] overflow-y-auto rounded-xl bg-float backdrop-blur-md p-2 shadow-(--shadow-menu)"
+            class="absolute left-0 top-full z-30 mt-1.5 w-[min(20rem,calc(100vw_-_2rem))] max-h-[min(60vh,26rem)] overflow-y-auto rounded-xl bg-float p-2 shadow-(--shadow-menu)"
           ></div>
         </div>
 
@@ -82,15 +79,10 @@ const defaultPlaceholder = placeholderFor('search', 0);
           aria-expanded="false"
           aria-controls="nav-search-listbox"
           aria-autocomplete="list"
-          class="min-w-0 flex-1 bg-transparent text-body text-ink outline-none placeholder:text-muted sm:text-base"
+          class="min-w-0 flex-1 bg-transparent outline-none"
         />
-        <button
-          type="button"
-          data-role="submit"
-          aria-label="搜索"
-          class="btn-brand grid h-9 w-9 shrink-0 place-items-center rounded-xl sm:h-10 sm:w-10"
-        >
-          <Icon name="lucide:search" class="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+        <button type="button" data-role="submit" aria-label="搜索" class="btn-brand grid shrink-0 place-items-center">
+          <Icon name="lucide:search" aria-hidden="true" />
         </button>
       </div>
 
@@ -100,20 +92,25 @@ const defaultPlaceholder = placeholderFor('search', 0);
         role="listbox"
         aria-label="搜索建议"
         hidden
-        class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 max-h-96 overflow-y-auto rounded-xl bg-float backdrop-blur-md shadow-(--shadow-dropdown)"
+        class="search-dropdown absolute inset-x-0 top-full z-30 mt-1.5 max-h-96 overflow-y-auto rounded-xl bg-float shadow-(--shadow-menu)"
       ></div>
     </div>
   </nav-search>
 
-  <!-- 常用磁贴行：SSG 默认集 + 常驻添加格；客户端由 quick-bar 与 pinned/最近使用三层合并重建 -->
-  <div id="quick-bar" data-fade-x class="mt-6 flex min-h-[4.25rem] items-center overflow-x-auto scrollbar-hide">
-    <div id="quick-tiles" class="mx-auto flex w-max shrink-0 items-stretch gap-2 px-1 sm:gap-4">
-      {quickLinks.map((l) => <Fragment set:html={quickTileHtml({ url: l.url, title: l.title, icon: l.icon }, { isDefault: true })} />)}
-      <Fragment set:html={quickAddHtml()} />
+  <div class="hero-spacer" aria-hidden="true"></div>
+
+  <!-- 胶囊快捷条：SSG 默认集 + 常驻添加格；客户端由 quick-bar 三层合并重建 -->
+  <div class="hero-quick">
+    <div id="quick-bar" data-fade-x>
+      <div id="quick-tiles">
+        {quickLinks.map((l) => <Fragment set:html={quickTileHtml({ url: l.url, title: l.title, icon: l.icon }, { isDefault: true })} />)}
+        <Fragment set:html={quickAddHtml()} />
+      </div>
     </div>
   </div>
-  <nav-quick-add></nav-quick-add>
 </section>
+
+<nav-quick-add></nav-quick-add>
 
 <script>
   import '../web/elements/nav-search';
@@ -123,4 +120,19 @@ const defaultPlaceholder = placeholderFor('search', 0);
 
   initNavHero();
   initQuickBar();
+
+  // 「添加」格点击回弹：委托到 document，客户端重建磁贴后依然有效
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as Element).closest<HTMLElement>('#quick-tiles > .add-tile');
+    if (!btn) return;
+    btn.classList.remove('is-pop');
+    void btn.offsetWidth;
+    btn.classList.add('is-pop');
+  });
+
+  document.addEventListener('animationend', (e) => {
+    if ((e as AnimationEvent).animationName !== 'add-tile-pop') return;
+    const btn = (e.target as Element).closest<HTMLElement>('#quick-tiles > .add-tile');
+    btn?.classList.remove('is-pop');
+  });
 </script>

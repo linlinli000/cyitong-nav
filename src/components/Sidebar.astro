@@ -2,8 +2,8 @@
 import type { CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 import { categoryIcon } from '../config/category-icons';
-import { SITE_LINKS, brandHref } from '../config/site-links';
 import { categoryLinkCount } from '../lib/site-data';
+import { SITE_LINKS } from '../config/site-links';
 
 interface Props {
   categories: CollectionEntry<'sites'>[];
@@ -14,12 +14,11 @@ const { categories, isHome } = Astro.props;
 
 // 内容页无分类区块，锚点须带回首页路径
 const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
+
+const FOOTER_LINKS = [...SITE_LINKS].reverse();
 ---
 
-<aside
-  id="sidebar"
-  class="fixed inset-y-0 left-0 z-40 flex w-56 -translate-x-full flex-col bg-card transition-transform duration-200 lg:translate-x-0"
->
+<aside id="sidebar" class="-translate-x-full">
   <!-- 首帧防闪烁；与 nav-sidebar.ts 的 RAIL_KEY 同键，改名两处同步 -->
   <script is:inline>
     (function () {
@@ -30,18 +29,12 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
       } catch {}
     })();
   </script>
-  <div class="sidebar-header flex h-14 items-center px-4">
-    <a href={brandHref(isHome)} class="sidebar-brand flex min-w-0 flex-1 items-center gap-2.5">
-      <img src="/logo.svg" alt="成医通" width="36" height="36" class="h-9 w-9 shrink-0" />
-      <span class="sidebar-brand-text">
-        <span class="block text-lg font-bold leading-tight text-ink">成医通</span>
-        <span class="block text-chip text-muted">nav.cyitong.top</span>
-      </span>
-    </a>
+  <div class="sidebar-header">
+    <span class="drawer-title">分类</span>
   </div>
 
-  <nav class="scrollbar-hide flex-1 overflow-y-auto px-2 py-4" aria-label="分类导航">
-    <div class="space-y-0.5">
+  <nav aria-label="分类导航">
+    <div>
       {
         categories.map((cat) => {
           const linkCount = categoryLinkCount(cat);
@@ -49,37 +42,31 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
             <div class="sidebar-group" data-cat={cat.data.id}>
               <button
                 type="button"
-                class="sidebar-cat-toggle sidebar-cat-link flex w-full items-center gap-x-2 rounded-lg py-3 font-medium text-muted transition-colors"
+                class="sidebar-cat-toggle sidebar-cat-link"
                 aria-expanded="false"
                 title={cat.data.name}
               >
-                <span class="sidebar-cat-icon shrink-0 text-brand">
-                  <Icon name={categoryIcon(cat.data.icon)} class="h-[21px] w-[21px]" aria-hidden="true" />
+                <span class="sidebar-cat-icon">
+                  <Icon name={categoryIcon(cat.data.icon)} aria-hidden="true" />
                 </span>
                 <span class="sidebar-cat-meta">
-                  <span class="sidebar-cat-name truncate text-body">{cat.data.name}</span>
-                  <span class="sidebar-cat-count shrink-0 text-note text-muted">{linkCount}</span>
-                  <Icon
-                    name="lucide:chevron-right"
-                    class="sidebar-chevron h-4 w-4 shrink-0 text-muted"
-                    aria-hidden="true"
-                  />
+                  <span class="sidebar-cat-name">{cat.data.name}</span>
+                  <span class="sidebar-cat-count">{linkCount}</span>
+                  <Icon name="lucide:chevron-right" class="sidebar-chevron" aria-hidden="true" />
                 </span>
               </button>
               <div class="sidebar-sub">
-                <div class="space-y-0.5 pt-0.5">
-                  {
-                    cat.data.subs.map((sub) => (
-                      <a
-                        href={catAnchor(cat.data.id)}
-                        data-sub-id={sub.id}
-                        data-cat={cat.data.id}
-                        class="sub-link block rounded-lg px-3 py-2 text-dense text-muted transition-colors"
-                      >
-                        {sub.name}
-                      </a>
-                    ))
-                  }
+                <div>
+                  {cat.data.subs.map((sub) => (
+                    <a
+                      href={catAnchor(cat.data.id)}
+                      data-sub-id={sub.id}
+                      data-cat={cat.data.id}
+                      class="sub-link"
+                    >
+                      {sub.name}
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
@@ -89,21 +76,27 @@ const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
     </div>
   </nav>
 
-  <div class="sidebar-footer px-2 py-4">
-    <div class="space-y-0.5">
-      {
-        SITE_LINKS.map((l) => (
-          <a
-            href={l.href}
-            class="sidebar-footer-link flex w-full items-center gap-x-2 rounded-lg py-3 font-medium text-muted transition-colors"
-          >
-            <span class="sidebar-footer-icon shrink-0 text-brand">
-              <Icon name={l.icon} class="h-[21px] w-[21px]" aria-hidden="true" />
-            </span>
-            <span class="sidebar-footer-label min-w-0 flex-1 truncate text-body">{l.label}</span>
-          </a>
-        ))
-      }
+  <div class="sidebar-footer">
+    <!-- 桌面端：折叠成图标条（移动端隐藏） -->
+    <div class="sidebar-footer-rail">
+      <button type="button" data-sidebar-toggle class="sidebar-footer-link" aria-label="收起侧边栏">
+        <span class="sidebar-footer-icon">
+          <Icon name="lucide:panel-left-close" class="footer-icon footer-icon--close" aria-hidden="true" />
+          <Icon name="lucide:panel-left-open" class="footer-icon footer-icon--open" aria-hidden="true" />
+        </span>
+        <span class="sidebar-footer-label">收起</span>
+      </button>
+    </div>
+    <!-- 移动端：站内链接（投稿/关于），顺序与右侧工具箱抽屉一致 -->
+    <div class="sidebar-footer-links">
+      {FOOTER_LINKS.map((l) => (
+        <a href={l.href} class="sidebar-footer-link">
+          <span class="sidebar-footer-icon">
+            <Icon name={l.icon} aria-hidden="true" />
+          </span>
+          <span class="sidebar-footer-label">{l.label}</span>
+        </a>
+      ))}
     </div>
   </div>
 </aside>

@@ -22,19 +22,31 @@ interface Props {
 const { categories, totalLinks, isHome, title, description, robots, searchIndex } = Astro.props;
 ---
 
-<Layout title={title} description={description} robots={robots} searchIndex={searchIndex}>
-  <nav-sidebar>
-    <Sidebar categories={categories} isHome={isHome} />
-  </nav-sidebar>
+<Layout title={title} description={description} robots={robots} searchIndex={searchIndex} isHome={isHome}>
+  <!-- 顶栏：全宽 fixed 毛玻璃药丸，覆盖在 hero 之上 -->
+  <TopBar isHome={isHome} />
 
-  <!-- 侧栏让位由 global.css 的 nav-sidebar:has() 规则唯一维护 -->
-  <div class="site-content min-h-screen">
-    <TopBar isHome={isHome} />
-    <slot />
-    <Footer totalLinks={totalLinks} />
-    <BackToTop />
-    <ThemeToggle />
+  <!-- 首页 hero 全宽通栏；内容页不传 hero slot 时整块不渲染 -->
+  {Astro.slots.has('hero') && (
+    <div class="hero-wrap">
+      <slot name="hero" />
+    </div>
+  )}
+
+  <!-- 侧栏与内容区在同一栅格里：让位、折叠、sticky 全由 theme.css 的 --rail-w 维护 -->
+  <div class="page-shell">
+    <nav-sidebar>
+      <Sidebar categories={categories} isHome={isHome} />
+    </nav-sidebar>
+
+    <div class="site-content">
+      <slot />
+      <Footer totalLinks={totalLinks} />
+    </div>
   </div>
+
+  <BackToTop />
+  <ThemeToggle />
 </Layout>
 
 <script>

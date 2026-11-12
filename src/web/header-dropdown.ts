@@ -1,4 +1,4 @@
-/** TopBar 快捷下拉（div[data-menu] 增强）*/
+/** TopBar 快捷下拉（[data-menu] 增强） */
 import { CloseGate } from './close-gate';
 
 const PANEL_ATTR = 'data-menu-panel';

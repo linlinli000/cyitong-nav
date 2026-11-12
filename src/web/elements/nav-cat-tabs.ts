@@ -1,9 +1,9 @@
-/** <nav-cat-tabs>：子分类 tab 过滤 + 卡片折叠，仅增强 CategoryBlock 静态标记 */
-import { BREAKPOINT_LG } from '../breakpoints';
+/** <nav-cat-tabs>：子分类 tab 过滤 + 卡片折叠 */
+import { BREAKPOINT_LG } from '../shared/breakpoints';
 import { scrollBehavior } from '../motion';
 import { watchScrollFade } from '../scroll-fade';
 
-const ROWS_DESKTOP = 3;
+const ROWS_DESKTOP = 4;
 const ROWS_MOBILE = 5;
 const REVEAL_LANDING_RATIO = 0.65;
 
@@ -33,15 +33,25 @@ export class NavCatTabs extends HTMLElement {
     if (expanding) this.scrollToRevealed();
   };
 
-  /** 展开/收起后滑到新增的第一张卡（65% 视口高着点）；已在其上方则不动 */
+  /**
+   * 展开后把新增首卡滚到视口 65% 处；滚动量封顶到卡片头部贴住顶栏，
+   * 否则标题和「更多」会被推出屏幕。
+   */
   private scrollToRevealed(): void {
     const first = this.block().querySelectorAll<HTMLElement>('.link-tile')[this.maxCards];
     if (!first) return;
     const landing = Math.round(window.innerHeight * REVEAL_LANDING_RATIO);
     const top = first.getBoundingClientRect().top;
     if (top < landing) return;
-    const behavior = scrollBehavior();
-    window.scrollTo({ top: window.scrollY + top - landing, behavior });
+
+    const block = this.closest<HTMLElement>('[data-cat-block]');
+    const navH =
+      parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 80;
+    // 卡片头部距视口顶还有多少余量可滚；<=0 说明头部已在顶栏之上，不许再滚
+    const headroom = block ? Math.round(block.getBoundingClientRect().top - navH) : 0;
+    const delta = Math.min(Math.round(top - landing), Math.max(0, headroom));
+    if (delta <= 0) return;
+    window.scrollTo({ top: window.scrollY + delta, behavior: scrollBehavior() });
   }
 
   connectedCallback(): void {
@@ -73,7 +83,6 @@ export class NavCatTabs extends HTMLElement {
     this.activate(btn.dataset.filter ?? '');
   };
 
-  /** tablist 方向键导航 */
   private onTabKeydown = (e: KeyboardEvent): void => {
     const tabs = this.tabButtons();
     const i = tabs.indexOf(document.activeElement as HTMLButtonElement);

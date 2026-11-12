@@ -1,0 +1,213 @@
+/* =========================================================================
+   基础样式层：设计令牌 + 字体 + 元素基础
+   ========================================================================= */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* 站点字体：钉钉进步体（DingTalk JinBuTi），本地自托管，见 Layout.astro 的 preload */
+  --font-sans: "DingTalk JinBuTi", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --text-chip: 11px;
+  --text-note: 12px;
+  --text-note--line-height: 18px;
+  --text-dense: 14px;
+  --text-body: 15px;
+  --text-read: 16px;
+  --text-caption: 13px;
+  --color-surface: #f2f4f7;
+  --color-card: #ffffff;
+  --color-field: #ffffff;
+  --color-ink: #484b4f;
+  --color-muted: #93959a;
+  --color-line: rgba(116, 116, 116, 0.1);
+  --color-tint: rgba(116, 116, 116, 0.1);
+  --color-track: var(--color-tint);
+  --color-fill: var(--color-tint);
+  --color-hover: rgba(220, 220, 220, 0.6);
+  --color-bar: rgba(245, 245, 245, 0.75);
+  --color-float: rgba(255, 255, 255, 0.96);
+  --color-subtle: #6b6e73;
+  --color-code: rgba(116, 116, 116, 0.1);
+  --color-brand: #1e9bff;
+  --color-brand-dark: #1a5fa8;
+  --color-brand-solid: #1e9bff;
+  /* hover 用的深一档品牌蓝：基于 solid 混黑，亮/暗模式都生效，避免 --color-brand-dark 在暗色下反而变浅 */
+  --color-brand-hover: color-mix(in srgb, var(--color-brand-solid) 82%, #000);
+  --color-brand-soft: rgba(30, 155, 255, 0.1);
+  --color-brand-mark: rgba(30, 155, 255, 0.16);
+  --color-brand-wash: rgba(30, 155, 255, 0.12);
+  --color-on-solid: #ffffff;
+  --color-tooltip: #111111;
+  --color-on-tooltip: #ffffff;
+  --color-danger: #e33636;
+
+  /* 动效曲线：微交互 / 弹层抽屉 / 大位移 */
+  --default-transition-timing-function: var(--ease-ui);
+  --ease-ui: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-pop: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-glide: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== 布局 token（所有组件只引用这里的变量） ===== */
+:root {
+  --nav-h: 80px;
+  --rail-w: 190px;
+  --rail-gap: 15px;
+  --gutter: 10px;
+  --page-max: 1600px;
+  --r-lg: 12px;
+  --r-md: 8px;
+  --r-sm: 6px;
+  --z-content: 1;
+  --z-fab: 20;
+  --z-drawer: 40;
+  --z-menu: 60;
+  --z-tooltip: 90;
+  --z-rail: 99;
+  --z-flyout: 105;
+  --z-topbar: 109;
+  --z-topmost: 110;
+  --glass-bg: rgba(245, 245, 245, 0.75);
+  --glass-blur: saturate(2) blur(15px);
+  --glass-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.1);
+  --nav-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  --tile-shadow: inset 0 0 25px rgba(116, 116, 116, 0.1);
+  --hero-grad: linear-gradient(90deg, #587c9f 0%, #7d7b7e 50%, #a27a5e 100%);
+
+  --shadow-tile: var(--tile-shadow);
+  /* 双层阴影：近影定边缘，远影定高度 */
+  --shadow-dropdown: 0 1px 3px rgb(0 0 0 / 0.08), 0 4px 24px rgb(0 0 0 / 0.12);
+  --shadow-menu: 0 2px 6px rgb(0 0 0 / 0.08), 0 10px 30px rgb(0 0 0 / 0.12);
+  --shadow-flyout: 0 2px 6px rgb(0 0 0 / 0.08), 0 12px 32px rgb(0 0 0 / 0.12);
+  --shadow-card: 0 2px 4px rgb(0 0 0 / 0.04), 0 6px 18px rgb(0 0 0 / 0.08);
+  --shadow-tab: 0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+.dark {
+  color-scheme: dark;
+  --color-surface: #1b1d1f;
+  --color-card: #2c2e2f;
+  --color-field: #2a2c2e;
+  --color-ink: #c6c9cf;
+  --color-muted: #909399;
+  --color-track: var(--color-tint);
+  --color-tint: rgba(255, 255, 255, 0.08);
+  --color-fill: var(--color-tint);
+  --color-hover: rgba(255, 255, 255, 0.08);
+  --color-bar: rgba(45, 46, 47, 0.85);
+  --color-float: rgba(45, 46, 47, 0.94);
+  --color-brand: #3fa9ff;
+  --color-brand-dark: #7fc3f5;
+  --color-brand-wash: var(--color-brand-mark);
+  --color-danger: #f87171;
+  --glass-bg: rgba(45, 46, 47, 0.75);
+  --tile-shadow: inset 0 0 25px rgba(255, 255, 255, 0.05);
+  --shadow-dropdown: 0 1px 3px rgb(0 0 0 / 0.24), 0 4px 24px rgb(0 0 0 / 0.4);
+  --shadow-menu: 0 2px 6px rgb(0 0 0 / 0.28), 0 10px 30px rgb(0 0 0 / 0.45);
+  --shadow-flyout: 0 2px 6px rgb(0 0 0 / 0.3), 0 12px 32px rgb(0 0 0 / 0.5);
+  --shadow-card: 0 2px 4px rgb(0 0 0 / 0.16), 0 6px 18px rgb(0 0 0 / 0.3);
+}
+
+@font-face {
+  font-family: "DingTalk JinBuTi";
+  src: url("/fonts/DDjinbuti.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* 减少动态效果：JS 侧平滑滚动统一走 web/motion.ts */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* 选中文本 */
+::selection {
+  background: var(--color-brand-mark);
+  color: var(--color-ink);
+}
+
+/* 键盘焦点环 */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* 搜索框焦点环 */
+.search-field {
+  outline: 2px solid transparent;
+}
+.search-field:has(input:focus-visible) {
+  outline-color: var(--color-brand);
+}
+.search-field input:focus-visible {
+  outline: none;
+}
+
+/* 表单输入框贴身聚焦环 */
+.quick-field,
+.quick-field:focus-visible {
+  outline: none;
+}
+.quick-field {
+  transition: border-color 0.15s var(--ease-ui), box-shadow 0.15s var(--ease-ui);
+}
+.quick-field:focus {
+  border-color: var(--color-brand);
+  
+  box-shadow: none;
+}
+
+body {
+  @apply bg-surface text-ink antialiased;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5;
+  padding-top: var(--nav-h);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 全站细体：标题与强调一律 300，仅 <b>/<strong> 用 400 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+th,
+.font-bold,
+.font-semibold,
+.font-medium,
+.font-extralight {
+  font-weight: 300;
+}
+b,
+strong {
+  font-weight: 400;
+}
+
+/* 自定义元素宿主置块 */
+nav-search,
+nav-theme-toggle,
+nav-sidebar,
+nav-dialog,
+nav-backtotop,
+nav-cat-tabs,
+nav-tools {
+  display: block;
+}

@@ -2,7 +2,6 @@
 import type { CollectionEntry } from 'astro:content';
 import { Icon } from 'astro-icon/components';
 import { categoryIcon } from '../config/category-icons';
-import { categoryLinkCount } from '../lib/site-data';
 import LinkCard from './LinkCard.astro';
 
 interface Props {
@@ -10,36 +9,20 @@ interface Props {
 }
 
 const { category } = Astro.props;
-const total = categoryLinkCount(category);
 ---
 
-<section
-  id={category.data.id}
-  data-spy
-  data-cat-block={category.data.id}
-  class="scroll-mt-24 rounded-card bg-card px-3 py-3 sm:px-4 sm:py-4"
->
-  <div class="relative mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
-    <div class="flex shrink-0 items-center gap-2.5 pr-24 lg:pr-0">
-      <span class="text-brand">
-        <Icon name={categoryIcon(category.data.icon)} class="h-5 w-5" aria-hidden="true" />
+<section id={category.data.id} data-spy data-cat-block={category.data.id} class="content-card">
+  <div class="cat-head">
+    <h2 class="cat-title">
+      <span class="cat-glyph">
+        <Icon name={categoryIcon(category.data.icon)} aria-hidden="true" />
       </span>
-      <h2 class="text-lg font-bold text-ink">{category.data.name}</h2>
-      <span
-        class="inline-flex shrink-0 items-center gap-1 rounded-full bg-track px-2.5 py-0.5 text-note text-muted"
-      >
-        <span class="font-semibold text-brand">{total}</span>
-        个链接
-      </span>
-    </div>
+      {category.data.name}
+    </h2>
 
-    <nav-cat-tabs class="min-w-0 flex-1 lg:flex-initial">
-      <div data-fade-x class="scrollbar-hide -mx-1 overflow-x-auto px-1">
-        <div
-          class="flex w-max items-center gap-0.5 rounded-xl bg-track p-1"
-          role="tablist"
-          aria-label={`${category.data.name}的子分类筛选`}
-        >
+    <nav-cat-tabs class="cat-tabs min-w-0">
+      <div data-fade-x class="scrollbar-hide overflow-x-auto">
+        <div role="tablist" aria-label={`${category.data.name}的子分类筛选`}>
           <button
             type="button"
             id={`cat-tab-${category.data.id}-all`}
@@ -75,13 +58,13 @@ const total = categoryLinkCount(category);
 
     <button
       type="button"
-      class="cat-more absolute top-0 right-0 lg:static"
+      class="cat-more"
       aria-expanded="false"
       aria-controls={`cat-panel-${category.data.id}`}
       hidden
     >
       <span class="cat-more-label">更多</span>
-      <Icon name="lucide:chevron-down" class="cat-more-chevron h-3.5 w-3.5" aria-hidden="true" />
+      <Icon name="lucide:chevron-down" class="cat-more-chevron" aria-hidden="true" />
     </button>
   </div>
 
@@ -89,7 +72,7 @@ const total = categoryLinkCount(category);
     id={`cat-panel-${category.data.id}`}
     role="tabpanel"
     aria-labelledby={`cat-tab-${category.data.id}-all`}
-    class="grid cat-grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+    class="cat-grid"
   >
     {
       category.data.subs.flatMap((sub) =>
