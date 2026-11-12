@@ -3,6 +3,7 @@
  * 不用 <dialog>（其 ::backdrop 走 top layer，会盖住另一抽屉）。
  */
 import { lockScroll, unlockScroll } from '../scroll-lock';
+import { announceOverlayOpen, isDialogEsc, onOverlayOpen } from '../overlay';
 
 class NavTools extends HTMLElement {
   private panel: HTMLElement | null = null;
@@ -30,6 +31,7 @@ class NavTools extends HTMLElement {
 
   private onDocKeydown = (e: KeyboardEvent): void => {
     if (e.key !== 'Escape' || !this.isOpen()) return;
+    if (isDialogEsc(e)) return;
     e.preventDefault();
     this.requestClose();
   };
@@ -45,11 +47,8 @@ class NavTools extends HTMLElement {
     this.opener?.focus({ preventScroll: true });
   };
 
-  /** 左侧侧栏打开时，工具箱先收起，两个抽屉互斥（同 linlog） */
-  private onOtherDrawerOpen = (e: Event): void => {
-    const from = (e as CustomEvent<string>).detail;
-    if (from !== 'tools') this.closeImmediately();
-  };
+  /** 互斥让位订阅：其他浮层打开时立即收起，不等退出动画 */
+  private unyield: (() => void) | null = null;
 
   /** 互斥场景立即关闭：不等退出动画，立刻让出层级 */
   private closeImmediately(): void {
@@ -67,7 +66,7 @@ class NavTools extends HTMLElement {
     this.backdrop = this.querySelector<HTMLElement>('[data-tools-backdrop]');
     document.addEventListener('click', this.onDocClick);
     document.addEventListener('keydown', this.onDocKeydown);
-    document.addEventListener('nav-drawer-open', this.onOtherDrawerOpen as EventListener);
+    this.unyield = onOverlayOpen('tools', () => this.closeImmediately());
     this.backdrop?.addEventListener('click', this.onBackdropClick);
     this.panel?.addEventListener('click', this.onPanelClick);
     this.panel?.addEventListener('animationend', this.onAnimationEnd);
@@ -76,7 +75,7 @@ class NavTools extends HTMLElement {
   disconnectedCallback(): void {
     document.removeEventListener('click', this.onDocClick);
     document.removeEventListener('keydown', this.onDocKeydown);
-    document.removeEventListener('nav-drawer-open', this.onOtherDrawerOpen as EventListener);
+    this.unyield?.();
     this.backdrop?.removeEventListener('click', this.onBackdropClick);
     this.panel?.removeEventListener('click', this.onPanelClick);
     this.panel?.removeEventListener('animationend', this.onAnimationEnd);
@@ -86,8 +85,8 @@ class NavTools extends HTMLElement {
   private open(): void {
     const panel = this.panel;
     if (!panel || !panel.hidden) return;
-    // 先广播，让已打开的左侧侧栏收起
-    document.dispatchEvent(new CustomEvent('nav-drawer-open', { detail: 'tools' }));
+    // 先广播，让已打开的左侧侧栏 / 历史面板收起
+    announceOverlayOpen('tools');
     panel.classList.remove('closing');
     panel.hidden = false;
     if (this.backdrop) this.backdrop.hidden = false;

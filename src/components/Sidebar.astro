@@ -16,7 +16,7 @@ const { categories, isHome } = Astro.props;
 const catAnchor = (id: string): string => (isHome ? `#${id}` : `/#${id}`);
 ---
 
-<aside id="sidebar" class="-translate-x-full">
+<aside id="sidebar" tabindex="-1" class="-translate-x-full">
   <div class="sidebar-header">
     <span class="drawer-title">分类</span>
   </div>

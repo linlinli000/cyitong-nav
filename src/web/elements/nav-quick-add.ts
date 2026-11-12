@@ -1,5 +1,7 @@
 /** <nav-quick-add>：添加快捷方式对话框；图标解析 上传 > 站内收录（同 host 复用） > unavatar 抓取 > 首字母兜底 */
 import { iconEl } from '../shared/icons';
+import { announceOverlayOpen } from '../overlay';
+import { lockScroll, unlockScroll } from '../scroll-lock';
 import {
   MAX_PINS,
   QUICK_ADD_OPEN_EVENT,
@@ -93,7 +95,10 @@ class NavQuickAdd extends HTMLElement {
     this.dlg?.addEventListener('click', (e) => {
       if (e.target === this.dlg) this.dlg?.close();
     });
-    this.dlg?.addEventListener('close', () => this.opener?.focus({ preventScroll: true }));
+    this.dlg?.addEventListener('close', () => {
+      unlockScroll();
+      this.opener?.focus({ preventScroll: true });
+    });
     this.querySelectorAll('[data-role="close"]').forEach((btn) =>
       btn.addEventListener('click', () => this.dlg?.close()),
     );
@@ -118,6 +123,7 @@ class NavQuickAdd extends HTMLElement {
 
   disconnectedCallback(): void {
     document.removeEventListener(QUICK_ADD_OPEN_EVENT, this.onOpenEvent);
+    if (this.dlg?.open) unlockScroll();
   }
 
   private onOpenEvent = (e: Event): void => {
@@ -133,6 +139,8 @@ class NavQuickAdd extends HTMLElement {
     this.querySelector('[data-role="preview"]')!.innerHTML = '';
     this.hideErr();
     this.dlg.showModal();
+    lockScroll();
+    announceOverlayOpen('dialog');
     this.querySelector<HTMLInputElement>('[data-role="url"]')?.focus();
   }
 

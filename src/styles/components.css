@@ -1390,6 +1390,21 @@ nav-quick-add dialog {
   display: none;
 }
 
+/* 退出与入场对称：Esc / 开关按钮关闭时播完再隐藏（外部点击 / 回放立即让位） */
+.topbar-history.closing {
+  animation: topbar-pop-out var(--dur-fast) var(--ease-pop) forwards;
+}
+
+@keyframes topbar-pop-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
 
 @keyframes topbar-pop-in {
   from {

@@ -1,6 +1,7 @@
 /** <nav-sidebar>：分类手风琴、滚动高亮、移动抽屉、桌面折叠 */
 import { SidebarFlyout } from '../sidebar-flyout';
 import { lockScroll, unlockScroll } from '../scroll-lock';
+import { announceOverlayOpen, isDialogEsc, onOverlayOpen } from '../overlay';
 import { BREAKPOINT_LG } from '../shared/breakpoints';
 import { scrollBehavior } from '../motion';
 import type { NavCatTabs } from './nav-cat-tabs';
@@ -47,11 +48,8 @@ class NavSidebar extends HTMLElement {
     }
   };
 
-  /** 另一个抽屉（工具箱）打开时，自己先收起，两个抽屉互斥 */
-  private onOtherDrawerOpen = (e: Event): void => {
-    const from = (e as CustomEvent<string>).detail;
-    if (from !== 'sidebar' && this.drawerOpen()) this.closeDrawer();
-  };
+  /** 互斥让位订阅：其他浮层打开时收起自家抽屉 */
+  private unyield: (() => void) | null = null;
 
   private onSubLinkClick = (e: MouseEvent): void => {
     const link = (e.target as Element).closest<HTMLAnchorElement>('a.sub-link[data-sub-id]');
@@ -66,7 +64,7 @@ class NavSidebar extends HTMLElement {
   private onDocKeydown = (e: KeyboardEvent): void => {
     if (e.key !== 'Escape') return;
     // 焦点在 modal dialog 内时 Esc 归它消费，侧栏不连带关闭
-    if ((e.target as Element).closest?.('dialog[open]')) return;
+    if (isDialogEsc(e)) return;
     if (this.flyout.isOpen()) {
       this.flyout.close(true);
       return;
@@ -113,7 +111,7 @@ class NavSidebar extends HTMLElement {
     this.mqLg?.removeEventListener('change', this.onMqLgChange);
     document.removeEventListener('click', this.onDocClick);
     document.removeEventListener('keydown', this.onDocKeydown);
-    document.removeEventListener('nav-drawer-open', this.onOtherDrawerOpen as EventListener);
+    this.unyield?.();
     this.removeEventListener('click', this.onToggleClick);
     this.removeEventListener('click', this.onSubLinkClick);
     this.removeEventListener('pointerover', this.flyout.onPointerOver);
@@ -244,7 +242,9 @@ class NavSidebar extends HTMLElement {
   private initDrawer(): void {
     document.addEventListener('click', this.onDocClick);
     document.addEventListener('keydown', this.onDocKeydown);
-    document.addEventListener('nav-drawer-open', this.onOtherDrawerOpen as EventListener);
+    this.unyield = onOverlayOpen('sidebar', () => {
+      if (this.drawerOpen()) this.closeDrawer();
+    });
     this.mqLg = window.matchMedia(`(min-width: ${BREAKPOINT_LG}px)`);
     this.mqLg.addEventListener('change', this.onMqLgChange);
 
@@ -254,13 +254,15 @@ class NavSidebar extends HTMLElement {
   }
 
   private openDrawer(): void {
-    // 先广播，让已打开的工具箱抽屉收起
-    document.dispatchEvent(new CustomEvent('nav-drawer-open', { detail: 'sidebar' }));
+    // 先广播，让已打开的工具箱 / 历史面板收起
+    announceOverlayOpen('sidebar');
     this.aside?.classList.remove('-translate-x-full');
     this.aside?.classList.add('translate-x-0');
     if (this.backdrop) this.backdrop.hidden = false;
     lockScroll();
     this.setOpenerExpanded(true);
+    // 焦点落抽屉自身（tabindex="-1"）：键盘打开时焦点环在抽屉上，鼠标打开不显环
+    this.aside?.focus({ preventScroll: true });
   }
 
   private closeDrawer(): void {

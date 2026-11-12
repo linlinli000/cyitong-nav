@@ -2,6 +2,8 @@
 import { escapeHtml } from '../shared/html-escape';
 import type { Entry } from '../../content.config';
 import { iconEl } from '../shared/icons';
+import { announceOverlayOpen } from '../overlay';
+import { lockScroll, unlockScroll } from '../scroll-lock';
 import { NAV_OPEN_CARD_EVENT, toCardDataFromDataset, type CardData } from '../shared/card-attrs';
 
 class NavDialog extends HTMLElement {
@@ -51,6 +53,7 @@ class NavDialog extends HTMLElement {
     this.dlg!.addEventListener('click', (e) => {
       if (e.target === this.dlg) this.dlg?.close();
     });
+    this.dlg!.addEventListener('close', () => unlockScroll());
     this.querySelectorAll('[data-role="close"]').forEach((btn) =>
       btn.addEventListener('click', () => this.dlg?.close()),
     );
@@ -62,6 +65,14 @@ class NavDialog extends HTMLElement {
   disconnectedCallback(): void {
     document.removeEventListener('click', this.onDocClick);
     document.removeEventListener(NAV_OPEN_CARD_EVENT, this.onOpenCard);
+    if (this.dlg?.open) unlockScroll();
+  }
+
+  private showModal(): void {
+    if (this.dlg!.open) return;
+    this.dlg!.showModal();
+    lockScroll();
+    announceOverlayOpen('dialog');
   }
 
   private setHeader(title: string, icon: string): void {
@@ -107,7 +118,7 @@ class NavDialog extends HTMLElement {
       body.appendChild(p);
     }
     // 先开盖再异步生成，qrcode 首载有延迟
-    if (!this.dlg!.open) this.dlg!.showModal();
+    this.showModal();
     try {
       const { default: QRCode } = await import('qrcode');
       img.src = await QRCode.toDataURL(url, { width: 256, margin: 1, errorCorrectionLevel: 'M' });
@@ -139,7 +150,7 @@ class NavDialog extends HTMLElement {
           )
           .join('')}
       </ul>`;
-    if (!this.dlg!.open) this.dlg!.showModal();
+    this.showModal();
   }
 }
 
