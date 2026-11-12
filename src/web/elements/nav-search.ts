@@ -520,6 +520,8 @@ class NavSearch extends HTMLElement {
     this.query = q;
     if (this.input) this.input.value = q;
     this.cursor = -1;
+    // 历史回放须重算结果：空查询聚焦时 results 为空，直接 doSearch 会落空
+    this.updateDropdown();
     this.doSearch();
   }
 
