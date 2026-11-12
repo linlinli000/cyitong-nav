@@ -29,3 +29,21 @@ export function placeBelow(
   );
   return { left, top, side };
 }
+
+/** 锚点右侧贴边放置（侧栏收起态浮出）：垂直顶对齐或居中，不做上下翻转 */
+export function placeRight(
+  anchor: DOMRect,
+  width: number,
+  height: number,
+  centerVertical = false,
+  gap = 8,
+  pad = 8,
+): { left: number; top: number } {
+  const left = clamp(anchor.right + gap, pad, window.innerWidth - width - pad);
+  const top = clamp(
+    centerVertical ? anchor.top + anchor.height / 2 - height / 2 : anchor.top,
+    pad,
+    window.innerHeight - height - pad,
+  );
+  return { left, top };
+}
