@@ -19,9 +19,11 @@
   --color-field: #ffffff;
   --color-ink: #484b4f;
   --color-muted: #93959a;
+  --color-faint: #93959a;
   --color-line: rgba(116, 116, 116, 0.1);
   --color-tint: rgba(116, 116, 116, 0.1);
   --color-track: var(--color-tint);
+  --color-track-deep: var(--color-tint);
   --color-fill: var(--color-tint);
   --color-hover: rgba(220, 220, 220, 0.6);
   --color-float: rgba(255, 255, 255, 0.96);
@@ -96,7 +98,9 @@
   --color-field: #2a2c2e;
   --color-ink: #c6c9cf;
   --color-muted: #909399;
+  --color-faint: #73757a;
   --color-track: var(--color-tint);
+  --color-track-deep: #24262a;
   --color-tint: rgba(255, 255, 255, 0.08);
   --color-fill: var(--color-tint);
   --color-hover: rgba(255, 255, 255, 0.08);

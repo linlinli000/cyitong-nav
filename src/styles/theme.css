@@ -547,7 +547,7 @@ nav-sidebar {
   min-width: 0;
   padding: 4px;
   border-radius: var(--r-lg);
-  background: var(--color-track);
+  background: var(--color-track-deep);
 }
 
 .cat-tab {
@@ -720,7 +720,7 @@ nav-sidebar {
   font-size: var(--text-note);
   font-weight: 300;
   line-height: 18px;
-  color: var(--color-muted);
+  color: var(--color-faint);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
