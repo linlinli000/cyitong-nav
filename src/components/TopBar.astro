@@ -9,12 +9,13 @@ interface Props {
 }
 
 const { isHome } = Astro.props;
+const path = Astro.url.pathname;
 
 /** 顶栏主导航：与站内页面一一对应 */
 const NAV = [
   { label: '首页', href: '/', icon: 'lucide:home', current: isHome },
-  { label: '投稿与反馈', href: '/contribute/', icon: 'lucide:edit-3', current: false },
-  { label: '关于本站', href: '/about/', icon: 'lucide:info', current: false },
+  { label: '投稿与反馈', href: '/contribute/', icon: 'lucide:edit-3', current: path.startsWith('/contribute') },
+  { label: '关于本站', href: '/about/', icon: 'lucide:info', current: path.startsWith('/about') },
 ];
 
 /** 右侧快捷项：只用带下拉的三组工具（翻译 / 网盘 / 邮箱），不再放站内锚点文字链 */
@@ -35,6 +36,17 @@ const QUICK = TOOLS;
         <span class="menu-bar" aria-hidden="true"></span>
         <span class="menu-bar" aria-hidden="true"></span>
       </button>
+
+      <a
+        href="https://wiki.cyitong.top"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="wiki"
+        title="wiki"
+        class="topbar-icon topbar-icon--xs"
+      >
+        <Icon name="lucide:book-open" aria-hidden="true" />
+      </a>
 
       <a href={brandHref(isHome)} class="topbar-brand" aria-label="成医通">
         <img src="/logo.svg" alt="成医通" width="36" height="36" />
