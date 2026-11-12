@@ -2,58 +2,32 @@
 
 成都医学院师生导航页，汇集校内系统、医学文献、AI 工具与实用工具；支持站内/引擎搜索、扫码、镜像站与首页常用磁贴。
 
-线上地址：<https://nav.cyitong.top>
-
-站内另有两个内容页：<https://nav.cyitong.top/about/>（使用说明、首页设置、常见问题等）与 <https://nav.cyitong.top/contribute/>（收录条件与投稿方式）。
+线上地址：<https://nav.cyitong.top>（另有 /about 使用说明、/contribute 投稿页）。
 
 ## 添加一个链接
 
-数据是三层结构：**一级分类 → 二级分类 → 链接**，存在 `src/content/sites/*.yaml`。加一条链接按下面步骤操作。
+数据是三层结构：**一级分类 → 二级分类 → 链接**，存在 `src/content/sites/*.yaml`。七个一级分类文件同名：`campus`(成医生活) `study`(线上学习) `exam`(考试比赛) `academic`(学术文献) `scitools`(科研服务) `aitool`(AI 工具) `tools`(实用工具)。
 
-### 1. 确定分类
+### 1. 放图标
 
-七个一级分类，文件同名（`src/content/sites/{id}.yaml`）：
+保存为 webp 到 `public/icons/{一级分类}/{链接id}.webp`（建议官网 favicon 压缩），如 `public/icons/campus/alipay.webp`。
 
-| id | 名称 | | id | 名称 |
-|---|---|---|---|---|
-| `campus` | 成医生活 | | `exam` | 考试比赛 |
-| `study` | 线上学习 | | `academic` | 学术文献 |
-| `scitools` | 科研服务 | | `aitool` | AI 工具 |
-| `tools` | 实用工具 | | | |
+### 2. 写数据条目
 
-链接加进最贴切的二级分类 `subs[].links[]` 即可（必要时也可新增一个二级分类）。收录条件见 <https://nav.cyitong.top/contribute/#criteria>：成医师生会反复使用，不限校内。
-
-### 2. 放图标
-
-图标保存为 webp，放到 `public/icons/{一级分类}/{链接id}.webp`，如：
-
-```
-public/icons/campus/alipay.webp
-```
-
-建议从官网取 favicon，压缩到小尺寸。
-
-### 3. 写数据条目
-
-在对应 yaml 的 `links[]` 追加一条：
+在对应 yaml 的 `subs[].links[]` 追加一条：
 
 ```yaml
-subs:
-  - id: finance            # 二级分类 id（新增时自取小写英文）
-    name: 财务
-    links:
-      - id: alipay              # 必填，小写字母/数字，与图标文件名一致
-        title: 计划财务处         # 必填，卡片显示名
-        desc: 校园缴费支付宝服务号  # 可选，一行简介（≤40 字），卡片、悬浮提示、搜索都用
-        pinyin: jihuacaiwuchu   # 必填，全拼，供搜索
-        pinyinFirst: jhcwc      # 必填，首字母，供搜索
-        url: "alipays://…"      # 必填，带协议头的绝对地址；含 # & ? 要加引号
-        badge: 扫码              # 可选，卡片徽章文案；不写就没有徽章
-        qr: true                # 可选，点击弹二维码（只在单入口时有效）
-        qrNote: 请使用支付宝扫码   # qr 的提示语
+- id: alipay              # 必填，小写字母/数字，与图标文件名一致
+  title: 计划财务处         # 必填，卡片显示名
+  desc: 校园缴费支付宝服务号  # 可选，一行简介（≤40 字），卡片/悬浮提示/搜索共用
+  pinyin: jihuacaiwuchu   # 必填，全拼，供搜索
+  pinyinFirst: jhcwc      # 必填，首字母，供搜索
+  url: "alipays://…"      # 必填，带协议头；含 # & ? 加引号
+  badge: 扫码              # 可选，徽章文案；不写就没有
+  qr: true                # 可选，点击弹二维码（仅单入口时有效）
 ```
 
-**多入口**：`url` 也能写成列表，点击时弹窗选入口。列表**至少两条**、**每条都要写 `label`**（写什么弹窗就显示什么），列表第一条是默认入口——卡片点开的就是它。多入口时点击只会弹这个列表，`qr` 不生效。
+**多入口**：`url` 也可写成列表（至少两条、每条带 `label`，第一条是默认入口），点击弹窗选入口，此时 `qr` 不生效：
 
 ```yaml
         url:
@@ -62,20 +36,11 @@ subs:
           - { label: 镜像导航, url: https://sci-hub.shop/ }
 ```
 
-### 4. 校验
+### 3. 校验
 
-在仓库根目录跑 `npm run build`，构建期会拦下这些问题，并指出是哪个文件、哪条链接：
+`npm run build` 会拦下：图标缺失、同一分类 id 重复、漏 pinyin、url 无协议头、入口列表不规范、qr 与多入口冲突、schema 外字段、新增一级分类缺 `order`。
 
-- 图标文件缺失，或 `id` 与图标文件名不一致；
-- 同一分类下 `id` 重复（两条链接会共用同一个图标）；
-- 漏写 `pinyin` / `pinyinFirst`（这条链接会搜不到）；
-- `url` 没有协议头（须为 `https://`、`alipays://` 这类绝对地址）；
-- 入口列表少于两条，或某条漏写 `label`；
-- `qr` 跟多入口 `url` 同时写，或写了 `qrNote` 却没写 `qr: true`（这两种写法不会生效）；
-- 写了 schema 里没有的字段（拼错，或沿用了旧写法）；
-- 新增一级分类缺 `order` 排序号。
-
-构建通过后，在 GitHub 提 Pull Request。站内 <https://nav.cyitong.top/contribute/> 是面向投稿者的简版说明（含不会写代码的邮件 / Issue 投稿方式）。
+构建通过后在 GitHub 提 PR；<https://nav.cyitong.top/contribute/> 是面向投稿者的简版说明。
 
 ## 本地运行
 
@@ -85,39 +50,38 @@ npm run dev       # 开发预览 → http://localhost:4321
 npm run build     # 类型检查 + 构建（改数据/代码后必跑）
 ```
 
-## 目录简览
+## 目录结构
 
 ```
 public/
-├── icons/
-│   ├── {一级分类}/       # 链接图标 {链接id}.webp
-│   └── topbar/           # 顶栏快捷下拉的站点图标
-└── logo.svg              # 站点图标
+├── icons/{一级分类}/   # 链接图标 {链接id}.webp
+├── icons/topbar/       # 顶栏快捷下拉的站点图标
+├── fonts/              # 自托管字体
+└── logo.svg favicon.ico og.png robots.txt _headers ...
 
 src/
-├── content.config.ts     # 数据 schema 与构建期校验
-├── content/sites/*.yaml  # 唯一内容数据源（7 个分类，贡献者编辑）
-├── config/               # 开发者维护的静态配置表
-│   ├── category-icons.ts # 分类 icon 语义键 → lucide 图标名
-│   ├── search-engines.ts # 搜索引擎与品牌字形
-│   ├── site-links.ts     # 页脚/侧栏的「关于本站、投稿与反馈」
-│   └── topbar-tools.ts   # 顶栏快捷下拉（翻译 / 网盘 / 邮箱）的数据
-├── lib/
-│   ├── icon-sprite.ts    # 运行期图标 → <symbol>（服务端）
-│   └── site-data.ts      # 分类 / 搜索索引 / 链接总数的唯一读取口
-├── layouts/
-│   ├── Layout.astro      # HTML 文档壳：防闪烁主题 / 图标 sprite / 搜索索引
-│   └── SiteLayout.astro  # 页面 chrome：侧栏 + 顶栏 + 页脚
-├── pages/                # index / about / contribute / 404
-├── components/           # 纯 .astro 模板组件
-├── styles/global.css     # 设计令牌与全局/组件样式
-└── web/                  # 客户端运行时（原生 TS）
-    ├── elements/         # 自注册元素 <nav-*>，副作用导入
-    ├── quick-bar/        # 常用磁贴行：存储 / 磁贴结构 / 行控制器
-    ├── card-attrs.ts     # 扫码/入口 data 属性契约（SSR LinkCard 与 nav-search 共用）
-    ├── sidebar-flyout.ts # 收起态侧栏的浮出面板（子分类 / 底部链接共用）
-    ├── breakpoints.ts    # 视口断点常量（与 Tailwind lg / global.css 同步）
-    └── *.ts              # 纯工具 / 文档增强（storage、html-escape、icon-path…）
+├── content.config.ts    # 数据 schema + 构建期校验
+├── content/sites/*.yaml # 唯一内容数据源（7 个分类，贡献者编辑）
+├── config/              # 开发者维护的静态配置（搜索/顶栏/页脚/分类图标）
+├── lib/                 # 服务端专用（icon-sprite / site-data）
+├── layouts/             # Layout(文档壳) / SiteLayout(侧栏+顶栏+页脚)
+├── pages/               # index / about / contribute / 404
+├── components/          # 纯 .astro 模板组件
+├── styles/              # 分层 CSS（入口 global.css 按层 @import）
+│   ├── base.css         #   基础层（设计令牌 + 字体 + 元素基础）
+│   ├── components.css   #   组件样式（卡片/顶栏/搜索/磁贴/弹窗）
+│   ├── theme.css        #   视觉主题（页面骨架/侧栏/Hero 布局）
+│   └── states.css       #   状态覆盖（激活/展开/显隐态）
+└── web/                 # 客户端运行时（原生 TS）
+    ├── elements/        # 自注册元素 <nav-*>，副作用导入
+    ├── quick-bar/       # 常用磁贴行（存储/磁贴结构/行控制器）
+    ├── shared/          # SSR/客户端共享的纯模块（无 DOM）
+    │   ├── card-attrs.ts    # 卡片 data 契约
+    │   ├── search-utils.ts  # 站内搜索 + SiteRecord 类型
+    │   ├── icons.ts         # 运行期图标名 + iconEl
+    │   ├── icon-path.ts     # 图标路径约定
+    │   └── html-escape / breakpoints / site-icon
+    └── *.ts             # DOM 增强（link-tip / header-dropdown / scroll-lock / storage…）
 ```
 
 ## 技术栈与部署
