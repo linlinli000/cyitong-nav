@@ -3,4 +3,6 @@ dist/
 .astro/
 *.log
 .DS_Store
-CLAUDE.md
+AGENT.md
+.Trash-0/
+.scratch/
