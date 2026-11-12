@@ -1220,16 +1220,18 @@ nav-quick-add dialog {
     transform 0.16s var(--ease-pop);
 }
 
-/* hover 反馈只在支持悬停的设备上生效，避免触屏点完保持高亮（不位移，只换底色） */
+/* hover 反馈只在支持悬停的设备上生效，避免触屏点完保持高亮（不位移，只换底色与字色） */
 @media (hover: hover) {
   .topbar-icon:hover {
-    opacity: 0.72;
-    background: rgba(116, 116, 116, 0.1);
+    background: var(--color-tint);
+    color: var(--color-brand);
   }
 }
 
 .topbar-icon:active {
   transform: scale(0.9);
+  color: var(--color-brand);
+  background: var(--color-tint);
 }
 
 .topbar-icon svg {
