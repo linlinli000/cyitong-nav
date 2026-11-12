@@ -19,16 +19,6 @@ const FOOTER_LINKS = [...SITE_LINKS].reverse();
 ---
 
 <aside id="sidebar" class="-translate-x-full">
-  <!-- 首帧防闪烁；与 nav-sidebar.ts 的 RAIL_KEY 同键，改名两处同步 -->
-  <script is:inline>
-    (function () {
-      try {
-        if (localStorage.getItem('nav:rail') === 'collapsed') {
-          document.getElementById('sidebar').classList.add('is-collapsed');
-        }
-      } catch {}
-    })();
-  </script>
   <div class="sidebar-header">
     <span class="drawer-title">分类</span>
   </div>

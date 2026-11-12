@@ -1,13 +1,11 @@
-/** <nav-sidebar>：分类手风琴、滚动高亮、移动抽屉、桌面折叠图标条（浮层见 sidebar-flyout） */
+/** <nav-sidebar>：分类手风琴、滚动高亮、移动抽屉、桌面折叠 */
 import { SidebarFlyout } from '../sidebar-flyout';
-import { storageSet } from '../storage';
 import { lockScroll, unlockScroll } from '../scroll-lock';
-import { BREAKPOINT_LG } from '../breakpoints';
+import { BREAKPOINT_LG } from '../shared/breakpoints';
 import { scrollBehavior } from '../motion';
 import type { NavCatTabs } from './nav-cat-tabs';
 
-const RAIL_KEY = 'nav:rail'; // 与 Sidebar.astro 的 inline 脚本同键，改名两处同步
-/** 侧栏高亮判定锚点 */
+/** 滚动高亮锚点：视口高度的 18% */
 const SPY_ANCHOR = 0.18;
 
 class NavSidebar extends HTMLElement {
@@ -28,15 +26,31 @@ class NavSidebar extends HTMLElement {
   private onDocClick = (e: MouseEvent): void => {
     if ((e.target as Element).closest('[data-sidebar-toggle]')) {
       e.preventDefault();
+      // 移动端「收起」= 关闭抽屉；桌面端才是折叠成图标条
+      if (window.innerWidth < BREAKPOINT_LG) {
+        if (this.drawerOpen()) this.closeDrawer();
+        return;
+      }
       this.toggleRail();
       return;
     }
     const opener = (e.target as Element).closest<HTMLElement>('[data-mobile-nav-open]');
     if (opener) {
       e.preventDefault();
+      // 同一个按钮兼作关闭：抽屉已开时再点（此时图标是 ×）直接收起
+      if (this.drawerOpen()) {
+        this.closeDrawer();
+        return;
+      }
       this.mobileOpener = opener;
       this.openDrawer();
     }
+  };
+
+  /** 另一个抽屉（工具箱）打开时，自己先收起，两个抽屉互斥 */
+  private onOtherDrawerOpen = (e: Event): void => {
+    const from = (e as CustomEvent<string>).detail;
+    if (from !== 'sidebar' && this.drawerOpen()) this.closeDrawer();
   };
 
   private onSubLinkClick = (e: MouseEvent): void => {
@@ -99,6 +113,7 @@ class NavSidebar extends HTMLElement {
     this.mqLg?.removeEventListener('change', this.onMqLgChange);
     document.removeEventListener('click', this.onDocClick);
     document.removeEventListener('keydown', this.onDocKeydown);
+    document.removeEventListener('nav-drawer-open', this.onOtherDrawerOpen as EventListener);
     this.removeEventListener('click', this.onToggleClick);
     this.removeEventListener('click', this.onSubLinkClick);
     this.removeEventListener('pointerover', this.flyout.onPointerOver);
@@ -139,7 +154,6 @@ class NavSidebar extends HTMLElement {
     this.sections.forEach((sec) => this.observer?.observe(sec));
   }
 
-  /** 全量重算 */
   private syncActive(): void {
     if (!this.sections.length) return;
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
@@ -166,9 +180,9 @@ class NavSidebar extends HTMLElement {
       else link.removeAttribute('aria-current');
     });
 
+    // 侧栏默认只列主分类，子分类由点击展开；这里仅同步高亮与滚动位置
     const group = this.querySelector<HTMLElement>(`.sidebar-group[data-cat="${id}"]`);
     if (group) {
-      this.setGroupOpen(group, true);
       group.scrollIntoView({ block: 'nearest', behavior: scrollBehavior() });
     }
   }
@@ -179,15 +193,15 @@ class NavSidebar extends HTMLElement {
     return !!this.aside?.classList.contains('is-collapsed') && window.innerWidth >= BREAKPOINT_LG;
   }
 
+  /** 折叠态只在本次会话内有效，不写入 localStorage —— 每次加载桌面端都默认展开 */
   private toggleRail(): void {
     this.aside?.classList.toggle('is-collapsed');
-    storageSet(RAIL_KEY, this.aside?.classList.contains('is-collapsed') ? 'collapsed' : 'expanded');
     this.syncToggleState();
     this.flyout.close(false);
   }
 
   private syncToggleState(): void {
-    const collapsed = this.aside?.classList.contains('is-collapsed') ?? true;
+    const collapsed = this.aside?.classList.contains('is-collapsed') ?? false;
     document.querySelectorAll<HTMLElement>('[data-sidebar-toggle]').forEach((btn) => {
       btn.setAttribute('aria-expanded', String(!collapsed));
       btn.setAttribute('aria-label', collapsed ? '展开侧边栏' : '收起侧边栏');
@@ -230,6 +244,7 @@ class NavSidebar extends HTMLElement {
   private initDrawer(): void {
     document.addEventListener('click', this.onDocClick);
     document.addEventListener('keydown', this.onDocKeydown);
+    document.addEventListener('nav-drawer-open', this.onOtherDrawerOpen as EventListener);
     this.mqLg = window.matchMedia(`(min-width: ${BREAKPOINT_LG}px)`);
     this.mqLg.addEventListener('change', this.onMqLgChange);
 
@@ -239,6 +254,8 @@ class NavSidebar extends HTMLElement {
   }
 
   private openDrawer(): void {
+    // 先广播，让已打开的工具箱抽屉收起
+    document.dispatchEvent(new CustomEvent('nav-drawer-open', { detail: 'sidebar' }));
     this.aside?.classList.remove('-translate-x-full');
     this.aside?.classList.add('translate-x-0');
     if (this.backdrop) this.backdrop.hidden = false;

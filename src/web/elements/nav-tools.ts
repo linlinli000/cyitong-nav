@@ -1,66 +1,98 @@
-/** <nav-tools>：移动端工具箱抽屉，顶栏按钮开、遮罩/Esc 关 */
+/**
+ * <nav-tools>：移动端工具箱抽屉。与侧栏同用普通 div + 遮罩，
+ * 不用 <dialog>（其 ::backdrop 走 top layer，会盖住另一抽屉）。
+ */
 import { lockScroll, unlockScroll } from '../scroll-lock';
 
 class NavTools extends HTMLElement {
-  private dlg: HTMLDialogElement | null = null;
+  private panel: HTMLElement | null = null;
+  private backdrop: HTMLElement | null = null;
   private opener: HTMLElement | null = null;
+
+  private isOpen(): boolean {
+    return this.panel ? !this.panel.hidden : false;
+  }
 
   private onDocClick = (e: MouseEvent): void => {
     const btn = (e.target as Element).closest<HTMLElement>('[data-role="tools-open"]');
     if (!btn) return;
     this.opener = btn;
-    this.open();
+    // 同一个按钮兼作关闭（此时图标已是 ×）
+    if (this.isOpen()) this.requestClose();
+    else this.open();
   };
 
-  private onCancel = (e: Event): void => {
-    // 拦截原生立即关闭，改走退出动画
+  private onPanelClick = (e: MouseEvent): void => {
+    if (e.target === this.panel) this.requestClose();
+  };
+
+  private onBackdropClick = (): void => this.requestClose();
+
+  private onDocKeydown = (e: KeyboardEvent): void => {
+    if (e.key !== 'Escape' || !this.isOpen()) return;
     e.preventDefault();
     this.requestClose();
   };
 
-  private onDlgClick = (e: MouseEvent): void => {
-    if (e.target === this.dlg) this.requestClose();
-  };
-
   private onAnimationEnd = (e: AnimationEvent): void => {
-    // ::backdrop 的动画事件也会以 dialog 为 target，用 pseudoElement 排除
-    if (e.target !== this.dlg || e.pseudoElement !== '') return;
-    if (!this.dlg?.classList.contains('closing')) return;
-    this.dlg.classList.remove('closing');
-    this.dlg.close();
-  };
-
-  private onClose = (): void => {
+    if (e.target !== this.panel) return;
+    if (!this.panel?.classList.contains('closing')) return;
+    this.panel.classList.remove('closing');
+    this.panel.hidden = true;
+    if (this.backdrop) this.backdrop.hidden = true;
     unlockScroll();
     this.syncExpanded(false);
-    // 焦点归还触发按钮
     this.opener?.focus({ preventScroll: true });
   };
 
+  /** 左侧侧栏打开时，工具箱先收起，两个抽屉互斥（同 linlog） */
+  private onOtherDrawerOpen = (e: Event): void => {
+    const from = (e as CustomEvent<string>).detail;
+    if (from !== 'tools') this.closeImmediately();
+  };
+
+  /** 互斥场景立即关闭：不等退出动画，立刻让出层级 */
+  private closeImmediately(): void {
+    const panel = this.panel;
+    if (!panel || panel.hidden) return;
+    panel.classList.remove('closing');
+    panel.hidden = true;
+    if (this.backdrop) this.backdrop.hidden = true;
+    unlockScroll();
+    this.syncExpanded(false);
+  }
+
   connectedCallback(): void {
-    this.dlg = this.querySelector<HTMLDialogElement>('dialog');
+    this.panel = this.querySelector<HTMLElement>('[data-role="tools-panel"]');
+    this.backdrop = this.querySelector<HTMLElement>('[data-tools-backdrop]');
     document.addEventListener('click', this.onDocClick);
-    this.dlg?.addEventListener('cancel', this.onCancel);
-    this.dlg?.addEventListener('click', this.onDlgClick);
-    this.dlg?.addEventListener('animationend', this.onAnimationEnd);
-    this.dlg?.addEventListener('close', this.onClose);
+    document.addEventListener('keydown', this.onDocKeydown);
+    document.addEventListener('nav-drawer-open', this.onOtherDrawerOpen as EventListener);
+    this.backdrop?.addEventListener('click', this.onBackdropClick);
+    this.panel?.addEventListener('click', this.onPanelClick);
+    this.panel?.addEventListener('animationend', this.onAnimationEnd);
   }
 
   disconnectedCallback(): void {
     document.removeEventListener('click', this.onDocClick);
-    this.dlg?.removeEventListener('cancel', this.onCancel);
-    this.dlg?.removeEventListener('click', this.onDlgClick);
-    this.dlg?.removeEventListener('animationend', this.onAnimationEnd);
-    this.dlg?.removeEventListener('close', this.onClose);
-    if (this.dlg?.open) unlockScroll();
+    document.removeEventListener('keydown', this.onDocKeydown);
+    document.removeEventListener('nav-drawer-open', this.onOtherDrawerOpen as EventListener);
+    this.backdrop?.removeEventListener('click', this.onBackdropClick);
+    this.panel?.removeEventListener('click', this.onPanelClick);
+    this.panel?.removeEventListener('animationend', this.onAnimationEnd);
+    if (this.isOpen()) unlockScroll();
   }
 
   private open(): void {
-    const dlg = this.dlg;
-    if (!dlg || dlg.open) return;
-    dlg.showModal();
-    // 初始焦点落 dialog 自身（tabindex="-1"），避免首条目焦点环
-    dlg.focus({ preventScroll: true });
+    const panel = this.panel;
+    if (!panel || !panel.hidden) return;
+    // 先广播，让已打开的左侧侧栏收起
+    document.dispatchEvent(new CustomEvent('nav-drawer-open', { detail: 'tools' }));
+    panel.classList.remove('closing');
+    panel.hidden = false;
+    if (this.backdrop) this.backdrop.hidden = false;
+    // 焦点落面板自身（tabindex="-1"），避免首条目焦点环
+    panel.focus({ preventScroll: true });
     this.syncExpanded(true);
     lockScroll();
   }
@@ -71,11 +103,13 @@ class NavTools extends HTMLElement {
     });
   }
 
-  /** <dialog> 的 close() 是瞬间移除：加 .closing 播完退出动画，animationend 再真正 close */
+  /** 加 .closing 播完退出动画，animationend 再真正隐藏 */
   private requestClose(): void {
-    const dlg = this.dlg;
-    if (!dlg || !dlg.open || dlg.classList.contains('closing')) return;
-    dlg.classList.add('closing');
+    const panel = this.panel;
+    if (!panel || panel.hidden || panel.classList.contains('closing')) return;
+    panel.classList.add('closing');
+    // 立即隐藏自定义遮罩（不等动画），避免遮罩盖住正在打开的另一抽屉
+    if (this.backdrop) this.backdrop.hidden = true;
   }
 }
 

@@ -19,6 +19,9 @@ const NAV = [
 
 /** 右侧快捷项：只用带下拉的三组工具（翻译 / 网盘 / 邮箱），不再放站内锚点文字链 */
 const QUICK = TOOLS;
+
+/** 抽屉底部固定区：与顶栏菜单顺序一致（投稿与反馈在前），仅此处交换，不动页脚数据源 */
+const TOOLS_FOOTER = [...SITE_LINKS].reverse();
 ---
 
 <header class="topbar">
@@ -161,28 +164,29 @@ const QUICK = TOOLS;
   <div class="history-body" data-history-body></div>
 </div>
 
-<!-- 移动端工具箱抽屉（翻译/网盘/邮箱全量 + 底部站内链接） -->
+<!-- 移动端工具箱抽屉（翻译/网盘/邮箱全量 + 底部站内链接）：
+     与左侧侧栏同一套机制——普通定位面板 + 普通遮罩 div，不用的 <dialog> 的 ::backdrop（会走 top layer 盖住另一个抽屉） -->
 <nav-tools>
-  <dialog
-    data-role="tools-dlg"
+  <div data-tools-backdrop hidden class="fixed inset-0 z-30 bg-black/40"></div>
+  <div
+    data-role="tools-panel"
     tabindex="-1"
-    class="m-0 ml-auto h-dvh max-h-dvh w-56 max-w-[84vw] bg-float backdrop-blur-md p-0 text-ink shadow-(--shadow-menu) focus:outline-none backdrop:bg-black/40"
+    hidden
+    class="m-0 ml-auto h-dvh max-h-dvh w-56 max-w-[84vw] bg-float backdrop-blur-md p-0 text-ink shadow-(--shadow-menu) focus:outline-none"
   >
-    <div class="flex h-full flex-col">
-      <div class="flex h-14 shrink-0 items-center px-4">
-        <span class="flex items-center gap-2 text-lg font-bold">
-          <Icon name="lucide:layout-grid" class="h-5 w-5 text-brand" aria-hidden="true" />
-          工具箱
-        </span>
+    <div class="tools-inner flex h-full flex-col">
+      <div class="tools-head">
+        <span class="drawer-title">工具箱</span>
       </div>
-      <div class="scrollbar-hide flex-1 space-y-0.5 overflow-y-auto px-2 pb-4 pt-1">
+      <div class="tools-scroll scrollbar-hide min-h-0 flex-1 overflow-y-auto px-2 pb-4 pt-1">
         {
           TOOLS.map((tool) => (
-            <section>
-              <h3 class="mb-1.5 flex items-center gap-x-2 rounded-lg py-3 pl-3.5 pr-2 text-body font-medium text-muted">
-                <Icon name={tool.icon} class="h-[21px] w-[21px] shrink-0" aria-hidden="true" />
-                {tool.label}
-                <span class="ml-auto shrink-0 text-note text-muted">{tool.items.length}</span>
+            <section class="pt-2 first:pt-0">
+              <h3 class="flex items-center gap-x-2 px-2 pb-1.5">
+                <Icon name={tool.icon} class="h-[18px] w-[18px] shrink-0 text-brand" aria-hidden="true" />
+                <span class="text-body text-muted">{tool.label}</span>
+                {/* 数量徽章复用搜索历史弹窗的 .history-tab-count 同款样式 */}
+                <span class="history-tab-count ml-auto">{tool.items.length}</span>
               </h3>
               <div class="grid grid-cols-2 gap-1.5">
                 {tool.items.map((item) => (
@@ -190,7 +194,7 @@ const QUICK = TOOLS;
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="flex h-[72px] flex-col items-center justify-center gap-1.5 rounded-xl bg-surface px-2 text-dense text-muted transition-colors hover:bg-track hover:text-ink"
+                    class="flex h-[60px] flex-col items-center justify-center gap-1.5 rounded-xl bg-surface px-2 text-body text-ink transition-colors hover:bg-track hover:text-brand"
                   >
                     <img
                       src={item.icon}
@@ -207,21 +211,20 @@ const QUICK = TOOLS;
           ))
         }
       </div>
-      <div class="shrink-0 space-y-0.5 px-2 py-4">
+      <div class="tools-foot shrink-0 pt-2.5">
         {
-          SITE_LINKS.map((l) => (
-            <a
-              href={l.href}
-              class="flex w-full items-center gap-x-2 rounded-lg py-3 pl-3.5 pr-2 font-medium text-muted transition-colors hover:bg-tint hover:text-ink"
-            >
-              <Icon name={l.icon} class="h-[21px] w-[21px] shrink-0 text-brand" aria-hidden="true" />
-              <span class="min-w-0 truncate text-body">{l.label}</span>
+          TOOLS_FOOTER.map((l) => (
+            <a href={l.href} class="sidebar-footer-link">
+              <span class="sidebar-footer-icon">
+                <Icon name={l.icon} aria-hidden="true" />
+              </span>
+              <span class="sidebar-footer-label">{l.label}</span>
             </a>
           ))
         }
       </div>
     </div>
-  </dialog>
+  </div>
 </nav-tools>
 
 <script>
