@@ -1,5 +1,6 @@
 /** 侧栏收起态的浮出容器：子链接面板与底部链接迷你提示共用 */
 import { CloseGate } from './close-gate';
+import { clamp } from './place';
 
 const FLYOUT_PAD = 8;
 const CLOSE_DELAY_MS = 150;
@@ -219,9 +220,8 @@ export class SidebarFlyout {
     this.el.classList.add('open');
     const fw = this.el.offsetWidth;
     const fh = this.el.offsetHeight;
-    const maxTop = Math.max(FLYOUT_PAD, window.innerHeight - fh - FLYOUT_PAD);
-    this.el.style.left = `${Math.max(FLYOUT_PAD, Math.min(r.right + FLYOUT_PAD, window.innerWidth - fw - FLYOUT_PAD))}px`;
+    this.el.style.left = `${clamp(r.right + FLYOUT_PAD, FLYOUT_PAD, window.innerWidth - fw - FLYOUT_PAD)}px`;
     const top = centerVertical ? r.top + r.height / 2 - fh / 2 : r.top;
-    this.el.style.top = `${Math.min(maxTop, Math.max(FLYOUT_PAD, top))}px`;
+    this.el.style.top = `${clamp(top, FLYOUT_PAD, window.innerHeight - fh - FLYOUT_PAD)}px`;
   }
 }

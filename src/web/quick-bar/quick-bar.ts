@@ -17,6 +17,7 @@ import {
 } from './quick-store';
 import { quickAddHtml, quickTileHtml } from './quick-tile';
 import { updateScrollFade, watchScrollFade } from '../scroll-fade';
+import { placeBelow } from '../place';
 import { storageSetJson } from '../storage';
 
 /** 行内磁贴上限：桌面 8 磁贴 + 添加格横排；移动端 2 行×5 列网格同为 8 磁贴 + 添加格 = 9 格，窄屏横向滚动（网格布局见 global.css） */
@@ -154,13 +155,9 @@ function openTileMenu(a: HTMLAnchorElement): void {
   menuEl.hidden = false;
   // 磁贴下方居中，越界翻转/夹边
   const r = a.getBoundingClientRect();
-  const mw = menuEl.offsetWidth;
-  const mh = menuEl.offsetHeight;
-  const x = Math.max(8, Math.min(r.left + r.width / 2 - mw / 2, window.innerWidth - mw - 8));
-  let y = r.bottom + 6;
-  if (y + mh > window.innerHeight - 8) y = r.top - mh - 6;
-  menuEl.style.left = `${x}px`;
-  menuEl.style.top = `${Math.max(8, y)}px`;
+  const { left, top } = placeBelow(r, menuEl.offsetWidth, menuEl.offsetHeight, 6, 8);
+  menuEl.style.left = `${left}px`;
+  menuEl.style.top = `${top}px`;
   menuTile = a;
   menuEl.querySelector('button')?.focus({ preventScroll: true });
 }

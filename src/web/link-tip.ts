@@ -1,5 +1,6 @@
 /** 链接卡简介浮层：单例按视口空间自动上/下 + 三角指向卡片 */
 import { CloseGate } from './close-gate';
+import { clamp, placeBelow } from './place';
 
 const TILE_SEL = 'a.link-tile[data-desc]';
 const HIDE_DELAY_MS = 90;
@@ -22,10 +23,6 @@ function ensurePop(): HTMLDivElement {
   return pop;
 }
 
-function clamp(v: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, v));
-}
-
 function hide(): void {
   gate.cancel();
   if (!shown) return;
@@ -41,18 +38,11 @@ function show(tile: HTMLElement): void {
   p.style.left = '-9999px';
   p.style.top = '0px';
   p.style.visibility = 'hidden';
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
   const ph = p.offsetHeight;
   const pw = p.offsetWidth;
   const r = tile.getBoundingClientRect();
-  const roomBelow = vh - r.bottom - GAP - PAD;
-  const roomAbove = r.top - GAP - PAD;
-  const side = roomBelow >= ph ? 'bottom' : roomAbove >= ph ? 'top' : roomAbove > roomBelow ? 'top' : 'bottom';
+  const { left, top, side } = placeBelow(r, pw, ph, GAP, PAD);
   p.dataset.side = side;
-  let top = side === 'bottom' ? r.bottom + GAP : r.top - GAP - ph;
-  top = clamp(top, PAD, Math.max(PAD, vh - PAD - ph));
-  const left = clamp(r.left + r.width / 2 - pw / 2, PAD, Math.max(PAD, vw - PAD - pw));
   const ax = clamp(r.left + r.width / 2 - left, ARROW_INSET, Math.max(ARROW_INSET, pw - ARROW_INSET));
   p.style.left = `${left}px`;
   p.style.top = `${top}px`;
