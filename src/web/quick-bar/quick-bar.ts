@@ -270,6 +270,23 @@ function onStorage(e: StorageEvent): void {
 
 let inited = false;
 
+// ── 添加格点击回弹 ──
+
+/** 委托到 document：客户端重建磁贴后依然有效 */
+const onAddTileClick = (e: MouseEvent): void => {
+  const btn = (e.target as Element).closest<HTMLElement>('#quick-tiles > .add-tile');
+  if (!btn) return;
+  btn.classList.remove('is-pop');
+  void btn.offsetWidth;
+  btn.classList.add('is-pop');
+};
+
+const onAddTilePopEnd = (e: AnimationEvent): void => {
+  if (e.animationName !== 'add-tile-pop') return;
+  const btn = (e.target as Element).closest<HTMLElement>('#quick-tiles > .add-tile');
+  btn?.classList.remove('is-pop');
+};
+
 export function initQuickBar(): void {
   if (inited) return;
   inited = true;
@@ -287,4 +304,6 @@ export function initQuickBar(): void {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeTileMenu();
   });
+  document.addEventListener('click', onAddTileClick);
+  document.addEventListener('animationend', onAddTilePopEnd);
 }

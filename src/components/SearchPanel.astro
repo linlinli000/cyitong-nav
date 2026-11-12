@@ -120,19 +120,4 @@ const defaultPlaceholder = placeholderFor('search', 0);
 
   initNavHero();
   initQuickBar();
-
-  // 「添加」格点击回弹：委托到 document，客户端重建磁贴后依然有效
-  document.addEventListener('click', (e) => {
-    const btn = (e.target as Element).closest<HTMLElement>('#quick-tiles > .add-tile');
-    if (!btn) return;
-    btn.classList.remove('is-pop');
-    void btn.offsetWidth;
-    btn.classList.add('is-pop');
-  });
-
-  document.addEventListener('animationend', (e) => {
-    if ((e as AnimationEvent).animationName !== 'add-tile-pop') return;
-    const btn = (e.target as Element).closest<HTMLElement>('#quick-tiles > .add-tile');
-    btn?.classList.remove('is-pop');
-  });
 </script>
