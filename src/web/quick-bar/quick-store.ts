@@ -1,4 +1,4 @@
-/** 常用磁贴存储：pinned（手动固定/添加，顺序即存储顺序）、hidden（移除后不再自动出现）与最近使用记账；URL 一律存浏览器规范化形态（a.href） */
+/** 磁贴存储：pinned、hidden、最近使用；URL 统一存浏览器规范化形态（a.href） */
 import { storageGetJson, storageSetJson } from '../storage';
 
 export interface QuickSite {
@@ -43,14 +43,9 @@ export function loadPins(): QuickSite[] {
   );
 }
 
-/** pinned 可能含 dataURL 图标（体积大），写失败必须让调用方可见，不能静默 */
+/** pinned 可能含 dataURL 图标（体积大），写失败必须让调用方可见 */
 export function savePins(items: QuickSite[]): boolean {
-  try {
-    localStorage.setItem(QUICK_PINNED_KEY, JSON.stringify(items.slice(0, MAX_PINS)));
-    return true;
-  } catch {
-    return false;
-  }
+  return storageSetJson(QUICK_PINNED_KEY, items.slice(0, MAX_PINS));
 }
 
 export function loadHidden(): Set<string> {

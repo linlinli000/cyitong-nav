@@ -1,4 +1,4 @@
-/** localStorage 安全读写：storageGet/Set 存字符串原值，Json 变体序列化结构数据。被禁用或损坏时静默回退 */
+/** localStorage 安全读写：禁用或损坏时回退 */
 
 export function storageGet(key: string, fallback: string): string {
   try {
@@ -24,8 +24,11 @@ export function storageGetJson<T>(key: string, fallback: T): T {
   }
 }
 
-export function storageSetJson(key: string, value: unknown): void {
+export function storageSetJson(key: string, value: unknown): boolean {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch {}
+    return true;
+  } catch {
+    return false;
+  }
 }
