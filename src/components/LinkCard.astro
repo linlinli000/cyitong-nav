@@ -33,10 +33,11 @@ const cardAttrs = toDataAttrs(card);
   class="link-tile"
 >
   <span class="tile-icon-wrap">
+    <!-- 光晕只在 hover 时才取图：写成 background-image 会绕过 <img loading="lazy">，161 张图标全量预取 -->
     <span
       class="icon-glow"
       aria-hidden="true"
-      style={`background-image: url('${iconPath(categoryId, link.id)}')`}
+      style={`--glow: url('${iconPath(categoryId, link.id)}')`}
     ></span>
     <Fragment
       set:html={siteIconHtml(iconPath(categoryId, link.id), link.title, 'tile-icon', { size: 40 })}

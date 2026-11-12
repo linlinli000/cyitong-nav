@@ -127,6 +127,8 @@ header [data-ghost]:hover {
   pointer-events: none;
 }
 .link-tile:hover .icon-glow {
+  /* 背景图挂在这里，hover 到谁才取谁的图；未命中规则时 --glow 不参与解析，不发请求 */
+  background-image: var(--glow);
   transform: scale(1);
 }
 
