@@ -5,13 +5,10 @@
   "type": "module",
   "homepage": "https://nav.cyitong.top",
   "scripts": {
-    "predev": "node scripts/subset-font.mjs",
     "dev": "astro dev",
-    "prebuild": "node scripts/subset-font.mjs",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "check": "astro check",
-    "font": "node scripts/subset-font.mjs"
+    "check": "astro check"
   },
   "dependencies": {
     "astro": "^7.2.0",
@@ -23,7 +20,6 @@
     "@tailwindcss/vite": "^4.3.3",
     "@types/qrcode": "^1.5.5",
     "astro-icon": "^1.2.0",
-    "subset-font": "^2.9.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.7.3"
   }

@@ -45,30 +45,26 @@ const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&
       </header>
 
       <h2 id="criteria">收录条件</h2>
-      <div class="doc-card my-4">
-        <ol class="doc-steps">
-          {RULES.map((rule) => <li>{rule}</li>)}
-        </ol>
-      </div>
+      <ol>
+        {RULES.map((rule) => <li>{rule}</li>)}
+      </ol>
 
       <h2 id="submit">提交方式</h2>
       <p>以下方式任选其一。</p>
-      <div class="my-4 grid gap-3">
-        <div class="doc-card">
-          <div class="doc-card-head">
-            <span class="doc-icon">
-              <Icon name="lucide:mail" class="h-5 w-5" aria-hidden="true" />
-            </span>
-            <h3>发送邮件</h3>
-          </div>
-          <p class="mt-2 text-dense text-muted">
+      <div class="my-4">
+        <blockquote>
+          <p class="doc-quote-title">
+            <Icon name="lucide:mail" class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+            <strong>发送邮件</strong>
+          </p>
+          <p>
             不需要注册任何账号，点按钮会自动带上下面的模板，按实际情况填写后发送即可。
           </p>
           <pre><code>{MAIL_FIELDS.join('\n')}</code></pre>
-          <p class="text-dense text-muted">
+          <p>
             分类拿不准可留空，或参照<a href="/">首页</a>的分类；其余未定项由维护者补全。
           </p>
-          <p class="mt-3">
+          <p>
             <a
               href={MAILTO}
               class="btn-brand inline-flex items-center gap-2 rounded-(--r-lg) px-6 py-2.5 text-sm no-underline"
@@ -77,19 +73,17 @@ const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&
               写邮件
             </a>
           </p>
-        </div>
+        </blockquote>
 
-        <div class="doc-card">
-          <div class="doc-card-head">
-            <span class="doc-icon">
-              <svg class="h-5 w-5" aria-hidden="true"><use href="#icon-github"/></svg>
-            </span>
-            <h3>提交 Issue</h3>
-          </div>
-          <p class="mt-2 text-dense text-muted">
+        <blockquote>
+          <p class="doc-quote-title">
+            <svg class="h-4 w-4 shrink-0 text-brand" aria-hidden="true"><use href="#icon-github"/></svg>
+            <strong>提交 Issue</strong>
+          </p>
+          <p>
             有 GitHub 账号且能正常访问 GitHub 时更合适：可以直接附截图，进度也能在 Issue 里追踪。
           </p>
-          <p class="mt-3">
+          <p>
             <a
               href={ISSUE_URL}
               target="_blank"
@@ -100,16 +94,14 @@ const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&
               新建 Issue
             </a>
           </p>
-        </div>
+        </blockquote>
 
-        <div class="doc-card">
-          <div class="doc-card-head">
-            <span class="doc-icon">
-              <Icon name="lucide:git-pull-request" class="h-5 w-5" aria-hidden="true" />
-            </span>
-            <h3>提交 Pull Request</h3>
-          </div>
-          <p class="mt-2 text-dense text-muted">
+        <blockquote>
+          <p class="doc-quote-title">
+            <Icon name="lucide:git-pull-request" class="h-4 w-4 shrink-0 text-brand" aria-hidden="true" />
+            <strong>提交 Pull Request</strong>
+          </p>
+          <p>
             全站数据与代码托管于 <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub</a
             >，会改 YAML 就能参与；字段含义、多入口与徽章等完整写法见仓库 <a
               href={`${REPO_URL}#readme`}
@@ -117,7 +109,7 @@ const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&
               rel="noopener noreferrer">README</a
             >。
           </p>
-          <ol class="doc-steps">
+          <ol>
             <li>
               <strong>加数据、放图标</strong>：在 <code>src/content/sites/{'{分类id}'}.yaml</code> 的 <code
                 >subs[].links[]</code
@@ -130,7 +122,7 @@ const MAILTO = `mailto:${MAIL}?subject=${encodeURIComponent('成医通反馈')}&
             </li>
             <li><strong>发 Pull Request</strong>：构建通过后提交，维护者确认后合并上线。</li>
           </ol>
-        </div>
+        </blockquote>
       </div>
     </article>
   </main>

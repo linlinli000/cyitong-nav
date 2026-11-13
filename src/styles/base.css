@@ -5,12 +5,17 @@
 @theme {
   /* 站点字体：钉钉进步体（DingTalk JinBuTi），本地自托管，见 Layout.astro 的 preload */
   --font-sans: "DingTalk JinBuTi", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", "Consolas", "SFMono-Regular", "Liberation Mono", Menlo, monospace;
   --text-chip: 11px;
   --text-note: 12px;
   --text-note--line-height: 18px;
   --text-dense: 14px;
   --text-body: 15px;
   --text-read: 16px;
+  --text-heading: 1.25rem;
+  --text-heading--line-height: 1.4;
+  --text-title: 1.75rem;
+  --text-title--line-height: 1.3;
   --text-caption: 13px;
   --color-surface: #f2f4f7;
   --color-card: #ffffff;
@@ -26,11 +31,11 @@
   --color-hover: rgba(220, 220, 220, 0.6);
   --color-float: rgba(255, 255, 255, 0.96);
   --color-subtle: #6b6e73;
-  --color-code: rgba(116, 116, 116, 0.1);
+  --color-key: oklch(0.96 0.002 169);
+  --color-key-line: oklch(0.925 0.002 169);
   --color-brand: #1e9bff;
   --color-brand-dark: #1a5fa8;
   --color-brand-solid: #1e9bff;
-  /* hover 用的深一档品牌蓝：基于 solid 混黑，亮/暗模式都生效，避免 --color-brand-dark 在暗色下反而变浅 */
   --color-brand-hover: color-mix(in srgb, var(--color-brand-solid) 82%, #000);
   --color-brand-soft: rgba(30, 155, 255, 0.1);
   --color-brand-mark: rgba(30, 155, 255, 0.16);
@@ -103,6 +108,8 @@
   --color-fill: var(--color-tint);
   --color-hover: rgba(255, 255, 255, 0.08);
   --color-float: rgba(45, 46, 47, 0.94);
+  --color-key: oklch(0.32 0 0);
+  --color-key-line: oklch(0.32 0 0);
   --color-brand: #3fa9ff;
   --color-brand-dark: #7fc3f5;
   --color-brand-wash: var(--color-brand-mark);
@@ -115,7 +122,7 @@
 
 @font-face {
   font-family: "DingTalk JinBuTi";
-  src: url("/fonts/DDjinbuti.woff2") format("woff2");
+  src: url("/fonts/DDjinbuti.full.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -163,22 +170,41 @@ body {
 }
 
 /* 全站细体：标题与强调一律 300，仅 <b>/<strong> 用 400 */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-th,
-.font-bold,
-.font-semibold,
-.font-medium,
-.font-extralight {
-  font-weight: 300;
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  th,
+  .font-bold,
+  .font-semibold,
+  .font-medium,
+  .font-extralight {
+    font-weight: 300;
+  }
+  b,
+  strong {
+    font-weight: 400;
+  }
 }
-b,
-strong {
-  font-weight: 400;
+
+/* 键盘键帽 */
+kbd {
+  display: inline-flex;
+  min-height: 1.45rem;
+  align-items: center;
+  border: 1px solid var(--color-key-line);
+  border-bottom-color: color-mix(in oklch, var(--color-key-line), var(--color-ink) 25%);
+  border-radius: var(--r-sm);
+  background: var(--color-key);
+  padding: 0.12rem 0.45rem;
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-note);
+  font-weight: 650;
+  box-shadow: inset 0 -2px 0 color-mix(in oklch, var(--color-key-line), var(--color-ink) 12%);
 }
 
 /* 自定义元素宿主置块 */
