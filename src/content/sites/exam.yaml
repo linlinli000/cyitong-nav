@@ -17,7 +17,7 @@ subs:
         desc: 全国计算机等级考试报名与查询
         pinyin: jisuanjibaoming
         pinyinFirst: jsjbm
-        url: https://ncre-bm.neea.edu.cn
+        url: https://ncre.neea.edu.cn/
       - id: putonghua
         title: 普通话报名
         desc: 普通话水平测试报名、查分与证书
@@ -47,19 +47,19 @@ subs:
         desc: 托福考试报名、成绩查询与寄送
         pinyin: tuofu
         pinyinFirst: tf
-        url: https://www.toefl.cn
+        url: https://toefl.neea.edu.cn/
       - id: ielts
         title: 雅思
         desc: 雅思报名、转退考与成绩查询
         pinyin: yasi
         pinyinFirst: ys
-        url: https://www.chinaielts.org
+        url: https://ielts.neea.edu.cn/
       - id: jlpt
         title: 日本语能力测试
         desc: 日语能力测试报名与成绩查询
         pinyin: ribenyunengliceshi
         pinyinFirst: rbynlcs
-        url: https://jlpt.neea.cn/index.do
+        url: https://jlpt-main.neea.edu.cn/
   - id: contest
     name: 大学生比赛
     links:

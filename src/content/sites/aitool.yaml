@@ -17,7 +17,7 @@ subs:
         desc: 阿里大模型，中文理解与文档处理
         pinyin: qianwen
         pinyinFirst: qw
-        url: https://tongyi.aliyun.com/qianwen
+        url: https://www.qianwen.com/
       - id: doubao
         title: 豆包
         desc: 字节全能助手，学习办公常用
@@ -30,6 +30,12 @@ subs:
         pinyin: kimi
         pinyinFirst: kimi
         url: https://kimi.moonshot.cn
+      - id: minimax
+        title: MiniMax
+        desc: 上海大模型，开源与 Agent 能力
+        pinyin: minimax
+        pinyinFirst: minimax
+        url: https://www.minimaxi.com
       - id: yiyan
         title: 文心一言
         desc: 百度大模型，文生图与文档分析
@@ -56,7 +62,7 @@ subs:
         url: https://chatglm.cn
       - id: zai
         title: Z.ai
-        desc: 智谱官方新站，免费体验 GLM 最新模型
+        desc: 智谱官方站，体验 GLM 系列模型
         pinyin: zai
         pinyinFirst: zai
         url: https://z.ai
@@ -93,6 +99,81 @@ subs:
         pinyin: grok
         pinyinFirst: grok
         url: https://grok.com
+  - id: agent
+    name: AI智能体
+    links:
+      - id: harness
+        title: DeepSeek Harness
+        desc: DeepSeek 官方智能体，插件扩展自动干活
+        pinyin: deepseekharness
+        pinyinFirst: dsh
+        url: https://www.deepseek.com/harness/
+      - id: zcode
+        title: ZCode
+        desc: 智谱编程智能体，长程任务自主开发
+        pinyin: zcode
+        pinyinFirst: zcode
+        url: https://zcode.z.ai
+      - id: qoder
+        title: Qoder
+        desc: 阿里编程智能体平台，任务式开发交付
+        pinyin: qoder tongyilingma
+        pinyinFirst: qoder
+        url: https://qoder.cn
+      - id: workbuddy
+        title: WorkBuddy
+        desc: 腾讯办公智能体，自主拆解交付任务
+        pinyin: workbuddy
+        pinyinFirst: workbuddy
+        url: https://www.workbuddy.cn
+      - id: trae
+        title: Trae
+        desc: 字节 AI 开发工程师，对话式编程
+        pinyin: trae
+        pinyinFirst: trae
+        url: https://www.trae.cn
+      - id: coze
+        title: 扣子
+        desc: 可视化搭建 AI 智能体与工作流
+        pinyin: kouzi
+        pinyinFirst: kz
+        url: https://www.coze.cn/
+      - id: manus
+        title: Manus
+        desc: 通用智能体，自主拆解执行复杂任务
+        pinyin: manus
+        pinyinFirst: manus
+        url: https://manus.im
+      - id: codex
+        title: Codex
+        desc: OpenAI 编程智能体，本地云端并行
+        pinyin: codex
+        pinyinFirst: codex
+        url: https://openai.com/codex/
+      - id: claudecode
+        title: Claude Code
+        desc: Anthropic 终端编程智能体
+        pinyin: claudecode
+        pinyinFirst: claudecode
+        url: https://claude.com/product/claude-code
+      - id: opencode
+        title: OpenCode
+        desc: 开源终端编程智能体，任意模型可接
+        pinyin: opencode
+        pinyinFirst: opencode
+        url: https://opencode.ai
+      - id: pi
+        title: Pi
+        desc: 极简终端智能体，靠扩展自定义
+        pinyin: pi
+        pinyinFirst: pi
+        url: https://pi.dev
+      - id: hermes
+        title: Hermes
+        desc: Nous 自进化智能体，跨平台常驻
+        pinyin: hermes
+        pinyinFirst: hermes
+        url: https://hermes-agent.nousresearch.com
   - id: office
     name: AI办公
     links:
@@ -114,12 +195,6 @@ subs:
         pinyin: tengxunima
         pinyinFirst: txima
         url: https://ima.qq.com
-      - id: coze
-        title: 扣子
-        desc: 可视化搭建 AI 智能体与工作流
-        pinyin: kouzi
-        pinyinFirst: kz
-        url: https://www.coze.cn/
       - id: metaso
         title: 秘塔AI搜索
         desc: AI 智能搜索，学术检索自动引文溯源
@@ -141,11 +216,11 @@ subs:
         pinyin: kelingai
         pinyinFirst: klai
         url: https://klingai.com
-      - id: minimax
-        title: MiniMax
-        desc: 海螺AI，视频生成与角色对话
-        pinyin: minimax
-        pinyinFirst: minimax
+      - id: hailuo
+        title: 海螺AI
+        desc: MiniMax 出品，图生视频与配音
+        pinyin: hailuoai
+        pinyinFirst: hlai
         url: https://hailuoai.com
       - id: midjourney
         title: Midjourney
