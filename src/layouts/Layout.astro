@@ -119,8 +119,7 @@ const webSiteSchema = {
   </head>
   <body id="top" class={isHome ? 'page-home' : 'page-inner'}>
     <script is:inline>
-      // 顶栏滚过阈值后加深阴影；
-      // 同时维护 body.is-scrolling：滚动中把右下悬浮球滑走，停手再滑回
+      // 滚过阈值加深顶栏阴影；并维护 body.is-scrolling（滚动中滑走右下悬浮球，停手滑回）
       (function () {
         var ticking = false;
         var idleTimer = null;

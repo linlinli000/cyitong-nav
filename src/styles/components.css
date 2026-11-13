@@ -1,6 +1,4 @@
-/* =========================================================================
-   组件样式层：卡片、顶栏、搜索、磁贴、弹窗、抽屉等组件的结构、默认视觉与交互
-   ========================================================================= */
+/* 组件样式层：卡片、顶栏、搜索、磁贴、弹窗、抽屉的结构、默认视觉与交互 */
 
 /* 侧边栏折叠面板过渡 */
 .sidebar-sub {
@@ -57,7 +55,7 @@
   color: var(--color-brand);
 }
 
-/* ===== 右下悬浮球（回到顶部/明暗切换共用）：实底白卡 + 描边 + 投影；滚动隐现由 theme.css 维护 ===== */
+/* ── 右下悬浮球（回到顶部/明暗切换共用，滚动隐现见 theme.css） ── */
 .nav-fab {
   position: fixed;
   right: 1.5rem;
@@ -491,6 +489,10 @@ header [data-ghost]:hover {
   .doc-card > :last-child {
     margin-bottom: 0;
   }
+  /* pre 长行的 min-content 会撑破 auto 轨；minmax(0,1fr) 改卡内滚 */
+  .doc-page .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .doc-card-head {
     display: flex;
     align-items: center;
@@ -659,7 +661,7 @@ header [data-ghost]:hover {
   }
 }
 
-/* ===== 搜索上下文芯片（范围+引擎+类型 合一） ===== */
+/* ── 搜索上下文芯片（范围+引擎+类型 合一） ── */
 .ctx-btn {
   display: inline-flex;
   align-items: center;
@@ -742,7 +744,7 @@ header [data-ghost]:hover {
     padding-bottom: 0.6rem;
   }
 }
-/* ===== 常用磁贴行（容器>链接；结构单一源 web/quick-bar/quick-tile.ts，管理操作走右键/长按菜单） ===== */
+/* ── 常用磁贴行（结构源 web/quick-bar/quick-tile.ts，管理走右键/长按菜单） ── */
 .quick-tile-wrap {
   position: relative;
   min-width: 0;
@@ -863,8 +865,7 @@ header [data-ghost]:hover {
   transition: opacity var(--dur-base) var(--ease-ui);
 }
 
-/* 移动端磁贴换 2 行×5 列网格（9 格 = 8 磁贴 + 添加格），上限与 quick-bar.ts 的 MAX_SHOW 一致；放不下横向滚动。
-   flex-shrink 必须放开：shrink-0 会让网格保持 max-content 在窄屏溢出（sticky 已撤，添加格随行滚动） */
+/* 移动端 2 行×5 列（9 格，上限同 quick-bar.ts MAX_SHOW）；flex-shrink 须放开，否则窄屏溢出 */
 @media (max-width: 767.98px) {
   #quick-tiles {
     display: grid;
@@ -878,7 +879,7 @@ header [data-ghost]:hover {
   }
 }
 
-/* ===== 移动端工具箱抽屉动画（普通 div，用 class 驱动，不再依赖 dialog） ===== */
+/* ── 移动端工具箱抽屉动画（class 驱动，非 dialog） ── */
 @keyframes drawer-slide-in {
   from {
     transform: translateX(100%);
@@ -909,7 +910,7 @@ header [data-ghost]:hover {
     transform: translateX(100%);
   }
 }
-/* ===== 弹窗（nav-dialog / nav-quick-add）===== */
+/* ── 弹窗（nav-dialog / nav-quick-add） ── */
 /* 选项：白卡描边（bg-card 与全站卡片同语言）；hover 中性灰不变蓝，蓝只做激活态 */
 @layer components {
   .dlg-list {
@@ -968,7 +969,7 @@ nav-quick-add dialog {
   backdrop-filter: var(--glass-blur);
 }
 
-/* ===== 共享原语：计数徽章与底部入口行（历史 tab / 工具箱 / 侧栏脚共用） ===== */
+/* ── 共享原语：计数徽章与底部入口行（历史 tab / 工具箱 / 侧栏脚共用） ── */
 /* 用 currentColor 做底：默认灰、hover 深、active 蓝，三态自动跟文字色一致 */
 .count-badge {
   padding: 0 5px;
@@ -1031,8 +1032,8 @@ nav-quick-add dialog {
 }
 
 
-/* ===== 自 theme.css 归位的组件视觉（顶栏 / 历史面板 / 侧栏行）：布局与几何仍留 theme ===== */
-/* ── 顶栏：固定在视口顶部的毛玻璃药丸 ─────────────────────────────── */
+/* ── 自 theme.css 归位的组件视觉（顶栏 / 历史面板 / 侧栏行，几何仍留 theme） ── */
+/* ── 顶栏 ── */
 .topbar {
   position: fixed;
   inset: 0 0 auto 0;
@@ -1060,8 +1061,7 @@ nav-quick-add dialog {
 }
 
 
-/* 内容页（关于/投稿/404）：未滚动时顶栏不悬浮，直接融进页面底色；
-   滚动后恢复毛玻璃药丸 + 阴影（切换在 states.css 的 body.scrolled / page-inner） */
+/* 内容页未滚动时顶栏融进底色，滚动后恢复药丸（切换见 states.css 的 body.scrolled / page-inner） */
 
 .topbar-inner {
   height: 100%;
@@ -1242,7 +1242,7 @@ nav-quick-add dialog {
   transition: transform 0.25s var(--ease-pop);
 }
 
-/* ── 图标动效 ─────────────────────────────────────────────────────── */
+/* ── 图标动效 ── */
 /* 汉堡：三条线，展开时上 / 下两条对折成 ×，中间一条缩没 */
 .menu-btn {
   position: relative;
@@ -1378,7 +1378,7 @@ nav-quick-add dialog {
   color: var(--color-ink);
 }
 
-/* ── 顶栏搜索历史面板：按 scope 分组（站内/搜索/社区/文献） ────────── */
+/* ── 顶栏搜索历史面板（按 scope 分组） ── */
 .topbar-history {
   position: fixed;
   top: calc(var(--nav-h) - 2px);
@@ -1730,7 +1730,7 @@ nav-quick-add dialog {
   opacity: 0.9;
 }
 
-/* ===== 表单聚焦环（搜索框 / 弹窗输入框） ===== */
+/* ── 表单聚焦环（搜索框 / 弹窗输入框） ── */
 .search-field {
   outline: 2px solid transparent;
 }

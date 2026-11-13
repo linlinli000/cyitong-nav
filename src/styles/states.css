@@ -1,6 +1,4 @@
-/* =========================================================================
-   状态覆盖层：由脚本动态切换的激活态 / 展开态 / 显隐态，置于最后保证覆盖默认态
-   ========================================================================= */
+/* 状态覆盖层：脚本切换的激活/展开/显隐态，置于最后以覆盖默认态 */
 
 .sidebar-group.open .sidebar-sub {
   max-height: 480px;
@@ -40,7 +38,8 @@
 body.scrolled .topbar-pill {
   box-shadow: var(--nav-shadow);
 }
-body.page-inner:not(.scrolled) .topbar-pill {
+/* 抽屉遮罩下透明药丸透黑，开着时让位回玻璃态 */
+body.page-inner:not(.scrolled):not(:has(#sidebar.translate-x-0, [data-role="tools-panel"]:not([hidden]))) .topbar-pill {
   background: transparent;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;

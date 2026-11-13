@@ -82,6 +82,29 @@ const { category } = Astro.props;
       )
     }
   </div>
+
+  <!-- SSR 静态 hidden，JS 按页数增强 -->
+  <div class="cat-foot" hidden>
+    <button
+      type="button"
+      class="cat-foot-btn"
+      data-cat-load
+      aria-controls={`cat-panel-${category.data.id}`}
+    >
+      加载更多
+      <span class="count-badge" data-cat-remaining></span>
+      <Icon name="lucide:chevron-down" aria-hidden="true" />
+    </button>
+    <button
+      type="button"
+      class="cat-foot-btn"
+      data-cat-collapse
+      aria-controls={`cat-panel-${category.data.id}`}
+    >
+      收起
+      <Icon name="lucide:chevron-up" aria-hidden="true" />
+    </button>
+  </div>
 </section>
 
 <script>

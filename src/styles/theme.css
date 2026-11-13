@@ -1,12 +1,8 @@
-/* =========================================================================
-   视觉主题层：页面骨架、侧栏几何、Hero / 分类卡 / 工具箱的布局与视觉
-   （组件默认视觉在 components.css，激活/展开态在 states.css）
-   ========================================================================= */
+/* 视觉主题层：页面骨架、侧栏几何、Hero / 分类卡 / 工具箱的布局与视觉（默认视觉见 components.css，激活态见 states.css） */
 
-/* ── 页面骨架 ─────────────────────────────────────────────────────────── */
+/* ── 页面骨架 ── */
 .hero-wrap {
-  /* 渐变尾巴：视觉上多伸出一段到内容区之下，桌面侧栏的毛玻璃才有东西可磨。
-     用 padding + 负 margin，只拉长绘制盒，不改内容起始位置 */
+  /* 渐变尾巴伸到内容区之下供侧栏毛玻璃磨砂；padding + 负 margin 只拉长绘制盒，不改内容起点 */
   --hero-tail: 150px;
   position: relative;
   margin-top: calc(-1 * var(--nav-h));
@@ -14,13 +10,10 @@
   padding-bottom: var(--hero-tail);
   margin-bottom: calc(-1 * var(--hero-tail));
   background: var(--hero-grad);
-  /* 这里刻意不建层叠上下文（无 z-index / isolation）：
-     尾巴必须退到 .page-shell 背景之下，否则会盖住首屏第一张分类卡。
-     原来靠它兜住的搜索下拉层级，改由 .hero-search 自己带 z-index */
+  /* 刻意不建层叠上下文：尾巴须退到 .page-shell 之下以免盖住首张分类卡；搜索下拉层级改由 .hero-search 自带 z-index */
 }
 
-/* 底缘渐隐：渐变色在「那条线」之后化进页面底色，而不是硬切一刀。
-   渐变终点用 transparent：浏览器按预乘 alpha 插值，等价于 rgba(surface, 0)，亮暗通用 */
+/* 底缘渐隐化进底色而非硬切；终点用 transparent（预乘 alpha 插值，亮暗通用） */
 .hero-wrap::after {
   content: "";
   position: absolute;
@@ -69,7 +62,7 @@ nav-sidebar {
 }
 
 
-/* ── 侧栏：190px 毛玻璃浮卡，跟随内容区 sticky ─────────────────────── */
+/* ── 侧栏：190px 毛玻璃浮卡 ── */
 #sidebar {
   position: sticky;
   top: calc(var(--nav-h) + var(--gutter));
@@ -164,7 +157,7 @@ nav-sidebar {
   }
 }
 
-/* ── Hero：渐变 + 居中搜索 + 底部胶囊条 ────────────────────────────── */
+/* ── Hero：渐变 + 居中搜索 + 底部胶囊条 ── */
 .hero {
   height: 340px;
   max-width: var(--page-max);
@@ -212,10 +205,7 @@ nav-sidebar {
 }
 
 .hero-search {
-  /* 不建层叠上下文：下拉菜单自己带 --z-overlay，只要祖先链上没有 stacking context，
-     就能压过 .page-shell(z-index:var(--z-content)) 里的分类卡。
-     这里一旦给 z-index，移动端抽屉（在 .page-shell 里，z-index 被限制为 1）
-     反而会被搜索框盖住 */
+  /* 不建层叠上下文：下拉自带 --z-overlay 即可压过分类卡；若给 z-index 会把移动端抽屉锁死在 z=1 反被搜索框盖住 */
   width: min(800px, 100%);
   flex: 0 0 auto;
 }
@@ -379,8 +369,7 @@ nav-sidebar {
   transform: none;
 }
 
-/* 桌面端 hover：整个磁贴（含「添加」格）轻微上浮（对齐卡片 hover 的 translateY）；
-   用断点判定桌面即可，不再叠加 (hover:hover) —— 该媒体查询在部分环境/无头浏览器下为 false，会让上浮整条失效 */
+/* 桌面 hover 磁贴轻微上浮；只用断点判定，不叠加 (hover:hover)（无头浏览器下为 false 会整条失效） */
 @media (min-width: 1024px) {
   .quick-tile-wrap {
     transition: transform 0.18s var(--ease-pop);
@@ -478,7 +467,7 @@ nav-sidebar {
   color: var(--color-muted);
 }
 
-/* ── 分类卡 + 子分类 pill ───────────────────────────────────────────── */
+/* ── 分类卡 + 子分类 pill ── */
 .cat-list {
   padding: 0;
   margin: 0;
@@ -582,8 +571,7 @@ nav-sidebar {
   border-radius: 0;
   background: transparent;
   color: var(--color-ink);
-  /* 钉钉进步体在同字号下字面更小更细，12px 挨着 15px 标题几乎读不出来，
-     抬到 13px 才与「更多」的层级相称 */
+  /* 钉钉进步体字面偏小，12px 挨着 15px 标题读不出，抬到 13px */
   font-size: var(--text-caption);
   line-height: 28px;
 }
@@ -602,8 +590,43 @@ nav-sidebar {
   transition: transform var(--dur-base) var(--ease-ui);
 }
 
-/* 网格：6 列 × 16px gap（1440 视口下 (-24+1191-80)/6 = 185.17px，与设计稿校准一致）。
-   保留 display:grid —— nav-cat-tabs.ts 靠 gridTemplateColumns 计算「更多」的折叠行数 */
+/* 增量不整块撑开，收起免滚回顶部 */
+.cat-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-divider);
+}
+.cat-foot[hidden] {
+  display: none;
+}
+.cat-foot-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 10px;
+  border-radius: var(--r-sm);
+  font-size: var(--text-caption);
+  line-height: 28px;
+  color: var(--color-ink);
+  background: transparent;
+  transition:
+    color var(--dur-fast) var(--ease-ui),
+    background var(--dur-fast) var(--ease-ui);
+}
+.cat-foot-btn:hover {
+  color: var(--color-brand);
+  background: var(--color-tint);
+}
+.cat-foot-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* 6 列 × 16px gap（1440 视口校准 185.17px）；保留 grid，nav-cat-tabs.ts 靠 gridTemplateColumns 算折叠行数 */
 .cat-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -739,8 +762,7 @@ nav-sidebar {
   white-space: nowrap;
 }
 
-/* 右上角跳转箭头：默认藏起、左移 4px 且逆时针歪 15°，
-   hover 时滑正、转到 0°、定格半透明 */
+/* 跳转箭头：默认藏起、左移 4px 歪 15°，hover 滑正转 0° 定格半透明 */
 .link-tile .tile-arrow {
   position: absolute;
   top: 5px;
@@ -780,7 +802,7 @@ nav-sidebar {
   }
 }
 
-/* ── 页脚 ───────────────────────────────────────────────────────────── */
+/* ── 页脚 ── */
 footer {
   padding: 24px 0 40px;
   font-size: var(--text-dense);
@@ -797,7 +819,7 @@ footer a:hover {
 }
 
 
-/* ── 工具箱抽屉：与左侧侧栏同一套圆角毛玻璃浮层，从右侧滑入 ────────── */
+/* ── 工具箱抽屉（右侧滑入，与侧栏同套毛玻璃浮层） ── */
 /* 普通 <div> 面板 + 普通遮罩 div（与左侧 <aside> 机制对称），不用 <dialog> 的 ::backdrop */
 [data-role="tools-panel"] {
   position: fixed;
@@ -905,10 +927,7 @@ footer a:hover {
   .page-shell {
     display: block;
     padding: 12px var(--gutter) 0;
-    /* 桌面端 z-index:var(--z-content) 是为压 hero 尾巴，但移动端侧栏是 position:fixed 抽屉，
-       若保留该 z-index 会把抽屉的 z-index:var(--z-drawer) 锁死在这个 stacking context 里（对外只有 1），
-       导致抽屉被工具箱的遮罩(--z-overlay，根上下文)盖住。这里去掉 z-index，让抽屉回到根上下文。
-       移动端分类卡与 hero 尾巴按 DOM 顺序（.page-shell 在后）天然叠放，无需 z-index 兜底。 */
+    /* 移动端去掉 z-index：保留会把 fixed 抽屉锁死在 z=1 被工具箱遮罩盖住；分类卡与 hero 尾巴按 DOM 顺序天然叠放 */
     z-index: auto;
   }
 
