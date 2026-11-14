@@ -7,11 +7,11 @@ subs:
     name: 选刊与投稿
     links:
       - id: fenqubiao
-        title: 中科院期刊分区表
+        title: 新锐分区
         desc: 查期刊分区与影响因子，投稿选刊参考
-        pinyin: zhongkeyuanqikanfenqubiao
-        pinyinFirst: zkyqkfqb
-        url: https://www.fenqubiao.com
+        pinyin: xinruifenqu
+        pinyinFirst: xrfq
+        url: https://www.xr-scholar.com/
       - id: jcr
         title: JCR
         desc: Web of Science 期刊影响因子与分区
@@ -89,7 +89,7 @@ subs:
         desc: 划词/整页双语对照阅读的浏览器扩展
         pinyin: chenjinshifanyi
         pinyinFirst: cjsfy
-        url: https://immersivetranslate.com/
+        url: https://www.immersivetranslate.net/
       - id: grammarly
         title: Grammarly
         desc: 英文写作纠错与润色建议
@@ -201,12 +201,6 @@ subs:
         pinyin: guojiashekejijin
         pinyinFirst: gjskjj
         url: https://www.nopss.gov.cn/
-      - id: nopssdata
-        title: 社科基金项目库
-        desc: 查已立项社科基金项目与成果
-        pinyin: shekejijinxiangmuku
-        pinyinFirst: skjjxmk
-        url: https://fz.people.com.cn/skygb/sk/index.php/index
   - id: standard
     name: 标准与专利
     links:

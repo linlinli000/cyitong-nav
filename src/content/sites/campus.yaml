@@ -111,6 +111,15 @@ subs:
         pinyin: xiaoqiyeweixin
         pinyinFirst: xqywx
         url: https://metc.cmc.edu.cn/info/1019/2280.htm
+      - id: zysc
+        title: 志愿四川
+        desc: 志愿服务注册与志愿时长记录
+        pinyin: zhiyuansichuan
+        pinyinFirst: zysc
+        url: https://zysc.scyol.com/fzysc/#/pages/regist/regist
+        badge: 扫码
+        qr: true
+        qrNote: 请使用微信扫码，打开志愿四川页面
       - id: hhy
         title: 成医后花园
         desc: 早期学校论坛
