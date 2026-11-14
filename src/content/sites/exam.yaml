@@ -6,6 +6,12 @@ subs:
   - id: domestic
     name: 国内通用考试
     links:
+      - id: neea
+        title: 中国教育考试网
+        desc: 教育部教育考试院官方门户，考试报名与成绩查询
+        pinyin: zhongguojiaoyukaoshiwang
+        pinyinFirst: zgjyksw
+        url: https://www.neea.edu.cn/
       - id: cet
         title: 四六级报名
         desc: 笔试口试报名与准考证打印
@@ -75,6 +81,12 @@ subs:
         pinyin: zhongguoguojidaxueshengchuangxindasai
         pinyinFirst: zggjdxscxds
         url: https://cy.ncss.cn
+      - id: zgs
+        title: 职业规划大赛
+        desc: 全国大学生职业规划大赛报名与赛程
+        pinyin: zhiyeguihuadasai
+        pinyinFirst: zyghds
+        url: https://zgs.chsi.com.cn/
       - id: culsc
         title: 生命科学竞赛
         desc: 全国大学生生命科学竞赛报名
@@ -93,3 +105,21 @@ subs:
         pinyin: quanguodaxueshengyingyujingsai
         pinyinFirst: qgdxsyyjs
         url: https://www.chinaneccs.cn
+      - id: cumcm
+        title: 数学建模比赛
+        desc: 全国大学生数学建模竞赛，赛题通知与获奖查询
+        pinyin: shuxuejianmobisai
+        pinyinFirst: sxjmbs
+        url: https://www.mcm.edu.cn/
+      - id: lanqiaobei
+        title: 蓝桥杯
+        desc: 全国大学生软件和信息技术大赛报名与赛程
+        pinyin: lanqiaobei
+        pinyinFirst: lqb
+        url: https://dasai.lanqiao.cn/
+      - id: 4c
+        title: 计算机设计大赛
+        desc: 中国大学生计算机设计大赛（4C）报名与作品提交
+        pinyin: jisuanjishejidasai
+        pinyinFirst: jsjsds
+        url: https://jsjds.blcu.edu.cn/
